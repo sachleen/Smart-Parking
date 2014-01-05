@@ -24,10 +24,6 @@ function initialize() {
     
     centerMap();
     
-    // Event Handlers
-    $("#addNode").click(addNode);
-    
-    
     // for easy testing
     var Node1 = new WirelessNode('ABCDE55555', new google.maps.LatLng(38.56080772372703,-121.42170578241348), '23');
     addMarker(Node1);
@@ -72,31 +68,7 @@ function addMarker(Node) {
         content: nodeInfoTemplate
     });
     
-    /*
-    google.maps.event.addListener(infoWindow,'closeclick',function(){
-        marker.setDraggable(false);
-    });
-    
-    // Show the info window when marker is clicked and allow it to be dragged
-    google.maps.event.addListener(marker, "click", function (e) {
-        infoWindow.open(map, this);
-        marker.setDraggable(true);
-    });
-    */
     Node.mapMarker = marker;
     Node.infoWindow = infoWindow;
     Node.attachMapEvents();
 }
-
-/*
-    String Format function from http://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format/4673436#4673436
-*/
-String.prototype.format = function() {
-    var args = arguments;
-    return this.replace(/{(\d+)}/g, function(match, number) { 
-        return typeof args[number] != 'undefined'
-            ? args[number]
-            : match
-        ;
-    });
-};

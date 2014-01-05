@@ -1,12 +1,17 @@
 WirelessNodes = [];
 
 $(function() {
-
+    /*
+        Event handler for deleteNode button
+        Did it this way to ensure elements added in the future would get this handler too
+    */
+    $("body").on("click", '.deleteNode', deleteNode);
+    $("#addNode").click(addNode);
 });
 
 /*
-    Add a new Node
-    Gets the node ID and number of sensors connected to it and places a marker on the map
+    Add Node event handler
+    Gets the node ID and number of sensors connected to it and adds it to the map
 */
 function addNode() {
     if (typeof addMarkerListener !== 'undefined') {
@@ -22,9 +27,20 @@ function addNode() {
         
         addMarker(node);
         
-        console.log("Added Node:");
-        console.log(node);
-        
         google.maps.event.removeListener(addMarkerListener);
     });
+}
+
+/*
+    Delete Node event handler
+    Finds the right node in WirelessNodes and calls its delete function
+*/
+function deleteNode() {
+    var id = $(this).data('nodeid');
+    
+    var Node = WirelessNodes.filter(function(Node) {
+        return Node.id == id;
+    });
+    
+    Node[0].delete();
 }
