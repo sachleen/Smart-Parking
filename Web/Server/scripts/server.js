@@ -7,28 +7,33 @@ $(function() {
     */
     $("body").on("click", '.deleteNode', deleteNode);
     $("#addNode").click(addNode);
+    
+    for (i = 1; i <= 32; i++) {
+        $("#spots").append("<option value="+i+">"+i+"</option>");
+    }
 });
 
 /*
     Add Node event handler
     Gets the node ID and number of sensors connected to it and adds it to the map
 */
-function addNode() {
-    if (typeof addMarkerListener !== 'undefined') {
-        google.maps.event.removeListener(addMarkerListener);
-    }
+function addNode(latLng) {
+    var id = prompt("Enter 5 character Node ID");
     
-    addMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
-        
-        var id = prompt("Enter the 10 character Node ID");
-        var spots = prompt("Enter number of sensor connected to this node");
-        
-        var node = new WirelessNode(id, event.latLng, spots);
-        
-        addMarker(node);
-        
-        google.maps.event.removeListener(addMarkerListener);
-    });
+    if (id.length != 5) {
+        alert("Invalid ID");
+    } else {
+        var spots = prompt("Enter number of spots");
+
+        if (parseInt(spots) > 0 && parseInt(spots) <= 32) {
+            var node = new WirelessNode(id, latLng, spots);
+            addMarker(node);
+            
+            node.save();
+        } else if(spots) {
+            alert("Invalid number");
+        }
+    }
 }
 
 /*
@@ -38,9 +43,7 @@ function addNode() {
 function deleteNode() {
     var id = $(this).data('nodeid');
     
-    var Node = WirelessNodes.filter(function(Node) {
-        return Node.id == id;
-    });
+    var Node = WirelessNode.findById(id);
     
-    Node[0].delete();
+    Node.delete();
 }

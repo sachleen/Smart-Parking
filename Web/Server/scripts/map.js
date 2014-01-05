@@ -24,6 +24,13 @@ function initialize() {
     
     centerMap();
     
+    /*
+        Allows user to click anywhere on the map to add a new node
+    */
+    addMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
+        addNode(event.latLng);
+    });
+    
     // for easy testing
     var Node1 = new WirelessNode('ABCDE55555', new google.maps.LatLng(38.56080772372703,-121.42170578241348), '23');
     addMarker(Node1);

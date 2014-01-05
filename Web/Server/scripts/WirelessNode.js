@@ -1,3 +1,10 @@
+/*
+    Creates a new Wireless Node
+    Parameter   Description
+    id          ID of the Node
+    latLng      Position to place the marker on the map
+    spots       Number of parking spaces connected to this node
+*/
 function WirelessNode(id, latLng, spots) {
     this.id = id;
     this.latLng = latLng;
@@ -8,10 +15,24 @@ function WirelessNode(id, latLng, spots) {
     this.dirty = false;
     
     WirelessNodes.push(this);
-    
-    this.save();
 }
 
+/*
+    Finds a node in WirelessNodes array given its ID
+    Parameter   Description
+    id          ID of Node to find
+*/
+WirelessNode.findById = function(id) {
+    var Node = WirelessNodes.filter(function(Node) {
+        return Node.id == id;
+    });
+    
+    return Node[0];
+}
+
+/*
+    Saves Node information to database
+*/
 WirelessNode.prototype.save = function() {
     console.log("Saving Node");
     console.log(this.id, this.latLng, this.spots);
@@ -19,6 +40,9 @@ WirelessNode.prototype.save = function() {
     // Make API call here
 }
 
+/*
+    Deletes Node from map and database
+*/
 WirelessNode.prototype.delete = function() {
     console.log("Deleting Node");
     console.log(this.id, this.latLng, this.spots);
@@ -34,6 +58,9 @@ WirelessNode.prototype.delete = function() {
     WirelessNodes.splice(index, 1);
 }
 
+/*
+    Attaches click and drag handlers to node marker and infoWindow
+*/
 WirelessNode.prototype.attachMapEvents = function() {
     var that = this;
     
