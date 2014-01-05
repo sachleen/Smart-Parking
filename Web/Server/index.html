@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>Smart Parking</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    
+    <link href="styles/default.css" rel="stylesheet">
+    
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=geometry,visualization"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    
+    <script src="scripts/WirelessNode.js"></script>
+    
+    <script src="scripts/server.js"></script>
+    
+    <script src="scripts/map.js"></script>
+</head>
+<body>
+    <div id="controls">
+        <button id="addNode">Add Node</button>
+    </div>
+    <div id="map-canvas"></div>
+</body>
+</html>
+
+<script type="text/template" id="nodeInfoTemplate">
+<div class="nodeInfo">
+    <span>Node ID:</span> {0}<br />
+    <span>Spots:</span> {1}<br />
+    <button class="deleteNode" data-nodeid="{0}">Delete</button>
+</div>
+</script>
