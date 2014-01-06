@@ -11,7 +11,26 @@ $(function() {
     for (i = 1; i <= 32; i++) {
         $("#spots").append("<option value="+i+">"+i+"</option>");
     }
+    
+    loadAllNodes();
 });
+
+/*
+    Loads all nodes from database on to the map
+*/
+function loadAllNodes() {
+    $.get("/API/nodes/all", function(response) {
+        var items = [];
+        response = $.parseJSON(response);
+        $.each(response, function(key, val) {
+            var latLng = new google.maps.LatLng(val['lat'], val['lng']);
+            var node = new WirelessNode(val['id'], latLng, val['total']);
+            addMarker(node);
+        });
+    }).fail(function() {
+        alert("Error communicating with server.");
+    });
+}
 
 /*
     Add Node event handler

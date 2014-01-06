@@ -32,12 +32,14 @@ function initialize() {
     });
     
     // for easy testing
+    /*
     var Node1 = new WirelessNode('ABCDE55555', new google.maps.LatLng(38.56080772372703,-121.42170578241348), '23');
     addMarker(Node1);
     
     getLatLngListener = google.maps.event.addListener(map, 'click', function(event) {
         console.log(event.latLng);
     });
+    */
 }
 
 /*
@@ -65,7 +67,7 @@ function addMarker(Node) {
         position: Node.latLng,
         map: map,
         animation: google.maps.Animation.DROP,
-        icon: 'images/'+~~(Math.random() * 6)+'.png',
+        icon: 'images/default.png',
     });
 
     // Information window for when marker is clicked

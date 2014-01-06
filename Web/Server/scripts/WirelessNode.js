@@ -37,17 +37,27 @@ WirelessNode.prototype.save = function() {
     console.log("Saving Node");
     console.log(this.id, this.latLng, this.spots);
     
-    // Make API call here
+    $.post("/API/nodes/save", {
+        id: this.id,
+        lat: this.latLng.lat(),
+        lng: this.latLng.lng(),
+        total: this.spots
+    }, function(response) {
+        alert(response);
+    }).fail(function() {
+        alert("Error communicating with server.");
+    });
 }
 
 /*
     Deletes Node from map and database
 */
 WirelessNode.prototype.delete = function() {
-    console.log("Deleting Node");
-    console.log(this.id, this.latLng, this.spots);
-    
-    // Make API call here
+    $.post("/API/nodes/delete", { id: this.id }, function(response) {
+        alert(response);
+    }).fail(function() {
+        alert("Error communicating with server.");
+    });
     
     // Remove the marker and infoWindow from map
     this.infoWindow.setMap(null);
