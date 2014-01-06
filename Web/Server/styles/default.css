@@ -58,3 +58,31 @@ input, select, button {
 button {
     width: 100%;
 }
+
+.info, .success, .error {
+    border: 1px solid;
+    border-top: 0;
+    padding: 15px 10px;
+    
+    width: 50%;
+    
+    position: absolute;
+    top: 0;
+    left: 25%;
+    
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.info {
+    color: #00529B;
+    background-color: #BDE5F8;
+}
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}

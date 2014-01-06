@@ -34,9 +34,6 @@ WirelessNode.findById = function(id) {
     Saves Node information to database
 */
 WirelessNode.prototype.save = function() {
-    console.log("Saving Node");
-    console.log(this.id, this.latLng, this.spots);
-    
     $.post("/API/nodes/save", {
         id: this.id,
         lat: this.latLng.lat(),
@@ -45,7 +42,7 @@ WirelessNode.prototype.save = function() {
     }, function(response) {
         parseResponse(response, "Node Saved!");
     }).fail(function() {
-        alert("Error communicating with server.");
+        showMessage("error", "Error communicating with server.");
     });
 }
 
@@ -56,7 +53,7 @@ WirelessNode.prototype.delete = function() {
     $.post("/API/nodes/delete", { id: this.id }, function(response) {
         parseResponse(response, "Node Deleted!");
     }).fail(function() {
-        alert("Error communicating with server.");
+        showMessage("error", "Error communicating with server.");
     });
     
     // Remove the marker and infoWindow from map

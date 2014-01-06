@@ -20,8 +20,28 @@ String.prototype.format = function() {
 function parseResponse(response, successMessage) {
     parsed = JSON.parse(response);
     if (parsed.success = "TRUE") {
-        alert(successMessage);
+        showMessage("success", successMessage);
+        
     } else {
-        alert(parsed.error_message);
+        showMessage("error", parsed.error_message);
     }
+}
+
+/*
+    Displays a message to the user using slide down animation
+*/
+function showMessage(type, message) {
+    var div = $("<div>");
+    div.addClass(type);
+    div.text(message);
+    div.hide();
+    $("body").append(div);
+    div.slideDown(500);
+    
+    
+    setTimeout(function() {
+        div.slideUp(500, function() {
+            div.remove();
+        });
+    }, 3000);
 }
