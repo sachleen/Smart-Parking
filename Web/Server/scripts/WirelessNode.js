@@ -43,7 +43,7 @@ WirelessNode.prototype.save = function() {
         lng: this.latLng.lng(),
         total: this.spots
     }, function(response) {
-        alert(response);
+        parseResponse(response, "Node Saved!");
     }).fail(function() {
         alert("Error communicating with server.");
     });
@@ -54,7 +54,7 @@ WirelessNode.prototype.save = function() {
 */
 WirelessNode.prototype.delete = function() {
     $.post("/API/nodes/delete", { id: this.id }, function(response) {
-        alert(response);
+        parseResponse(response, "Node Deleted!");
     }).fail(function() {
         alert("Error communicating with server.");
     });

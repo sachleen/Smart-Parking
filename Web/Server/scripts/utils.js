@@ -10,3 +10,18 @@ String.prototype.format = function() {
         ;
     });
 };
+
+/*
+    Alerts the user of the server's response after an API call
+    Parameter       Description
+    response        JSON response returned from server
+    successMessage  Message to show if response was a "success"
+*/
+function parseResponse(response, successMessage) {
+    parsed = JSON.parse(response);
+    if (parsed.success = "TRUE") {
+        alert(successMessage);
+    } else {
+        alert(parsed.error_message);
+    }
+}
