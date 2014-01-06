@@ -28,7 +28,7 @@ function loadAllNodes() {
             addMarker(node);
         });
     }).fail(function() {
-        alert("Error communicating with server.");
+        showMessage("error", "Error communicating with server.");
     });
 }
 
@@ -40,7 +40,7 @@ function addNode(latLng) {
     var id = prompt("Enter 5 character Node ID");
     
     if (id.length != 5) {
-        alert("Invalid ID");
+        showMessage("error", "Invalid ID");
     } else {
         var spots = prompt("Enter number of spots");
 
@@ -50,7 +50,7 @@ function addNode(latLng) {
             
             node.save();
         } else if(spots) {
-            alert("Invalid number");
+            showMessage("error", "Invalid number");
         }
     }
 }
