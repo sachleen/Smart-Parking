@@ -30,3 +30,20 @@ WirelessNode.findById = function(id) {
     
     return Node[0];
 }
+
+/*
+    Attaches event handlers to markers
+*/
+WirelessNode.prototype.attachMapEvents = function() {
+    var that = this;
+    
+    // Open the device's Maps application with directions to this spot when a marker is clicked
+    google.maps.event.addListener(this.mapMarker, "click", function (e) {
+        var ios = "http://maps.apple.com/?daddr={0},{1}";
+        var other = "http://maps.google.com/maps?daddr={0},{1}";
+        
+        var url = navigator.userAgent.match(/iPhone|iPad|iPod/i) ? ios : other;
+        
+        document.location.href = url.format(that.latLng.lat(), that.latLng.lng());
+    });
+}

@@ -55,4 +55,5 @@ function addMarker(Node) {
     });
 
     Node.mapMarker = marker;
+    Node.attachMapEvents();
 }
