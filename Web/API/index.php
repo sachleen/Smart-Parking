@@ -1,13 +1,32 @@
 <?php
 require 'vendor/autoload.php';
 
-ORM::configure(array(
-    'connection_string' => 'mysql:host=localhost;dbname=parking',
-    'username' => 'root',
-    'password' => 'admin'
-));
-
 $app = new \Slim\Slim();
+
+if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')
+    $app->config('mode', 'development');
+else
+    $app->config('mode', 'production');
+
+$app->config('debug', false);
+
+// Only invoked if mode is "production"
+$app->configureMode('production', function () use ($app) {
+    ORM::configure(array(
+        'connection_string' => 'mysql:host=localhost;dbname=sacramh7_parking',
+        'username' => 'sacramh7_parking',
+        'password' => '20=1=c9)xWSJ'
+    ));
+});
+
+// Only invoked if mode is "development"
+$app->configureMode('development', function () use ($app) {
+    ORM::configure(array(
+        'connection_string' => 'mysql:host=localhost;dbname=parking',
+        'username' => 'root',
+        'password' => 'admin'
+    ));
+});
 
 /*
     Parameter       Description

@@ -34,7 +34,7 @@ WirelessNode.findById = function(id) {
     Saves Node information to database
 */
 WirelessNode.prototype.save = function() {
-    $.post("/API/nodes/save", {
+    $.post(BASE_URL + "/API/nodes/save", {
         id: this.id,
         lat: this.latLng.lat(),
         lng: this.latLng.lng(),
@@ -50,7 +50,7 @@ WirelessNode.prototype.save = function() {
     Deletes Node from map and database
 */
 WirelessNode.prototype.delete = function() {
-    $.post("/API/nodes/delete", { id: this.id }, function(response) {
+    $.post(BASE_URL + "/API/nodes/delete", { id: this.id }, function(response) {
         parseResponse(response, "Node Deleted!");
     }).fail(function() {
         showMessage("error", "Error communicating with server.");

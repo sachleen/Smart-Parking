@@ -1,11 +1,15 @@
+var mode = "development";
+
+var BASE_URL;
+if (mode == "development")
+    BASE_URL = "http://smartparking.local";
+else
+    BASE_URL = "http://sachleen.com/sachleen/parking";
+    
 var WirelessNodes = [];
 var lastQuery = 0;
 var lastPosition = {};
 var timeout = 10000;
-
-$(function() {
-
-});
 
 /*
     Loads all nodes from database on to the map
@@ -25,7 +29,7 @@ function loadAllNodes(lat, lng) {
     // Only query server if data is older than timeout OR if map has moved too much
     if ((time - lastQuery > timeout) || distance > 0.5) {
         
-        $.get("/API/nodes/{0}/{1}/1.0".format(lat,lng), function(response) {
+        $.get(BASE_URL + "/API/nodes/{0}/{1}/1.0".format(lat,lng), function(response) {
             var items = [];
             response = $.parseJSON(response);
             

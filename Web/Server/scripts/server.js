@@ -1,3 +1,11 @@
+var mode = "development";
+
+var BASE_URL;
+if (mode == "development")
+    BASE_URL = "http://smartparking.local";
+else
+    BASE_URL = "http://sachleen.com/sachleen/parking";
+
 WirelessNodes = [];
 
 $(function() {
@@ -19,7 +27,7 @@ $(function() {
     Loads all nodes from database on to the map
 */
 function loadAllNodes() {
-    $.get("/API/nodes/all", function(response) {
+    $.get(BASE_URL + "/API/nodes/all", function(response) {
         var items = [];
         response = $.parseJSON(response);
         $.each(response, function(key, val) {

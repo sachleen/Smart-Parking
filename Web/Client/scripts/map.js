@@ -16,7 +16,7 @@ function initialize() {
     var properties = {
         // Default center location in case geolocation isn't supported
         center: new google.maps.LatLng(38.56080772372703,-121.42170578241348),
-        zoom:20,
+        zoom:19,
         mapTypeId:google.maps.MapTypeId.ROADMAP
     };
     
@@ -67,7 +67,6 @@ function addMarker(Node) {
     var icon = Node.available > 5 ? 5 : Node.available;
     var zidx = parseInt(Node.available > 5 ? 5 : Node.available);
     
-    console.log("[add]zIndex:", zidx);
     var marker = new google.maps.Marker({
         position: Node.latLng,
         map: map,
@@ -81,7 +80,8 @@ function addMarker(Node) {
 }
 
 /*
-    Updates the properties of an existing marker on the map
+    Updates the available count of an existing marker on the map
+    Does not update any other properties! Marker position won't change.
     Parameter   Description
     Node        WirelessNode object
 */
@@ -90,6 +90,5 @@ function updateMarker(Node) {
     var zIndex = parseInt(Node.available > 5 ? 5 : Node.available);
     
     Node.mapMarker.setIcon('images/'+icon+'.png');
-    console.log("[update]setZIndex: ", zIndex);
     Node.mapMarker.setZIndex(zIndex);
 }
