@@ -1,12 +1,10 @@
 <?php
+
 require 'vendor/autoload.php';
 
 $app = new \Slim\Slim();
 
-if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')
-    $app->config('mode', 'development');
-else
-    $app->config('mode', 'production');
+$app->config('mode', getenv('APP_MODE'));
 
 $app->config('debug', false);
 

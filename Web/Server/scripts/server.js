@@ -1,10 +1,4 @@
-var mode = "development";
-
-var BASE_URL;
-if (mode == "development")
-    BASE_URL = "http://smartparking.local";
-else
-    BASE_URL = "http://sachleen.com/sachleen/parking";
+BASE_URL = location.href + "..";
 
 WirelessNodes = [];
 
