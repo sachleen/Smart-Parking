@@ -28,6 +28,18 @@ function initialize() {
     });
     
     centerMap();
+    
+    var locationMarker = new google.maps.Marker({
+        position: new google.maps.LatLng(38.56080772372703,-121.42170578241348),
+        map: map,
+        animation: google.maps.Animation.DROP,
+        icon: 'images/bluedot.png',
+        zIndex: 100 // make sure the user's location is above all other markers
+    });
+    
+    var watchID = navigator.geolocation.watchPosition(function(position) {
+        locationMarker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+    });
 }
 
 /*
@@ -52,19 +64,32 @@ function centerMap() {
 */
 function addMarker(Node) {
     // Marker properties
-    var icon = Node.available > 5 ? 5 : Node.available
+    var icon = Node.available > 5 ? 5 : Node.available;
+    var zidx = parseInt(Node.available > 5 ? 5 : Node.available);
+    
+    console.log("[add]zIndex:", zidx);
     var marker = new google.maps.Marker({
         position: Node.latLng,
         map: map,
         animation: google.maps.Animation.DROP,
         icon: 'images/'+icon+'.png',
+        zIndex: zidx
     });
 
     Node.mapMarker = marker;
     Node.attachMapEvents();
 }
 
+/*
+    Updates the properties of an existing marker on the map
+    Parameter   Description
+    Node        WirelessNode object
+*/
 function updateMarker(Node) {
     var icon = Node.available > 5 ? 5 : Node.available;
+    var zIndex = parseInt(Node.available > 5 ? 5 : Node.available);
+    
     Node.mapMarker.setIcon('images/'+icon+'.png');
+    console.log("[update]setZIndex: ", zIndex);
+    Node.mapMarker.setZIndex(zIndex);
 }

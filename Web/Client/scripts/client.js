@@ -25,7 +25,7 @@ function loadAllNodes(lat, lng) {
     // Only query server if data is older than timeout OR if map has moved too much
     if ((time - lastQuery > timeout) || distance > 0.5) {
         
-        $.get("/API/nodes/{0}/{1}/1".format(lat,lng), function(response) {
+        $.get("/API/nodes/{0}/{1}/1.0".format(lat,lng), function(response) {
             var items = [];
             response = $.parseJSON(response);
             
@@ -45,7 +45,6 @@ function loadAllNodes(lat, lng) {
             lastQuery = new Date().getTime();
             lastPosition.lat = lat
             lastPosition.lng = lng;
-            
         }).fail(function() {
             showMessage("error", "Error communicating with server.");
         });
