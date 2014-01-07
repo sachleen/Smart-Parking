@@ -1,2 +1,3 @@
-Web/API/vendor/
+Web/API/vendor/*
+!Web/API/vendor/.htaccess
 Web/API/config.php
