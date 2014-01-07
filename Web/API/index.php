@@ -1,30 +1,14 @@
 <?php
 
 require 'vendor/autoload.php';
+require 'config.php';
 
 $app = new \Slim\Slim();
 
-$app->config('mode', getenv('APP_MODE'));
+$app->config('debug', getenv('APP_MODE') == "development" ? TRUE : FALSE);
 
-$app->config('debug', false);
+ORM::configure($connectionSettings);
 
-// Only invoked if mode is "production"
-$app->configureMode('production', function () use ($app) {
-    ORM::configure(array(
-        'connection_string' => 'mysql:host=localhost;dbname=sacramh7_parking',
-        'username' => 'sacramh7_parking',
-        'password' => '20=1=c9)xWSJ'
-    ));
-});
-
-// Only invoked if mode is "development"
-$app->configureMode('development', function () use ($app) {
-    ORM::configure(array(
-        'connection_string' => 'mysql:host=localhost;dbname=parking',
-        'username' => 'root',
-        'password' => 'admin'
-    ));
-});
 
 /*
     Parameter       Description
@@ -43,21 +27,14 @@ function sendResponse($success, $error_message) {
 
 $app->get('/nodes/:lat/:lng/:distance', function ($lat, $lng, $distance) {
     
-    $nodes = ORM::for_table('nodes')->raw_query("
-    SELECT
-      id, lat, lng, total, available, (
-        3959 * acos (
-          cos ( radians($lat) )
-          * cos( radians( lat ) )
-          * cos( radians( lng ) - radians($lng) )
-          + sin ( radians($lat) )
-          * sin( radians( lat ) )
-        )
-      ) AS distance
-    FROM nodes
-    HAVING distance < $distance
-    ORDER BY distance
-    ")->find_many();
+    $nodes = ORM::for_table('nodes')->select('id')
+                                    ->select('lat')
+                                    ->select('lng')
+                                    ->select('total')
+                                    ->select('available')
+                                    ->select_expr("calcDistance($lat, $lng, lat, lng)", 'distance')
+                                    ->having_lt('distance', $distance)
+                                    ->find_many();
     
     $nodes_arr = array();
     foreach ($nodes as $n) {
