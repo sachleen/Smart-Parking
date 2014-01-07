@@ -22,10 +22,8 @@ function initialize() {
     
     map = new google.maps.Map(document.getElementById("map-canvas"), properties);
     
-    google.maps.event.addListener(map, 'dragend', function() {
-        var center = map.getBounds().getCenter();
-        loadAllNodes(center.lat(), center.lng());
-    });
+    google.maps.event.addListener(map, 'dragend', centerChanged);
+    google.maps.event.addListener(map, 'zoom_changed', centerChanged);
     
     centerMap();
     
@@ -54,6 +52,12 @@ function centerMap() {
             loadAllNodes(position.coords.latitude, position.coords.longitude);
         });
     }
+}
+
+function centerChanged() {
+    console.log("CC");
+    var center = map.getBounds().getCenter();
+    loadAllNodes(center.lat(), center.lng());
 }
 
 /*
