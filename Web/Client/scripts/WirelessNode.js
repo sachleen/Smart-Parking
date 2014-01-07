@@ -4,13 +4,13 @@
     id          ID of the Node
     latLng      Position to place the marker on the map
     spots       Number of parking spaces connected to this node
-    avail       Number of parking spaces available or "empty"
+    available   Number of parking spaces available or "empty"
 */
-function WirelessNode(id, latLng, spots, avail) {
+function WirelessNode(id, latLng, spots, available) {
     this.id = id;
     this.latLng = latLng;
     this.spots = spots;
-    this.avail = avail
+    this.available = available
     this.mapMarker = null;
     
     this.dirty = false;

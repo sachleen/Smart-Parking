@@ -22,6 +22,11 @@ function initialize() {
     
     map = new google.maps.Map(document.getElementById("map-canvas"), properties);
     
+    google.maps.event.addListener(map, 'dragend', function() {
+        var center = map.getBounds().getCenter();
+        loadAllNodes(center.lat(), center.lng());
+    });
+    
     centerMap();
 }
 
@@ -34,6 +39,7 @@ function centerMap() {
         navigator.geolocation.getCurrentPosition(function (position) {
             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(initialLocation);
+            loadAllNodes(position.coords.latitude, position.coords.longitude);
         });
     }
 }
@@ -46,7 +52,7 @@ function centerMap() {
 */
 function addMarker(Node) {
     // Marker properties
-    icon = Node.spots > 5 ? 5 : Node.spots
+    var icon = Node.available > 5 ? 5 : Node.available
     var marker = new google.maps.Marker({
         position: Node.latLng,
         map: map,
@@ -56,4 +62,9 @@ function addMarker(Node) {
 
     Node.mapMarker = marker;
     Node.attachMapEvents();
+}
+
+function updateMarker(Node) {
+    var icon = Node.available > 5 ? 5 : Node.available;
+    Node.mapMarker.setIcon('images/'+icon+'.png');
 }

@@ -24,6 +24,42 @@ function sendResponse($success, $error_message) {
     echo json_encode($response);
 }
 
+$app->get('/nodes/:lat/:lng/:distance', function ($lat, $lng, $distance) {
+    
+    $nodes = ORM::for_table('nodes')->raw_query("
+    SELECT
+      id, lat, lng, total, available, (
+        3959 * acos (
+          cos ( radians($lat) )
+          * cos( radians( lat ) )
+          * cos( radians( lng ) - radians($lng) )
+          + sin ( radians($lat) )
+          * sin( radians( lat ) )
+        )
+      ) AS distance
+    FROM nodes
+    HAVING distance < $distance
+    ORDER BY distance
+    ")->find_many();
+    
+    $nodes_arr = array();
+    foreach ($nodes as $n) {
+        array_push($nodes_arr,
+            array("id"        => $n->id,
+                  "lat"       => $n->lat,
+                  "lng"       => $n->lng,
+                  "total"     => $n->total,
+                  "available" => $n->available,
+                  "distance"  => $n->distance
+            )
+        );
+    }
+    echo json_encode($nodes_arr);
+})->conditions(array(
+    'lat' => '-?\d+\.?\d*',
+    'lng' => '-?\d+\.?\d*',
+    'distance' => '\d+\.?\d*',
+));
 
 $app->get('/nodes/all', function () {
     $nodes = ORM::for_table('nodes')->select('id')
