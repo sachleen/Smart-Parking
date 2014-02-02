@@ -1,3 +1,16 @@
 Web/API/vendor/*
 !Web/API/vendor/.htaccess
 Web/API/config.php
+
+# Backsups
+Schematics/*/*.b#*
+Schematics/*/*.s#*
+# Gerbers
+Schematics/*/*.cmp
+Schematics/*/*.drd
+Schematics/*/*.dri
+Schematics/*/*.gpi
+Schematics/*/*.plc
+Schematics/*/*.sol
+Schematics/*/*.stc
+Schematics/*/*.sts
