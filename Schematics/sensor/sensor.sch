@@ -2062,7 +2062,7 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <part name="ATMEGA328P" library="SparkFun-DigitalIC" deviceset="ATMEGA328_SMT" device="" value="ATMEGA328P"/>
 <part name="MAX485" library="Maxim_By_element14_Batch_1" deviceset="MAX485CSA+" device=""/>
 <part name="ISP" library="adafruit" deviceset="AVRISP" device="-6"/>
-<part name="Y1" library="SparkFun-FreqCtrl" deviceset="RESONATOR" device="PTH"/>
+<part name="Y1" library="SparkFun-FreqCtrl" deviceset="RESONATOR" device="PTH" value="16MHz"/>
 <part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND3" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
@@ -2094,7 +2094,7 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <instance part="MAX485" gate="A" x="165.1" y="111.76"/>
 <instance part="ISP" gate="G$1" x="104.14" y="60.96"/>
 <instance part="Y1" gate="G$1" x="22.86" y="91.44" rot="R270"/>
-<instance part="GND1" gate="1" x="15.24" y="86.36"/>
+<instance part="GND1" gate="1" x="10.16" y="88.9"/>
 <instance part="GND2" gate="1" x="147.32" y="96.52"/>
 <instance part="GND3" gate="1" x="119.38" y="55.88"/>
 <instance part="GND4" gate="1" x="22.86" y="58.42"/>
@@ -2120,7 +2120,7 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <segment>
 <pinref part="Y1" gate="G$1" pin="2"/>
 <pinref part="GND1" gate="1" pin="GND"/>
-<wire x1="15.24" y1="91.44" x2="15.24" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="15.24" y1="91.44" x2="10.16" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="MAX485" gate="A" pin="GND"/>
