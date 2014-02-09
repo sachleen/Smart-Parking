@@ -54,8 +54,11 @@ function centerMap() {
     }
 }
 
+/*
+    Fires whenever the center of the map has changed.
+    Triggers an update of the nodes displayed on the map.
+*/
 function centerChanged() {
-    console.log("CC");
     var center = map.getBounds().getCenter();
     loadAllNodes(center.lat(), center.lng());
 }

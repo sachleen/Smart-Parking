@@ -6,7 +6,7 @@ var lastPosition = {};
 var timeout = 10000;
 
 /*
-    Loads all nodes from database on to the map
+    Loads all nodes within the boundaries from database on to the map
 */
 function loadAllNodes(lat, lng) {
     var time = new Date().getTime();
@@ -22,7 +22,6 @@ function loadAllNodes(lat, lng) {
     
     // Only query server if data is older than timeout OR if map has moved too much
     if ((time - lastQuery > timeout) || distance > 0.5) {
-        
         $.get(BASE_URL + "/API/nodes/{0}/{1}/1.0".format(lat,lng), function(response) {
             var items = [];
             response = $.parseJSON(response);
