@@ -19,7 +19,7 @@ String.prototype.format = function() {
 */
 function parseResponse(response, successMessage) {
     parsed = JSON.parse(response);
-    if (parsed.success = "TRUE") {
+    if (parsed.success == "TRUE") {
         showMessage("success", successMessage);
         
     } else {
