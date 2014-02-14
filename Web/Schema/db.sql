@@ -35,6 +35,18 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `api_keys`
+--
+
+CREATE TABLE IF NOT EXISTS `api_keys` (
+  `key` varchar(32) NOT NULL,
+  `actions` int(11) NOT NULL DEFAULT '1',
+  UNIQUE KEY `key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nodes`
 --
 
