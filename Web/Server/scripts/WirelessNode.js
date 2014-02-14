@@ -38,7 +38,8 @@ WirelessNode.prototype.save = function() {
         id: this.id,
         lat: this.latLng.lat(),
         lng: this.latLng.lng(),
-        total: this.spots
+        total: this.spots,
+        api_key: 'c51088dad22ea00758e0bdcc2a29bf5c'
     }, function(response) {
         parseResponse(response, "Node Saved!");
     }).fail(function() {
@@ -50,7 +51,10 @@ WirelessNode.prototype.save = function() {
     Deletes Node from map and database
 */
 WirelessNode.prototype.delete = function() {
-    $.post(BASE_URL + "/API/nodes/delete", { id: this.id }, function(response) {
+    $.post(BASE_URL + "/API/nodes/delete", {
+        id: this.id,
+        api_key: 'c51088dad22ea00758e0bdcc2a29bf5c'
+    }, function(response) {
         parseResponse(response, "Node Deleted!");
     }).fail(function() {
         showMessage("error", "Error communicating with server.");

@@ -156,6 +156,7 @@ $app->post('/nodes/save', function () use($app) {
         $node->total = $total;
         
         $node->save();
+        sendResponse(true, '');
     } else if ($available != null) {
         
         if (!authAPI($apiKey, 'update_available_count')) {
