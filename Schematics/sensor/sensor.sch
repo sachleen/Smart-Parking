@@ -2364,12 +2364,14 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <segment>
 <pinref part="PROPPLUG" gate="G$1" pin="3"/>
 <wire x1="73.66" y1="96.52" x2="96.52" y2="96.52" width="0.1524" layer="91"/>
+<pinref part="ATMEGA328P" gate="G$1" pin="PD0(RXD)"/>
 </segment>
 </net>
 <net name="N$9" class="0">
 <segment>
 <pinref part="PROPPLUG" gate="G$1" pin="4"/>
 <wire x1="73.66" y1="93.98" x2="96.52" y2="93.98" width="0.1524" layer="91"/>
+<pinref part="ATMEGA328P" gate="G$1" pin="PD1(TXD)"/>
 </segment>
 </net>
 </nets>
