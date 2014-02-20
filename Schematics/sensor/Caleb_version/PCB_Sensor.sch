@@ -67,12 +67,51 @@
 <layer number="107" name="Crop" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="108" name="tplace-old" color="10" fill="1" visible="yes" active="yes"/>
 <layer number="109" name="ref-old" color="11" fill="1" visible="yes" active="yes"/>
+<layer number="111" name="tGTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="112" name="bGTest" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="yes" active="yes"/>
+<layer number="117" name="mPads" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="118" name="mVias" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="119" name="mUnrouted" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="120" name="mDimension" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="123" name="mtOrigins" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="124" name="mbOrigins" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="125" name="_tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="126" name="_bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="127" name="mtValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="128" name="mbValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="129" name="mtStop" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="130" name="mbStop" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="131" name="prix" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="132" name="test" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="133" name="mtFinish" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="134" name="mbFinish" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="135" name="mtGlue" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="136" name="mbGlue" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="137" name="mtTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="138" name="mbTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="139" name="mtKeepout" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="140" name="mbKeepout" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="141" name="mtRestrict" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="142" name="mbRestrict" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="143" name="mvRestrict" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="145" name="mHoles" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="146" name="mMilling" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="147" name="mMeasures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="148" name="mDocument" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="149" name="mReference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="150" name="Notes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="152" name="mbDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="191" name="mNets" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="192" name="mBusses" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="193" name="mPins" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="194" name="mSymbols" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="195" name="mNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="196" name="mValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="200" name="200bmp" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="201" name="201bmp" color="2" fill="10" visible="yes" active="yes"/>
@@ -102,6 +141,7 @@
 <layer number="250" name="Descript" color="3" fill="1" visible="no" active="no"/>
 <layer number="251" name="SMDround" color="12" fill="11" visible="no" active="no"/>
 <layer number="254" name="cooling" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="255" name="PART_" color="7" fill="1" visible="yes" active="yes"/>
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
@@ -1816,6 +1856,294 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </deviceset>
 </devicesets>
 </library>
+<library name="Protofusion">
+<packages>
+<package name="POGOPROG-BACKMOUNT">
+<pad name="1" x="0" y="8.9408" drill="0.7"/>
+<pad name="2" x="0" y="7.6708" drill="0.7"/>
+<pad name="3" x="0" y="6.4008" drill="0.7"/>
+<pad name="4" x="0" y="5.1308" drill="0.7"/>
+<pad name="5" x="0" y="3.8608" drill="0.7"/>
+<pad name="6" x="0" y="2.5908" drill="0.7"/>
+<pad name="7" x="0" y="1.3208" drill="0.7"/>
+<pad name="8" x="0" y="0.0508" drill="0.7"/>
+</package>
+<package name="POGOPROG-CONN">
+<description>Standard pogo pin programming header with two alignment holes. Small SMD pads.</description>
+<smd name="3" x="0" y="1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="2" x="0" y="2.54" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="4" x="0" y="0" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="1" x="0" y="3.81" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="5" x="0" y="-1.27" dx="0.889" dy="0.8128" layer="1"/>
+<hole x="0" y="5.08" drill="0.508"/>
+<hole x="0" y="-3.81" drill="0.508"/>
+<wire x1="-0.635" y1="5.715" x2="0.635" y2="5.715" width="0.127" layer="21"/>
+<wire x1="0.635" y1="5.715" x2="0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="0.635" y1="-4.445" x2="-0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="-0.635" y1="-4.445" x2="-0.635" y2="5.715" width="0.127" layer="21"/>
+<smd name="6" x="0" y="-2.54" dx="0.889" dy="0.8128" layer="1"/>
+<polygon width="0.127" layer="21">
+<vertex x="-0.635" y="3.175"/>
+<vertex x="0.635" y="3.175"/>
+<vertex x="0.635" y="5.715"/>
+<vertex x="-0.635" y="5.715"/>
+</polygon>
+<text x="-1.27" y="6.35" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-6.35" size="1.27" layer="27">&gt;VALUE</text>
+<circle x="0" y="5.08" radius="0.635" width="0" layer="29"/>
+<circle x="0" y="-3.81" radius="0.635" width="0" layer="29"/>
+<circle x="0" y="-3.81" radius="0.635" width="0" layer="30"/>
+<circle x="0" y="5.08" radius="0.635" width="0" layer="30"/>
+</package>
+<package name="POGOPROG-CONN-0H">
+<description>No holes, 2 vias, pogo pin programming header.</description>
+<smd name="3" x="0" y="1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="2" x="0" y="2.54" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="4" x="0" y="0" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="5" x="0" y="-1.27" dx="0.889" dy="0.8128" layer="1"/>
+<wire x1="-0.635" y1="4.445" x2="0.635" y2="4.445" width="0.127" layer="21"/>
+<wire x1="0.635" y1="4.445" x2="0.635" y2="-3.175" width="0.127" layer="21"/>
+<wire x1="0.635" y1="-3.175" x2="-0.635" y2="-3.175" width="0.127" layer="21"/>
+<wire x1="-0.635" y1="-3.175" x2="-0.635" y2="4.445" width="0.127" layer="21"/>
+<polygon width="0.127" layer="21">
+<vertex x="-0.635" y="1.905"/>
+<vertex x="0.635" y="1.905"/>
+<vertex x="0.635" y="4.445"/>
+<vertex x="-0.635" y="4.445"/>
+</polygon>
+<text x="-1.27" y="5.08" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-5.08" size="1.27" layer="27">&gt;VALUE</text>
+<pad name="1" x="0" y="3.81" drill="0.4572"/>
+<pad name="6" x="0" y="-2.54" drill="0.4572"/>
+</package>
+<package name="POGOPROG-CONN-1H">
+<description>Standard pogo pin programming header with ONE alignment hole. Small SMD pads.</description>
+<smd name="3" x="0" y="0" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="2" x="0" y="1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="4" x="0" y="-1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="1" x="0" y="2.54" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="5" x="0" y="-2.54" dx="0.889" dy="0.8128" layer="1"/>
+<hole x="0" y="3.81" drill="0.5"/>
+<wire x1="-0.635" y1="4.445" x2="0.635" y2="4.445" width="0.127" layer="21"/>
+<wire x1="0.635" y1="4.445" x2="0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="0.635" y1="-4.445" x2="-0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="-0.635" y1="-4.445" x2="-0.635" y2="4.445" width="0.127" layer="21"/>
+<smd name="6" x="0" y="-3.81" dx="0.889" dy="0.8128" layer="1"/>
+<polygon width="0.127" layer="21">
+<vertex x="-0.635" y="1.905"/>
+<vertex x="0.635" y="1.905"/>
+<vertex x="0.635" y="4.445"/>
+<vertex x="-0.635" y="4.445"/>
+</polygon>
+<text x="-1.27" y="5.08" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-6.35" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="POGOPROG-CONN-OH-SMALLERVIAS">
+<description>No holes, 2 vias, pogo pin programming header. With smaller vias.</description>
+<smd name="3" x="0" y="0" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="2" x="0" y="1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="4" x="0" y="-1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="5" x="0" y="-2.54" dx="0.889" dy="0.8128" layer="1"/>
+<wire x1="-0.635" y1="3.175" x2="0.635" y2="3.175" width="0.127" layer="21"/>
+<wire x1="0.635" y1="3.175" x2="0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="0.635" y1="-4.445" x2="-0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="-0.635" y1="-4.445" x2="-0.635" y2="3.175" width="0.127" layer="21"/>
+<polygon width="0.127" layer="21">
+<vertex x="-0.635" y="0.635"/>
+<vertex x="0.635" y="0.635"/>
+<vertex x="0.635" y="3.175"/>
+<vertex x="-0.635" y="3.175"/>
+</polygon>
+<text x="-1.27" y="3.81" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-6.35" size="1.27" layer="27">&gt;VALUE</text>
+<pad name="1" x="0" y="2.54" drill="0.381"/>
+<pad name="6" x="0" y="-3.81" drill="0.381"/>
+</package>
+<package name="POGOPROG-CONN-W">
+<description>Standard pogo pin programming header with two alignment holes. WIDE smd pads.</description>
+<smd name="3" x="0" y="0" dx="1.143" dy="0.8128" layer="1"/>
+<smd name="2" x="0" y="1.27" dx="1.143" dy="0.8128" layer="1"/>
+<smd name="4" x="0" y="-1.27" dx="1.143" dy="0.8128" layer="1"/>
+<smd name="1" x="0" y="2.54" dx="1.143" dy="0.8128" layer="1"/>
+<smd name="5" x="0" y="-2.54" dx="1.143" dy="0.8128" layer="1"/>
+<hole x="0" y="3.81" drill="0.5"/>
+<hole x="0" y="-5.08" drill="0.5"/>
+<wire x1="-0.635" y1="4.445" x2="0.635" y2="4.445" width="0.127" layer="21"/>
+<wire x1="0.635" y1="4.445" x2="0.635" y2="-5.715" width="0.127" layer="21"/>
+<wire x1="0.635" y1="-5.715" x2="-0.635" y2="-5.715" width="0.127" layer="21"/>
+<wire x1="-0.635" y1="-5.715" x2="-0.635" y2="4.445" width="0.127" layer="21"/>
+<smd name="6" x="0" y="-3.81" dx="1.143" dy="0.8128" layer="1"/>
+<polygon width="0.127" layer="21">
+<vertex x="-0.635" y="1.905"/>
+<vertex x="0.635" y="1.905"/>
+<vertex x="0.635" y="4.445"/>
+<vertex x="-0.635" y="4.445"/>
+</polygon>
+<text x="-1.27" y="5.08" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-7.62" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="POGOPROG-CONN-OH-1V">
+<description>No holes, 1 via, pogo pin programming header.</description>
+<smd name="3" x="0" y="0" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="2" x="0" y="1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="4" x="0" y="-1.27" dx="0.889" dy="0.8128" layer="1"/>
+<smd name="5" x="0" y="-2.54" dx="0.889" dy="0.8128" layer="1"/>
+<wire x1="-0.635" y1="3.175" x2="0.635" y2="3.175" width="0.127" layer="21"/>
+<wire x1="0.635" y1="3.175" x2="0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="0.635" y1="-4.445" x2="-0.635" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="-0.635" y1="-4.445" x2="-0.635" y2="3.175" width="0.127" layer="21"/>
+<polygon width="0.127" layer="21">
+<vertex x="-0.635" y="0.635"/>
+<vertex x="0.635" y="0.635"/>
+<vertex x="0.635" y="3.175"/>
+<vertex x="-0.635" y="3.175"/>
+</polygon>
+<text x="-1.27" y="3.81" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-6.35" size="1.27" layer="27">&gt;VALUE</text>
+<pad name="1" x="0" y="2.54" drill="0.4572"/>
+<smd name="6" x="0" y="-3.81" dx="0.889" dy="0.8128" layer="1"/>
+</package>
+</packages>
+<symbols>
+<symbol name="POGOPROG-BACKBOARD">
+<pin name="MOSI" x="-15.24" y="5.08" length="middle"/>
+<pin name="MISO" x="-15.24" y="2.54" length="middle"/>
+<pin name="SCK" x="-15.24" y="0" length="middle"/>
+<pin name="\RST" x="-15.24" y="-2.54" length="middle"/>
+<pin name="VCC" x="-15.24" y="-5.08" length="middle"/>
+<pin name="GND" x="-15.24" y="-7.62" length="middle"/>
+<pin name="BODY1" x="15.24" y="5.08" length="middle" rot="R180"/>
+<pin name="BODY2" x="15.24" y="2.54" length="middle" rot="R180"/>
+<wire x1="-10.16" y1="-10.16" x2="-10.16" y2="7.62" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="7.62" x2="10.16" y2="7.62" width="0.254" layer="94"/>
+<wire x1="10.16" y1="7.62" x2="10.16" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-10.16" x2="-10.16" y2="-10.16" width="0.254" layer="94"/>
+<text x="-10.16" y="10.16" size="1.778" layer="95" rot="MR180">&gt;NAME</text>
+<text x="-10.16" y="-12.7" size="1.778" layer="95">&gt;VALUE</text>
+</symbol>
+<symbol name="POGOPROG-CONN">
+<pin name="MOSI" x="-2.54" y="-5.08" length="short"/>
+<pin name="MISO" x="-2.54" y="-2.54" length="short"/>
+<pin name="SCK" x="-2.54" y="0" length="short"/>
+<pin name="\RST" x="-2.54" y="-7.62" length="short"/>
+<pin name="VCC" x="-2.54" y="5.08" length="short"/>
+<pin name="GND" x="-2.54" y="2.54" length="short"/>
+<text x="0" y="7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="0" y="-10.16" size="1.778" layer="95" rot="MR180">&gt;VALUE</text>
+<rectangle x1="0" y1="-8.89" x2="1.27" y2="6.35" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="POGOPIN-BACKBOARD">
+<gates>
+<gate name="G$1" symbol="POGOPROG-BACKBOARD" x="-7.62" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="POGOPROG-BACKMOUNT">
+<connects>
+<connect gate="G$1" pin="BODY1" pad="1"/>
+<connect gate="G$1" pin="BODY2" pad="8"/>
+<connect gate="G$1" pin="GND" pad="3"/>
+<connect gate="G$1" pin="MISO" pad="5"/>
+<connect gate="G$1" pin="MOSI" pad="6"/>
+<connect gate="G$1" pin="SCK" pad="4"/>
+<connect gate="G$1" pin="VCC" pad="2"/>
+<connect gate="G$1" pin="\RST" pad="7"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="POGOPIN-CONN">
+<description>Protofusion custom pogo pin programming header</description>
+<gates>
+<gate name="J" symbol="POGOPROG-CONN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="STANDARD" package="POGOPROG-CONN">
+<connects>
+<connect gate="J" pin="GND" pad="5"/>
+<connect gate="J" pin="MISO" pad="3"/>
+<connect gate="J" pin="MOSI" pad="2"/>
+<connect gate="J" pin="SCK" pad="4"/>
+<connect gate="J" pin="VCC" pad="6"/>
+<connect gate="J" pin="\RST" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="WITHVIAS" package="POGOPROG-CONN-0H">
+<connects>
+<connect gate="J" pin="GND" pad="5"/>
+<connect gate="J" pin="MISO" pad="3"/>
+<connect gate="J" pin="MOSI" pad="2"/>
+<connect gate="J" pin="SCK" pad="4"/>
+<connect gate="J" pin="VCC" pad="6"/>
+<connect gate="J" pin="\RST" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="ONEHOLE" package="POGOPROG-CONN-1H">
+<connects>
+<connect gate="J" pin="GND" pad="5"/>
+<connect gate="J" pin="MISO" pad="3"/>
+<connect gate="J" pin="MOSI" pad="2"/>
+<connect gate="J" pin="SCK" pad="4"/>
+<connect gate="J" pin="VCC" pad="6"/>
+<connect gate="J" pin="\RST" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="WITHVIAS-SMV" package="POGOPROG-CONN-OH-SMALLERVIAS">
+<connects>
+<connect gate="J" pin="GND" pad="5"/>
+<connect gate="J" pin="MISO" pad="3"/>
+<connect gate="J" pin="MOSI" pad="2"/>
+<connect gate="J" pin="SCK" pad="4"/>
+<connect gate="J" pin="VCC" pad="6"/>
+<connect gate="J" pin="\RST" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="WIDE" package="POGOPROG-CONN-W">
+<connects>
+<connect gate="J" pin="GND" pad="5"/>
+<connect gate="J" pin="MISO" pad="3"/>
+<connect gate="J" pin="MOSI" pad="2"/>
+<connect gate="J" pin="SCK" pad="4"/>
+<connect gate="J" pin="VCC" pad="6"/>
+<connect gate="J" pin="\RST" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="WITHVIAS-1V" package="POGOPROG-CONN-OH-1V">
+<connects>
+<connect gate="J" pin="GND" pad="5"/>
+<connect gate="J" pin="MISO" pad="3"/>
+<connect gate="J" pin="MOSI" pad="2"/>
+<connect gate="J" pin="SCK" pad="4"/>
+<connect gate="J" pin="VCC" pad="6"/>
+<connect gate="J" pin="\RST" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1844,16 +2172,14 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="GNDOUT" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
 <part name="RX" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
 <part name="TX" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
-<part name="D13" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
-<part name="D12" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
-<part name="RST" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
-<part name="D11" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
-<part name="VCC" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
-<part name="GND" library="SparkFun-Connectors" deviceset="M01" device="SMD"/>
 <part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND3" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND4" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND5" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="U$1" library="Protofusion" deviceset="POGOPIN-BACKBOARD" device=""/>
+<part name="U$2" library="Protofusion" deviceset="POGOPIN-CONN" device="STANDARD"/>
+<part name="JP1" library="SparkFun-Connectors" deviceset="M01" device="POGOPIN_HOLE_0.58"/>
+<part name="JP2" library="SparkFun-Connectors" deviceset="M01" device="POGOPIN_HOLE_0.58"/>
 </parts>
 <sheets>
 <sheet>
@@ -1878,16 +2204,14 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="GNDOUT" gate="G$1" x="0" y="134.62"/>
 <instance part="RX" gate="G$1" x="-2.54" y="119.38"/>
 <instance part="TX" gate="G$1" x="-2.54" y="109.22"/>
-<instance part="D13" gate="G$1" x="78.74" y="96.52" rot="R180"/>
-<instance part="D12" gate="G$1" x="78.74" y="106.68" rot="R180"/>
-<instance part="RST" gate="G$1" x="78.74" y="86.36" rot="R180"/>
-<instance part="D11" gate="G$1" x="86.36" y="96.52"/>
-<instance part="VCC" gate="G$1" x="86.36" y="106.68"/>
-<instance part="GND" gate="G$1" x="86.36" y="86.36"/>
 <instance part="GND2" gate="1" x="152.4" y="111.76"/>
 <instance part="GND3" gate="1" x="27.94" y="132.08"/>
 <instance part="GND4" gate="1" x="10.16" y="132.08"/>
 <instance part="GND5" gate="1" x="43.18" y="96.52"/>
+<instance part="U$1" gate="G$1" x="20.32" y="71.12"/>
+<instance part="U$2" gate="J" x="73.66" y="101.6"/>
+<instance part="JP1" gate="G$1" x="114.3" y="99.06"/>
+<instance part="JP2" gate="G$1" x="114.3" y="88.9"/>
 </instances>
 <busses>
 </busses>
@@ -1920,9 +2244,9 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="GND5" gate="1" pin="GND"/>
 </segment>
 <segment>
-<wire x1="93.98" y1="86.36" x2="101.6" y2="86.36" width="0.1524" layer="91"/>
-<label x="96.52" y="86.36" size="1.778" layer="95"/>
-<pinref part="GND" gate="G$1" pin="1"/>
+<wire x1="63.5" y1="104.14" x2="71.12" y2="104.14" width="0.1524" layer="91"/>
+<label x="63.5" y="104.14" size="1.778" layer="95"/>
+<pinref part="U$2" gate="J" pin="GND"/>
 </segment>
 <segment>
 <wire x1="7.62" y1="134.62" x2="10.16" y2="134.62" width="0.1524" layer="91"/>
@@ -1966,9 +2290,9 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="VCCIN" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<wire x1="93.98" y1="106.68" x2="101.6" y2="106.68" width="0.1524" layer="91"/>
-<label x="96.52" y="106.68" size="1.778" layer="95"/>
-<pinref part="VCC" gate="G$1" pin="1"/>
+<wire x1="63.5" y1="106.68" x2="71.12" y2="106.68" width="0.1524" layer="91"/>
+<label x="63.5" y="106.68" size="1.778" layer="95"/>
+<pinref part="U$2" gate="J" pin="VCC"/>
 </segment>
 <segment>
 <pinref part="R1" gate="G$1" pin="1"/>
@@ -2115,9 +2439,9 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="R1" gate="G$1" pin="2"/>
 </segment>
 <segment>
-<wire x1="71.12" y1="86.36" x2="63.5" y2="86.36" width="0.1524" layer="91"/>
-<label x="63.5" y="86.36" size="1.778" layer="95"/>
-<pinref part="RST" gate="G$1" pin="1"/>
+<wire x1="71.12" y1="93.98" x2="63.5" y2="93.98" width="0.1524" layer="91"/>
+<label x="63.5" y="93.98" size="1.778" layer="95"/>
+<pinref part="U$2" gate="J" pin="\RST"/>
 </segment>
 </net>
 <net name="A4SDA" class="0">
@@ -2151,9 +2475,9 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="99.06" y="116.84" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="71.12" y1="96.52" x2="63.5" y2="96.52" width="0.1524" layer="91"/>
-<label x="63.5" y="96.52" size="1.778" layer="95"/>
-<pinref part="D13" gate="G$1" pin="1"/>
+<wire x1="71.12" y1="101.6" x2="63.5" y2="101.6" width="0.1524" layer="91"/>
+<label x="63.5" y="101.6" size="1.778" layer="95"/>
+<pinref part="U$2" gate="J" pin="SCK"/>
 </segment>
 </net>
 <net name="D12" class="0">
@@ -2163,9 +2487,9 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="99.06" y="119.38" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="71.12" y1="106.68" x2="63.5" y2="106.68" width="0.1524" layer="91"/>
-<label x="63.5" y="106.68" size="1.778" layer="95"/>
-<pinref part="D12" gate="G$1" pin="1"/>
+<wire x1="71.12" y1="99.06" x2="63.5" y2="99.06" width="0.1524" layer="91"/>
+<label x="63.5" y="99.06" size="1.778" layer="95"/>
+<pinref part="U$2" gate="J" pin="MISO"/>
 </segment>
 </net>
 <net name="D11" class="0">
@@ -2175,9 +2499,9 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="99.06" y="121.92" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="93.98" y1="96.52" x2="101.6" y2="96.52" width="0.1524" layer="91"/>
-<label x="96.52" y="96.52" size="1.778" layer="95"/>
-<pinref part="D11" gate="G$1" pin="1"/>
+<wire x1="63.5" y1="96.52" x2="71.12" y2="96.52" width="0.1524" layer="91"/>
+<label x="63.5" y="96.52" size="1.778" layer="95"/>
+<pinref part="U$2" gate="J" pin="MOSI"/>
 </segment>
 </net>
 </nets>
