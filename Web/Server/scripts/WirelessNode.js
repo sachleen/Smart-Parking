@@ -34,12 +34,12 @@ WirelessNode.findById = function(id) {
     Saves Node information to database
 */
 WirelessNode.prototype.save = function() {
-    $.post(BASE_URL + "/API/nodes/save", {
+    $.post(BASE_URL + "nodes/save", {
         id: this.id,
         lat: this.latLng.lat(),
         lng: this.latLng.lng(),
         total: this.spots,
-        api_key: 'c51088dad22ea00758e0bdcc2a29bf5c'
+        api_key: API_KEY
     }, function(response) {
         parseResponse(response, "Node Saved!");
     }).fail(function() {
@@ -51,9 +51,9 @@ WirelessNode.prototype.save = function() {
     Deletes Node from map and database
 */
 WirelessNode.prototype.delete = function() {
-    $.post(BASE_URL + "/API/nodes/delete", {
+    $.post(BASE_URL + "nodes/delete", {
         id: this.id,
-        api_key: 'c51088dad22ea00758e0bdcc2a29bf5c'
+        api_key: API_KEY
     }, function(response) {
         parseResponse(response, "Node Deleted!");
     }).fail(function() {

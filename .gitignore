@@ -1,6 +1,8 @@
 Web/API/vendor/*
 !Web/API/vendor/.htaccess
 Web/API/config.php
+Web/Client/scripts/config.js
+Web/Server/scripts/config.js
 
 # Backsups
 Schematics/*/*.b#*
