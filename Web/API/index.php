@@ -36,8 +36,7 @@ function sendResponse($success, $error_message) {
     key             API Key
     action          The action the app is trying to perform:
                         update_available_count
-                        create_or_update
-                        delete
+                        create_update_delete
 */
 function authAPI($key, $action) {
     $checkKey = ORM::for_table('api_keys')->where('key', $key)->find_one();
@@ -48,18 +47,15 @@ function authAPI($key, $action) {
     
     /*
         Bit 0 (LSB) - update_available_count
-        Bit 1       - create_or_update
-        Bit 2       - delete
+        Bit 1       - create_update_delete
     */
     $actions = $checkKey->actions;
     
     switch($action) {
         case 'update_available_count':
             return $actions & 1;
-        case 'create_or_update':
+        case 'create_update_delete':
             return $actions & 2;
-        case 'delete':
-            return $actions & 4;
         default:
             return 0;
     }
@@ -131,6 +127,8 @@ $app->post('/nodes/save', function () use($app) {
         return;
     }
     
+    $id = strtoupper($id);
+    
     /*
         If lat, lng, and total are all set there are two possibilities:
             Create a new node
@@ -139,7 +137,7 @@ $app->post('/nodes/save', function () use($app) {
     */
     if ($lat != null && $lng != null && $total != null) {
         
-        if (!authAPI($apiKey, 'create_or_update')) {
+        if (!authAPI($apiKey, 'create_update_delete')) {
             sendResponse(false, "API Key Fail");
             return;
         }
@@ -188,11 +186,12 @@ $app->post('/nodes/delete', function () use($app) {
     $id = $app->request->post('id');
     $apiKey = $app->request->post('api_key');
     
-    if (!authAPI($apiKey, 'delete')) {
+    if (!authAPI($apiKey, 'create_update_delete')) {
         sendResponse(false, "API Key Fail");
         return;
     }
     
+    $id = strtoupper($id);
     $node = ORM::for_table('nodes')->find_one($id);
     
     if ($node) {
