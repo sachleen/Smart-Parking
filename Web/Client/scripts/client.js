@@ -20,7 +20,7 @@ function loadAllNodes(lat, lng) {
     
     // Only query server if data is older than timeout OR if map has moved too much
     if ((time - lastQuery > timeout) || distance > 0.5) {
-        $.get(BASE_URL + "/nodes/{0}/{1}/1.0".format(lat,lng), function(response) {
+        $.get(BASE_URL + "nodes/{0}/{1}/1.0".format(lat,lng), function(response) {
             var items = [];
             response = $.parseJSON(response);
             
