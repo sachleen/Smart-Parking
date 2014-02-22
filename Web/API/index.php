@@ -156,6 +156,9 @@ $app->post('/nodes/save', function () use($app) {
         $node->save();
         sendResponse(true, '');
     } else if ($available != null) {
+        /*
+            Update available count
+        */
         
         if (!authAPI($apiKey, 'update_available_count')) {
             sendResponse(false, "API Key Fail");
@@ -175,6 +178,17 @@ $app->post('/nodes/save', function () use($app) {
         
         $node->available = $available;
         $node->save();
+        
+        /*
+            Add this to the history table
+        */
+        $log = ORM::for_table('history')->create();
+
+        $log->node_id = $id;
+        $log->set_expr('updated', 'NOW()'); // date("Y-m-d H:i:s")
+        $log->total = $node->total;
+        $log->available = $available;
+        $log->save();
         
         sendResponse(true, '');
     } else {

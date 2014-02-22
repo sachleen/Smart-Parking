@@ -38,11 +38,50 @@ DELIMITER ;
 -- Table structure for table `api_keys`
 --
 
+DROP TABLE IF EXISTS `api_keys`;
 CREATE TABLE IF NOT EXISTS `api_keys` (
   `key` varchar(32) NOT NULL,
   `actions` int(11) NOT NULL DEFAULT '1',
   UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `api_keys`
+--
+
+INSERT INTO `api_keys` (`key`, `actions`) VALUES
+('c51088dad22ea00758e0bdcc2a29bf5c', 7),
+('e1d1b85eef174d89121da2407f7bb15b', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `history`
+--
+
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE IF NOT EXISTS `history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `node_id` varchar(5) NOT NULL,
+  `updated` datetime NOT NULL,
+  `total` tinyint(4) NOT NULL,
+  `available` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `history`
+--
+
+INSERT INTO `history` (`id`, `node_id`, `updated`, `total`, `available`) VALUES
+(1, 'CCCCC', '2014-02-21 14:59:00', 5, 2),
+(2, 'CCCCC', '2014-02-21 15:00:00', 5, 4),
+(3, 'CCCCC', '2014-02-21 15:01:00', 5, 5),
+(4, 'CCCCC', '2014-02-21 15:02:00', 5, 0),
+(5, 'CCCCC', '2014-02-21 15:03:00', 5, 1),
+(6, 'CCCCC', '2014-02-21 15:04:00', 5, 0),
+(7, 'CCCCC', '2014-02-21 19:08:03', 5, 2),
+(8, 'EEEEE', '2014-02-21 19:08:42', 2, 0);
 
 -- --------------------------------------------------------
 
