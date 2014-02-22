@@ -4,7 +4,7 @@
 */
 API_KEY = "YOUR_KEY_HERE";
 /*
-    Base URL for Smart Parking API including trailing backslash.
+    Base URL for Smart Parking API including trailing slash.
     Example: http://myurl.com/smart-parking/api/
     
 */
