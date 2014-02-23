@@ -44,7 +44,7 @@ function centerMap() {
         navigator.geolocation.getCurrentPosition(function (position) {
             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(initialLocation);
-            loadAllNodes(position.coords.latitude, position.coords.longitude);
+            loadAllNodes(position.coords.latitude, position.coords.longitude, SEARCH_RADIUS);
         });
     }
 }
@@ -55,7 +55,7 @@ function centerMap() {
 */
 function centerChanged() {
     var center = map.getBounds().getCenter();
-    loadAllNodes(center.lat(), center.lng());
+    loadAllNodes(center.lat(), center.lng(), SEARCH_RADIUS);
 }
 
 /*
