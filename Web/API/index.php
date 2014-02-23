@@ -80,8 +80,7 @@ $app->get('/nodes/:lat/:lng/:distance', function ($lat, $lng, $distance) {
                   "lat"       => $n->lat,
                   "lng"       => $n->lng,
                   "total"     => $n->total,
-                  "available" => $n->available,
-                  "distance"  => $n->distance
+                  "available" => $n->available
             )
         );
     }
