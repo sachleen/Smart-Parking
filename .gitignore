@@ -4,6 +4,8 @@ Web/API/config.php
 Web/Client/scripts/config.js
 Web/Server/scripts/config.js
 
+# == Eagle Files ==
+Schematics/*/eagle.epf
 # Backsups
 Schematics/*/*.b#*
 Schematics/*/*.s#*
