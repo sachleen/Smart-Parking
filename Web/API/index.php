@@ -61,6 +61,25 @@ function authAPI($key, $action) {
     }
 }
 
+$app->get('/nodes/:id', function ($id) {
+    
+    $node = ORM::for_table('nodes')->find_one($id);
+    
+    if ($node) {
+        $nodeInfo = array("id"        => $node->id,
+                          "lat"       => $node->lat,
+                          "lng"       => $node->lng,
+                          "total"     => $node->total,
+                          "available" => $node->available
+                         );
+        
+        echo json_encode($nodeInfo);
+    } else {
+        sendResponse(false, "Node does not exist");
+    }
+})->conditions(array(
+    'id' => '[A-Za-z0-9]{5}',
+));
 
 $app->get('/nodes/:lat/:lng/:distance', function ($lat, $lng, $distance) {
     
