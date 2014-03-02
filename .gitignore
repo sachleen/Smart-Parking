@@ -4,17 +4,39 @@ Web/API/config.php
 Web/Client/scripts/config.js
 Web/Server/scripts/config.js
 
-# == Eagle Files ==
-Schematics/*/eagle.epf
-# Backsups
-Schematics/*/*.b#*
-Schematics/*/*.s#*
-# Gerbers
-Schematics/*/*.cmp
-Schematics/*/*.drd
-Schematics/*/*.dri
-Schematics/*/*.gpi
-Schematics/*/*.plc
-Schematics/*/*.sol
-Schematics/*/*.stc
-Schematics/*/*.sts
+# Ignore list for Eagle, a PCB layout tool
+
+# Backup files
+*.s#?
+*.b#?
+*.l#?
+
+# Eagle project file
+# It contains a serial number and references to the file structure
+# on your computer.
+# comment the following line if you want to have your project file included.
+eagle.epf
+
+# CAM files
+*.$$$
+*.cmp
+*.ly2
+*.l15
+*.sol
+*.plc
+*.stc
+*.sts
+*.crc
+*.crs
+
+*.dri
+*.drl
+*.gpi
+*.pls
+
+*.drd
+*.drd.*
+
+*.info
+
+*.eps
