@@ -112,26 +112,26 @@ $app->get('/nodes/:lat/:lng/:distance/', function ($lat, $lng, $distance) {
 /*
     This is only here for testing purposes...
 */
-// $app->get('/nodes/all/', function () {
-    // $nodes = ORM::for_table('nodes')->select('id')
-                                     // ->select('lat')
-                                     // ->select('lng')
-                                     // ->select('total')
-                                     // ->select('available')
-                                     // ->find_many();
-    // $nodes_arr = array();
-    // foreach ($nodes as $n) {
-        // array_push($nodes_arr,
-            // array("id"        => $n->id,
-                  // "lat"       => $n->lat,
-                  // "lng"       => $n->lng,
-                  // "total"     => $n->total,
-                  // "available" => $n->available
-            // )
-        // );
-    // }
-    // echo json_encode($nodes_arr);
-// });
+$app->get('/nodes/all/', function () {
+    $nodes = ORM::for_table('nodes')->select('id')
+                                     ->select('lat')
+                                     ->select('lng')
+                                     ->select('total')
+                                     ->select('available')
+                                     ->find_many();
+    $nodes_arr = array();
+    foreach ($nodes as $n) {
+        array_push($nodes_arr,
+            array("id"        => $n->id,
+                  "lat"       => $n->lat,
+                  "lng"       => $n->lng,
+                  "total"     => $n->total,
+                  "available" => $n->available
+            )
+        );
+    }
+    echo json_encode($nodes_arr);
+});
 
 $app->post('/nodes/save/', function () use($app) {
 
