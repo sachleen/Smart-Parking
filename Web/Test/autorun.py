@@ -16,34 +16,30 @@ try:
         available = int(json['available'])
         total = int(json['total'])
 
-        if available < total:            
-            # Add or subtract one from available spots
-            if available == 0:
-                available = 1
-            elif available == total:
-                available = available - 1
-            else:
-                available = available + random.sample([-1,1],1)[0];
-            
-            print "Node ID: ", randNode
-            print "Available spots Before:", json['available']
-            print "Available spots After:", available
-            
-            payload = {
-                'id': randNode,
-                'available': available,
-                'api_key': CONFIG_API_KEY
-            }
-            
-            r = requests.post(CONFIG_BASE_URL + "nodes/save", data = payload)
-            
-            print "Waiting",
-            for x in range(0, 15):
-                print ".",
-                time.sleep(.5)
+        # Add or subtract one from available spots
+        if available == 0:
+            available = 1
+        elif available == total:
+            available = available - 1
         else:
-            print "Picking new node"
-            time.sleep(1);
+            available = available + random.sample([-1,1],1)[0];
+        
+        print "Node ID: ", randNode
+        print "Available spots Before:", json['available']
+        print "Available spots After:", available
+        
+        payload = {
+            'id': randNode,
+            'available': available,
+            'api_key': CONFIG_API_KEY
+        }
+        
+        r = requests.post(CONFIG_BASE_URL + "nodes/save", data = payload)
+        
+        print "Waiting",
+        for x in range(0, 15):
+            print ".",
+            time.sleep(.5)
         
         print "\n"
 except KeyboardInterrupt:

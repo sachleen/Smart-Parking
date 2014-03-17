@@ -1,6 +1,7 @@
 import requests
 
 CONFIG_BASE_URL = 'http://smartparking.local/API/'
+#CONFIG_BASE_URL = 'http://sachleen.com/sachleen/parking/API/'
 CONFIG_API_KEY_FULL = u'c51088dad22ea00758e0bdcc2a29bf5c'
 CONFIG_API_KEY_HALF = u'e1d1b85eef174d89121da2407f7bb15b'
 CONFIG_API_KEY_BAD = u'BADAPIKEYe1d18e0bd7f7bb15bb85eef'
