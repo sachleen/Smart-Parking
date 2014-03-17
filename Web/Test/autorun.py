@@ -1,9 +1,11 @@
 import requests, random, time
 
 CONFIG_BASE_URL = 'http://smartparking.local/API/'
+#CONFIG_BASE_URL = 'http://sachleen.com/sachleen/parking/API/'
 CONFIG_API_KEY = u'e1d1b85eef174d89121da2407f7bb15b'
 
-nodes = ['AAAAA', 'BBBBB', 'CCCCC', 'DDDDD', 'EEEEE', 'FFFFF']
+nodes = ['AAAAA', 'BBBBB', 'CCCCC', 'DDDDD', 'EEEEE', 'FFFFF'] #for localhost
+#nodes = ['TEST1', 'PPPPP', 'CCCCC', 'DDDDD', 'EEEEE', 'FFFFF'] #for server
 
 try:
     while True:
@@ -12,7 +14,7 @@ try:
         print "Getting node info from server"
         r = requests.get(CONFIG_BASE_URL + "nodes/{0}".format(randNode))
         json = r.json()
-
+        
         available = int(json['available'])
         total = int(json['total'])
 
