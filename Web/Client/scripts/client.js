@@ -1,7 +1,7 @@
 var WirelessNodes = [];
 var lastQuery = 0;
 var lastPosition = {};
-var timeout = 2000;
+var timeout = 5000;
 
 /*
     Loads all nodes within the boundaries from database on to the map
@@ -27,9 +27,12 @@ function loadAllNodes(lat, lng) {
             $.each(response, function(key, val) {
                 var node = WirelessNode.findById(val['id']);
                 if (node) {
-                    node.spots = val['total'];
-                    node.available = val['available'];
-                    updateMarker(node);
+                    if (node.spots != val['total'] || node.available != val['available']) {
+                        node.spots = val['total'];
+                        node.available = val['available'];
+                        
+                        updateMarker(node);
+                    }
                 } else {
                     var latLng = new google.maps.LatLng(val['lat'], val['lng']);
                     node = new WirelessNode(val['id'], latLng, val['total'], val['available']);

@@ -100,4 +100,14 @@ function updateMarker(Node) {
     
     Node.mapMarker.setIcon('images/'+icon+'.png');
     Node.mapMarker.setZIndex(zIndex);
+    
+    if (Node.mapMarker.getAnimation() != null) {
+        Node.mapMarker.setAnimation(null);
+    } else {
+        Node.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(
+            function() {
+                Node.mapMarker.setAnimation(null);
+            }, 1200);
+    }
 }
