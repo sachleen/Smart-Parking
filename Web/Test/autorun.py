@@ -37,7 +37,7 @@ try:
             r = requests.post(CONFIG_BASE_URL + "nodes/save", data = payload)
             
             print "Waiting",
-            for x in range(0, 20):
+            for x in range(0, 10):
                 print ".",
                 time.sleep(.5)
         else:

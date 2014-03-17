@@ -1,7 +1,7 @@
 var WirelessNodes = [];
 var lastQuery = 0;
 var lastPosition = {};
-var timeout = 10000;
+var timeout = 2000;
 
 /*
     Loads all nodes within the boundaries from database on to the map

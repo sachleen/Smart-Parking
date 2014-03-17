@@ -1,7 +1,7 @@
 var map;
 
 $(function() {
-    google.maps.event.addDomListener(window,'load',initialize);    
+    google.maps.event.addDomListener(window,'load',initialize);
 });
 
 
@@ -62,6 +62,8 @@ function centerChanged() {
     var center = map.getBounds().getCenter();
     loadAllNodes(center.lat(), center.lng());
 }
+
+setInterval(centerChanged, 1000);
 
 /*
     Adds a marker to the map to represent a node
