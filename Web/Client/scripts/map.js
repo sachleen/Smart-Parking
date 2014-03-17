@@ -22,8 +22,8 @@ function initialize() {
     
     map = new google.maps.Map(document.getElementById("map-canvas"), properties);
     
-    google.maps.event.addListener(map, 'dragend', centerChanged);
-    google.maps.event.addListener(map, 'zoom_changed', centerChanged);
+    google.maps.event.addListener(map, 'dragend', loadNodesAtCurrentPosition);
+    google.maps.event.addListener(map, 'zoom_changed', loadNodesAtCurrentPosition);
     
     centerMap();
     
@@ -58,12 +58,12 @@ function centerMap() {
     Fires whenever the center of the map has changed.
     Triggers an update of the nodes displayed on the map.
 */
-function centerChanged() {
+function loadNodesAtCurrentPosition() {
     var center = map.getBounds().getCenter();
     loadAllNodes(center.lat(), center.lng());
 }
 
-setInterval(centerChanged, 1000);
+setInterval(loadNodesAtCurrentPosition, 1000);
 
 /*
     Adds a marker to the map to represent a node
