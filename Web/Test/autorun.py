@@ -9,6 +9,7 @@ try:
     while True:
         # Get info for random node
         randNode = nodes[random.randrange(len(nodes))]
+        print "Getting node info from server"
         r = requests.get(CONFIG_BASE_URL + "nodes/{0}".format(randNode))
         json = r.json()
 
@@ -37,7 +38,7 @@ try:
             r = requests.post(CONFIG_BASE_URL + "nodes/save", data = payload)
             
             print "Waiting",
-            for x in range(0, 10):
+            for x in range(0, 15):
                 print ".",
                 time.sleep(.5)
         else:
