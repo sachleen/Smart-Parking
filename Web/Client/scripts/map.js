@@ -98,14 +98,12 @@ function updateMarker(Node) {
     var icon = Node.available > 5 ? 5 : Node.available;
     var zIndex = parseInt(Node.available > 5 ? 5 : Node.available);
     
-    Node.mapMarker.setIcon('images/'+icon+'.png');
-    Node.mapMarker.setZIndex(zIndex);
-    
-
     Node.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(
         function() {
             Node.mapMarker.setAnimation(null);
+            Node.mapMarker.setIcon('images/'+icon+'.png');
+            Node.mapMarker.setZIndex(zIndex);
         },
         1400
     );
