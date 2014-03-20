@@ -1,5 +1,4 @@
 <?php
-
 require 'vendor/autoload.php';
 require 'config.php';
 
@@ -61,7 +60,7 @@ function authAPI($key, $action) {
     }
 }
 
-$app->get('/nodes/:id', function ($id) {
+$app->get('/nodes/:id/', function ($id) {
     
     $node = ORM::for_table('nodes')->find_one($id);
     
@@ -81,7 +80,7 @@ $app->get('/nodes/:id', function ($id) {
     'id' => '[A-Za-z0-9]{5}',
 ));
 
-$app->get('/nodes/:lat/:lng/:distance', function ($lat, $lng, $distance) {
+$app->get('/nodes/:lat/:lng/:distance/', function ($lat, $lng, $distance) {
     
     $nodes = ORM::for_table('nodes')->select('id')
                                     ->select('lat')
@@ -110,7 +109,10 @@ $app->get('/nodes/:lat/:lng/:distance', function ($lat, $lng, $distance) {
     'distance' => '\d+\.?\d*',
 ));
 
-$app->get('/nodes/all', function () {
+/*
+    This is only here for testing purposes...
+*/
+$app->get('/nodes/all/', function () {
     $nodes = ORM::for_table('nodes')->select('id')
                                      ->select('lat')
                                      ->select('lng')
@@ -131,7 +133,8 @@ $app->get('/nodes/all', function () {
     echo json_encode($nodes_arr);
 });
 
-$app->post('/nodes/save', function () use($app) {
+$app->post('/nodes/save/', function () use($app) {
+
     $id = $app->request->post('id');
     $lat = $app->request->post('lat');
     $lng = $app->request->post('lng');
@@ -214,7 +217,7 @@ $app->post('/nodes/save', function () use($app) {
     }
 });
 
-$app->post('/nodes/delete', function () use($app) {
+$app->post('/nodes/delete/', function () use($app) {
     $id = $app->request->post('id');
     $apiKey = $app->request->post('api_key');
     
@@ -233,6 +236,25 @@ $app->post('/nodes/delete', function () use($app) {
         sendResponse(false, "Node not found!");
     }
 });
+
+$app->get('/history/:id/', function ($id) {
+    
+    $logs = ORM::for_table('history')->where('node_id', $id)->order_by_asc('updated')->find_many();
+
+    
+    $log_arr = array();
+    foreach ($logs as $log) {
+        array_push($log_arr,
+            array("time"         => $log->updated,
+                  "availability" => $log->available/$log->total
+            )
+        );
+    }
+    echo json_encode($log_arr);
+    
+})->conditions(array(
+    'id' => '[A-Za-z0-9]{5}',
+));
 
 $app->run();
 

@@ -1,7 +1,7 @@
 var map;
 
 $(function() {
-    google.maps.event.addDomListener(window,'load',initialize);    
+    google.maps.event.addDomListener(window,'load',initialize);
 });
 
 
@@ -22,8 +22,8 @@ function initialize() {
     
     map = new google.maps.Map(document.getElementById("map-canvas"), properties);
     
-    google.maps.event.addListener(map, 'dragend', centerChanged);
-    google.maps.event.addListener(map, 'zoom_changed', centerChanged);
+    google.maps.event.addListener(map, 'dragend', loadNodesAtCurrentPosition);
+    google.maps.event.addListener(map, 'zoom_changed', loadNodesAtCurrentPosition);
     
     centerMap();
     
@@ -58,10 +58,12 @@ function centerMap() {
     Fires whenever the center of the map has changed.
     Triggers an update of the nodes displayed on the map.
 */
-function centerChanged() {
+function loadNodesAtCurrentPosition() {
     var center = map.getBounds().getCenter();
     loadAllNodes(center.lat(), center.lng());
 }
+
+setInterval(loadNodesAtCurrentPosition, 1000);
 
 /*
     Adds a marker to the map to represent a node
@@ -96,6 +98,13 @@ function updateMarker(Node) {
     var icon = Node.available > 5 ? 5 : Node.available;
     var zIndex = parseInt(Node.available > 5 ? 5 : Node.available);
     
-    Node.mapMarker.setIcon('images/'+icon+'.png');
-    Node.mapMarker.setZIndex(zIndex);
+    Node.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(
+        function() {
+            Node.mapMarker.setAnimation(null);
+            Node.mapMarker.setIcon('images/'+icon+'.png');
+            Node.mapMarker.setZIndex(zIndex);
+        },
+        1400
+    );
 }
