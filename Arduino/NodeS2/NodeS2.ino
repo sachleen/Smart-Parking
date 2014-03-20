@@ -31,9 +31,12 @@ void setup()
 	
     String powerOnMessage = nodeId + ',' + String(numSensors) + ',' + String(0);//numSensors should be 99 at startup so the base knows its asking for number of sensors
     Serial.println(numSensors); delay(2000);
+    /*
     while(numSensors == 99 || numSensors == 0){
         numSensors = sendMessageBase(powerOnMessage);
     }
+    */
+    numSensors = 3;
 }
 
 void loop()
