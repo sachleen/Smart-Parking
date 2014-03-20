@@ -1,7 +1,9 @@
-// Receive
 #include <RS485.h>
 #include <SoftwareSerial.h>
 #include <Wire.h>
+
+#include "globals.h"
+#include "rs485.h"
 
 #define Addr 0x1E               // 7-bit address of HMC5883 compass
 #define SENSOR_ID 3
@@ -12,8 +14,8 @@
 */
 void setup()
 {
-    Serial.begin(9600);
-    Serial.println("System Startup - Receiver");
+    DEBUG_INIT(9600);
+    DEBUG_PRINTLN("System Startup - Receiver");
 
     RS485_Begin(4800);
     
@@ -31,10 +33,10 @@ void loop()
 {
     char recBuff[maxMsgLen+3+1];
     
-    if(RS485_ReadMessage(fAvailable,fRead, recBuff))
+    if(getMessage(recBuff))
     {
-        Serial.print("Receiving:");
-        Serial.println(recBuff);
+        DEBUG_PRINT("Receiving:");
+        DEBUG_PRINTLN(recBuff);
         
         // Check if the request is for this sensor
         if (recBuff[0] == getSensorIdFromIndex(SENSOR_ID)) {
@@ -44,11 +46,11 @@ void loop()
             
             switch (recBuff[1]) {
                 case 'C': // Report compass status
-                    Serial.println("Reporting Compass Status");
+                    DEBUG_PRINTLN("Reporting Compass Status");
                     sendBuff[1] = isCarPresent() ? 'T' : 'A';
                     break;
                 default:
-                    Serial.println("Don't understand the request :(");
+                    DEBUG_PRINTLN("Don't understand the request :(");
                     sendBuff[1] = '?';
             }
             
@@ -56,20 +58,19 @@ void loop()
             sendBuff[2] = '\0';
             
             // Send response
-            if(RS485_SendMessage(sendBuff,fWrite,ENABLE_PIN))
+            if(sendMessage(sendBuff))
             {
-                Serial.print("Sent:");
-                Serial.println(sendBuff);
+                DEBUG_PRINT("Sent:");
+                DEBUG_PRINTLN(sendBuff);
             }
         } else {
             // The request was NOT for this sensor
-            Serial.println("Not me");
+            DEBUG_PRINTLN("Not me");
         }
         
-        Serial.println();
+        DEBUG_PRINTLN();
     }
 }
-
 
 int calZ; // Holds the reference value for compass Z axis
 boolean needsCalibration = true;
@@ -83,7 +84,7 @@ bool isCarPresent() {
     
     getCompassData(x, y, z);
     
-    Serial.print("Z: ");Serial.print(z);
+    DEBUG_PRINT("Z: ");DEBUG_PRINTLN(z);
     
     /*
         Recalibrate the compass reference value.
@@ -96,17 +97,17 @@ bool isCarPresent() {
         up with small changes in the compass reading and always have a "good" reference value.
     */
     if (needsCalibration || deltaErrorCount >= 5) {
-        Serial.print("Calibrating Compass");
+        DEBUG_PRINT("Calibrating Compass");
         calZ = z;
         for (int i = 0; i < 10; i++) {
             getCompassData(x, y, z);
             calZ = (calZ + z) / 2;
-            Serial.print(" .");
+            DEBUG_PRINT(" .");
             delay(100);
         }
         needsCalibration = false;
         deltaErrorCount = 0;
-        Serial.println(" Done!");
+        DEBUG_PRINTLN(" Done!");
     }
     
     int delta = abs(calZ - z);
