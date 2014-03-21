@@ -2,8 +2,8 @@ EAGLE AutoRouter Statistics:
 
 Job           : /Users/fountcal/Dropbox/Documents/Spring 2014/CPE191/GitHub/Smart-Parking/Schematics/sensor/sensor.brd
 
-Start at      : 17:11:39 (2/19/14)
-End at        : 17:11:39 (2/19/14)
+Start at      : 19:24:09 (3/9/14)
+End at        : 19:24:09 (3/9/14)
 Elapsed time  : 00:00:00
 
 Signals       :    17   RoutingGrid: 8 mil  Layers: 2

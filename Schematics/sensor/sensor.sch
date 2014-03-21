@@ -2326,6 +2326,54 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 </deviceset>
 </devicesets>
 </library>
+<library name="wirepad">
+<description>&lt;b&gt;Single Pads&lt;/b&gt;&lt;p&gt;
+&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+<package name="1,6/0,9">
+<description>&lt;b&gt;THROUGH-HOLE PAD&lt;/b&gt;</description>
+<wire x1="-0.508" y1="0.762" x2="-0.762" y2="0.762" width="0.1524" layer="21"/>
+<wire x1="-0.762" y1="0.762" x2="-0.762" y2="0.508" width="0.1524" layer="21"/>
+<wire x1="-0.762" y1="-0.508" x2="-0.762" y2="-0.762" width="0.1524" layer="21"/>
+<wire x1="-0.762" y1="-0.762" x2="-0.508" y2="-0.762" width="0.1524" layer="21"/>
+<wire x1="0.508" y1="-0.762" x2="0.762" y2="-0.762" width="0.1524" layer="21"/>
+<wire x1="0.762" y1="-0.762" x2="0.762" y2="-0.508" width="0.1524" layer="21"/>
+<wire x1="0.762" y1="0.508" x2="0.762" y2="0.762" width="0.1524" layer="21"/>
+<wire x1="0.762" y1="0.762" x2="0.508" y2="0.762" width="0.1524" layer="21"/>
+<circle x="0" y="0" radius="0.635" width="0.1524" layer="51"/>
+<pad name="1" x="0" y="0" drill="0.9144" diameter="1.6002" shape="octagon"/>
+<text x="-0.762" y="1.016" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="0" y="0.6" size="0.0254" layer="27">&gt;VALUE</text>
+</package>
+</packages>
+<symbols>
+<symbol name="PAD">
+<wire x1="-1.016" y1="1.016" x2="1.016" y2="-1.016" width="0.254" layer="94"/>
+<wire x1="-1.016" y1="-1.016" x2="1.016" y2="1.016" width="0.254" layer="94"/>
+<text x="-1.143" y="1.8542" size="1.778" layer="95">&gt;NAME</text>
+<text x="-1.143" y="-3.302" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="P" x="2.54" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="1,6/0,9" prefix="PAD" uservalue="yes">
+<description>&lt;b&gt;THROUGH-HOLE PAD&lt;/b&gt;</description>
+<gates>
+<gate name="1" symbol="PAD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="1,6/0,9">
+<connects>
+<connect gate="1" pin="P" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -2352,7 +2400,6 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="SUPPLY5" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
 <part name="GND6" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="SUPPLY6" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
-<part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="1206" value="10K"/>
 <part name="15P" library="testpad" deviceset="PTR1" device="TP12R"/>
 <part name="17P" library="testpad" deviceset="PTR1" device="TP12R"/>
 <part name="RST" library="testpad" deviceset="PTR1" device="TP12R"/>
@@ -2363,6 +2410,9 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="RX" library="testpad" deviceset="PTR1" device="TP12R"/>
 <part name="JP1" library="SparkFun-Connectors" deviceset="M04" device="PTH"/>
 <part name="JP2" library="SparkFun-Connectors" deviceset="M04" device="PTH"/>
+<part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="PAD1" library="wirepad" deviceset="1,6/0,9" device=""/>
+<part name="PAD2" library="wirepad" deviceset="1,6/0,9" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -2387,7 +2437,6 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <instance part="SUPPLY5" gate="G$1" x="193.04" y="134.62"/>
 <instance part="GND6" gate="1" x="200.66" y="101.6"/>
 <instance part="SUPPLY6" gate="G$1" x="22.86" y="132.08"/>
-<instance part="R1" gate="G$1" x="22.86" y="127" rot="R90"/>
 <instance part="15P" gate="G$1" x="144.78" y="63.5"/>
 <instance part="17P" gate="G$1" x="134.62" y="58.42"/>
 <instance part="RST" gate="G$1" x="129.54" y="55.88"/>
@@ -2398,6 +2447,9 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <instance part="RX" gate="G$1" x="96.52" y="93.98"/>
 <instance part="JP1" gate="G$1" x="215.9" y="111.76" rot="R180"/>
 <instance part="JP2" gate="G$1" x="165.1" y="154.94" rot="R180"/>
+<instance part="R2" gate="G$1" x="22.86" y="127" rot="R90"/>
+<instance part="PAD1" gate="1" x="99.06" y="119.38"/>
+<instance part="PAD2" gate="1" x="88.9" y="127"/>
 </instances>
 <busses>
 </busses>
@@ -2477,13 +2529,13 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <pinref part="JP1" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<pinref part="SUPPLY6" gate="G$1" pin="5V"/>
-<pinref part="R1" gate="G$1" pin="2"/>
-</segment>
-<segment>
 <wire x1="160.02" y1="157.48" x2="149.86" y2="157.48" width="0.1524" layer="91"/>
 <pinref part="SUPPLY4" gate="G$1" pin="5V"/>
 <pinref part="JP2" gate="G$1" pin="1"/>
+</segment>
+<segment>
+<pinref part="SUPPLY6" gate="G$1" pin="5V"/>
+<pinref part="R2" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="N$1" class="0">
@@ -2529,7 +2581,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <wire x1="22.86" y1="119.38" x2="12.7" y2="119.38" width="0.1524" layer="91"/>
 <wire x1="22.86" y1="121.92" x2="22.86" y2="119.38" width="0.1524" layer="91"/>
 <junction x="22.86" y="119.38"/>
-<pinref part="R1" gate="G$1" pin="1"/>
+<pinref part="R2" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <wire x1="129.54" y1="58.42" x2="81.28" y2="58.42" width="0.1524" layer="91"/>
