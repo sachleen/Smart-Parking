@@ -1,6 +1,11 @@
 #include <RS485.h>
 #include <SoftwareSerial.h>
+
+#include "globals.h"
+#include "WiredCommunication.h"
+
 SoftwareSerial xbee(5, 6); // RX, TX
+WiredCommunication wiredbus;
 
 #define MAX_SENSORS 32
 String nodeId = "test1";
@@ -20,8 +25,8 @@ bool dataChanged = false; // Set to true if any sensor's status has changed. XBe
 */
 void setup()
 {
-    Serial.begin(9600);
-    Serial.println("New System Startup - Sender");
+    DEBUG_INIT(9600);
+    DEBUG_PRINTLN("New System Startup - Sender");
 
     RS485_Begin(4800);
     xbee.begin(9600);
@@ -30,7 +35,7 @@ void setup()
     delay(2000);
 	
     String powerOnMessage = nodeId + ',' + String(numSensors) + ',' + String(0);//numSensors should be 99 at startup so the base knows its asking for number of sensors
-    Serial.println(numSensors); delay(2000);
+    DEBUG_PRINTLN(numSensors); delay(2000);
     /*
     while(numSensors == 99 || numSensors == 0){
         numSensors = sendMessageBase(powerOnMessage);
@@ -45,36 +50,28 @@ void loop()
         Loops through all the sensors asking for a status.
         Records the responses or time outs in sensorStatus[]
     */
-    RS485_Listen();//Should be replaced by getSendMessageSensor() function call
-
     for (int sensorNum = 1; sensorNum <= numSensors; sensorNum++) {
         
-        Serial.print("Querying Sensor ");
-        Serial.println(sensorNum);
+        DEBUG_PRINT("Querying Sensor ");DEBUG_PRINTLN(sensorNum);
         
-        
-       //The message is composed of a sensor ID and command.
-      
+        //The message is composed of a sensor ID and command.
         char sendBuff[maxMsgLen+1];
         sendBuff[0] = getSensorIdFromIndex(sensorNum);//get sensorIdFromIndex
         sendBuff[1] = 'C';
         sendBuff[2] = '\0';
         
-        if(sendMessageSensor(sendBuff))
-        //if(RS485_SendMessage(sendBuff,fWrite,ENABLE_PIN))
+        if(wiredbus.sendMessage(sendBuff))
         {
-            //Serial.print("Sending:");
-            Serial.println(sendBuff);
+            DEBUG_PRINTLN(sendBuff);
             
             // Listen for response
-            char recBuff[maxMsgLen+3+1];//what are the 3 and 1?
+            char recBuff[maxMsgLen+3+1];
             timeout_init(2000);
             bool gotResponse = false;
             while (!timeout_timedout()) {
-                if (getMessageSensor(recBuff)){
-				//if (RS485_ReadMessage(fAvailable,fRead, recBuff)) {//NEEDS TO BE REPLACED WITH GET MESSAGE FROM SENSOR FUNCTION
-                    Serial.print("Got:");
-                    Serial.println(recBuff);
+                if (wiredbus.getMessage(recBuff)){
+                    DEBUG_PRINT("Got:");
+                    DEBUG_PRINTLN(recBuff);
                     
                     /*
                         If the response is from the same sensor we responded data from, parse it.
@@ -82,26 +79,26 @@ void loop()
                     if (recBuff[0] == getSensorIdFromIndex(sensorNum)) {
                         switch (recBuff[1]) {
                             case 'T': // Car present
-                                Serial.println("CAR PRESENT");
+                                DEBUG_PRINTLN("CAR PRESENT");
                                 if (sensorStatus[sensorNum-1] != 'T'){
                                     sensorStatus[sensorNum-1] = 'T';
                                     dataChanged = true;
                                 }
                                 break;
                             case 'A': // Car NOT present
-                                Serial.println("CAR NOT PRESENT");
+                                DEBUG_PRINTLN("CAR NOT PRESENT");
                                 if (sensorStatus[sensorNum-1] != 'A'){
                                     sensorStatus[sensorNum-1] = 'A';
                                     dataChanged = true;
                                 }
                                 break;
                             default:
-                                Serial.println("Invalid Response");
+                                DEBUG_PRINTLN("Invalid Response");
                                 sensorStatus[sensorNum-1] = 'I';
                         }
                     } else {
                         // Wrong sensor ID
-                        Serial.println("Wrong sensor responded to request...wtf");
+                        DEBUG_PRINTLN("Wrong sensor responded to request...");
                         sensorStatus[sensorNum-1] = 'W';
                     }
                     
@@ -112,14 +109,14 @@ void loop()
             }
             
             if (!gotResponse) {
-                Serial.println("Timed out!");
+                DEBUG_PRINTLN("Timed out!");
                 sensorStatus[sensorNum-1] = 'L';
             }
         }
 		else {
-            Serial.println("Send Failed");
+            DEBUG_PRINTLN("Send Failed");
         }
-        Serial.println();
+        DEBUG_PRINTLN();
         delay(100);
     }
     
@@ -127,20 +124,20 @@ void loop()
     /*
         Print stuff out to serial
     */
-    Serial.println("==============================");
-    Serial.print("Sensor: ");
+    DEBUG_PRINTLN("==============================");
+    DEBUG_PRINT("Sensor: ");
     for (int i = 1; i <= numSensors; i++) {
-        Serial.print(i);
-        Serial.print(" ");
+        DEBUG_PRINT(i);
+        DEBUG_PRINT(" ");
     }
-    Serial.print("\nStatus: ");
+    DEBUG_PRINT("\nStatus: ");
     for (int i = 1; i <= numSensors; i++) {
-        Serial.print(sensorStatus[i-1]);
-        Serial.print((i < 10) ? " " : "  ");
+        DEBUG_PRINT(sensorStatus[i-1]);
+        DEBUG_PRINT((i < 10) ? " " : "  ");
     }
-    Serial.println();
+    DEBUG_PRINTLN();
     
-    Serial.println(dataChanged ? "Data changed, sending..." : "Not sending. no change");
+    DEBUG_PRINTLN(dataChanged ? "Data changed, sending..." : "Not sending. no change");
     
     if (dataChanged) {
         /*
@@ -159,46 +156,18 @@ void loop()
             [Node ID],[Total Spots],[Available Spots]
         */
         String updateMessage = nodeId + ',' + String(numSensors) + ',' + String(countAvailable);
-        /*
-		xbee.listen();
-        Serial.println(updateMessage);
-        xbee.println(updateMessage);
-		*/
-		
+
 		check = sendMessageBase(updateMessage);
 		if(check < 0){
-			Serial.println("sendMessageBase() failed");
+			DEBUG_PRINTLN("sendMessageBase() failed");
 		}
 		
     }
     
-    Serial.println("==============================\n");
+    DEBUG_PRINTLN("==============================\n");
     
     dataChanged = false;
 }
-
-bool sendMessageSensor(char message[]){
-	RS485_Listen();//Activates sensor channel
-	return (RS485_SendMessage(message,fWrite,ENABLE_PIN));
-}
-
-bool getMessageSensor(char data[]){
-	//RS485_Listen();//Activates sensor channel
-	return RS485_ReadMessage(fAvailable,fRead, data);
-}
-
-/*
-int sendMessageBase(String message){
-	//sends message to base
-	//wait for response from base
-	Serial.println(F("Sending message to base and getting response..."));
-	Serial.println("Message sent: " + message);
-        xbee.listen();
-        xbee.println(message);
-        Serial.println(getBaseMessage());
-        return 3;//returns 3 for testing
-}
-*/
 
 int sendMessageBase(String message){
 	//sends message to base
@@ -221,7 +190,7 @@ int sendMessageBase(String message){
 	uint8_t total = -1;
 	
 	if(responseCount >= 5){
-		Serial.println(F("getBaseMessage() timed out!"));
+		DEBUG_PRINTLN(F("getBaseMessage() timed out!"));
 		//total = -1;
 	}
 	else{
@@ -234,15 +203,15 @@ int sendMessageBase(String message){
 			end = baseResponse.indexOf(',', start);
 			total = baseResponse.substring(start, end).toInt();
 			
-			Serial.println("Target Node:  " + String(target));
-			Serial.println("Number: " + String(total));
+			DEBUG_PRINTLN("Target Node:  " + String(target));
+			DEBUG_PRINTLN("Number: " + String(total));
 		}
 		else{
-			Serial.println("Base Response = NULL");
+			DEBUG_PRINTLN("Base Response = NULL");
 		}
 	}
-    //Serial.print("This is what sendMessageBase returns: ");
-    //Serial.println(total);
+    //DEBUG_PRINT("This is what sendMessageBase returns: ");
+    //DEBUG_PRINTLN(total);
     //delay(2000);
     return total;
 }
@@ -279,13 +248,13 @@ String xbeeResponse() {
     }
     
     if (counter >= 2500) {
-        Serial.println(F("XBEE Timed Out"));
+        DEBUG_PRINTLN(F("XBEE Timed Out"));
         return NULL;
     }
     
     while (xbee.available()) {
         char input = xbee.read();
-        //Serial.println("Xbee response: " + input);
+        //DEBUG_PRINTLN("Xbee response: " + input);
         content.concat(input);
         if (input == '\n') {
             break;
@@ -309,30 +278,4 @@ unsigned long timeout_remaining() {
 }
 bool timeout_timedout() {
     return millis() > _timeout_end;
-}
-
-
-
-/*
-    Software Reset Functions
-*/
-#include <avr/wdt.h>
-/*
-    Enables the watchdog timer and starts an infinite loop so the uC restarts
-*/
-void soft_reset() {
-   wdt_enable(WDTO_15MS);
-   while(1) {};
-}
-
-/*
-    Disabled the watchdog timer as soon as possible on startup (before bootloader) so it doesn't continually restart chip.
-*/
-void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
-void wdt_init(void)
-{
-   MCUSR = 0;
-   wdt_disable();
-
-   return;
 }

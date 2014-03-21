@@ -1,16 +1,14 @@
-/*
-    Function Prototypes
-*/
-bool getMessage(char*);
-bool sendMessage(char*);
+#include "Arduino.h"
+#include "WiredCommunication.h"
+#include <RS485.h>
 
 /*
-    Variables
+    Constructor
 */
+WiredCommunication::WiredCommunication()
+{
 
-/*
-    Functions
-*/
+}
 
 /*
     Reads a message from the RS485 bus.
@@ -20,7 +18,8 @@ bool sendMessage(char*);
     
     Returns true if there was a message and it was written to buff. False otherwise.
 */
-bool getMessage(char* buff) {
+bool WiredCommunication::getMessage(char* buff) {
+    RS485_Listen();
     if (RS485_ReadMessage(fAvailable, fRead, buff)) {
         return true;
     }
@@ -36,7 +35,8 @@ bool getMessage(char* buff) {
     
     Returns true if the message was written to the bus successfully. False otherwise.
 */
-bool sendMessage(char* buff) {
+bool WiredCommunication::sendMessage(char* buff) {
+    RS485_Listen();
     if (RS485_SendMessage(buff, fWrite, ENABLE_PIN)) {
         return true;
     }
