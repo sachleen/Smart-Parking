@@ -4898,7 +4898,7 @@ type 0309, grid 2.5 mm</description>
 <instance part="U3" gate="A" x="30.48" y="33.02"/>
 <instance part="U4" gate="G$1" x="-144.78" y="25.4"/>
 <instance part="BATT" gate="G$1" x="-88.9" y="35.56"/>
-<instance part="SOLAR" gate="G$1" x="-170.18" y="58.42"/>
+<instance part="SOLAR" gate="G$1" x="-170.18" y="58.42" rot="MR180"/>
 <instance part="C1" gate="G$1" x="-157.48" y="63.5"/>
 <instance part="R3" gate="G$1" x="-104.14" y="27.94"/>
 <instance part="R6" gate="G$1" x="-76.2" y="12.7" rot="R90"/>
@@ -4912,7 +4912,7 @@ type 0309, grid 2.5 mm</description>
 <instance part="GND9" gate="1" x="-83.82" y="0"/>
 <instance part="GND10" gate="1" x="-76.2" y="0"/>
 <instance part="GND11" gate="1" x="-101.6" y="38.1" rot="R270"/>
-<instance part="GND12" gate="1" x="-165.1" y="53.34"/>
+<instance part="GND12" gate="1" x="-157.48" y="50.8"/>
 <instance part="SUPPLY7" gate="G$1" x="-157.48" y="76.2"/>
 <instance part="Y2" gate="G$1" x="-124.46" y="78.74" rot="R270"/>
 <instance part="JP3" gate="G$1" x="-7.62" y="15.24" rot="R90"/>
@@ -5033,10 +5033,10 @@ type 0309, grid 2.5 mm</description>
 <pinref part="GND10" gate="1" pin="GND"/>
 </segment>
 <segment>
-<wire x1="-172.72" y1="60.96" x2="-165.1" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="-172.72" y1="55.88" x2="-157.48" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="SOLAR" gate="G$1" pin="1"/>
 <pinref part="GND12" gate="1" pin="GND"/>
-<wire x1="-165.1" y1="60.96" x2="-165.1" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="-157.48" y1="55.88" x2="-157.48" y2="53.34" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="BATT" gate="G$1" pin="1"/>
@@ -5305,8 +5305,11 @@ type 0309, grid 2.5 mm</description>
 <net name="N$8" class="0">
 <segment>
 <pinref part="C1" gate="G$1" pin="P$2"/>
-<wire x1="-170.18" y1="58.42" x2="-157.48" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="-170.18" y1="58.42" x2="-172.72" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="-172.72" y1="58.42" x2="-157.48" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="-157.48" y1="58.42" x2="-157.48" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="SOLAR" gate="G$1" pin="2"/>
+<junction x="-172.72" y="58.42"/>
 </segment>
 </net>
 <net name="N$9" class="0">
