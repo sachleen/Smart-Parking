@@ -19,6 +19,7 @@ WiredCommunication::WiredCommunication()
     Returns true if there was a message and it was written to buff. False otherwise.
 */
 bool WiredCommunication::getMessage(char* buff) {
+    RS485_Listen();
     if (RS485_ReadMessage(fAvailable, fRead, buff)) {
         return true;
     }
@@ -35,6 +36,7 @@ bool WiredCommunication::getMessage(char* buff) {
     Returns true if the message was written to the bus successfully. False otherwise.
 */
 bool WiredCommunication::sendMessage(char* buff) {
+    RS485_Listen();
     if (RS485_SendMessage(buff, fWrite, ENABLE_PIN)) {
         return true;
     }
