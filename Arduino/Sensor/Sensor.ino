@@ -3,10 +3,12 @@
 #include <Wire.h>
 
 #include "globals.h"
-#include "rs485.h"
+#include "WiredCommunication.h"
 
 #define Addr 0x1E               // 7-bit address of HMC5883 compass
 #define SENSOR_ID 3
+
+WiredCommunication wiredbus;
 
 /*
     Setup block
@@ -33,7 +35,7 @@ void loop()
 {
     char recBuff[maxMsgLen+3+1];
     
-    if(getMessage(recBuff))
+    if(wiredbus.getMessage(recBuff))
     {
         DEBUG_PRINT("Receiving:");
         DEBUG_PRINTLN(recBuff);
@@ -58,7 +60,7 @@ void loop()
             sendBuff[2] = '\0';
             
             // Send response
-            if(sendMessage(sendBuff))
+            if(wiredbus.sendMessage(sendBuff))
             {
                 DEBUG_PRINT("Sent:");
                 DEBUG_PRINTLN(sendBuff);
