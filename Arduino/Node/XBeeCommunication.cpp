@@ -2,13 +2,15 @@
 #include "XBeeCommunication.h"
 #include <RS485.h>
 
+extern SoftwareSerial xbee;
+
 /*
     Constructor
 */
 XBeeCommunication::XBeeCommunication(String nodeId)
 {
     // TODO: INITIATE XBEE SOFTWARE SERIAL
-    // xbee.begin(9600);
+    
     _nodeId = nodeId;
 }
 
@@ -27,8 +29,8 @@ String XBeeCommunication::getMessage() {
     
     String targetNode = xResponse.substring(start, end);
     
-    if(targetNode.equals(_nodeId)){
-        return xResponse;
+    if(targetNode.equals(_nodeId)) {
+        return xResponse.substring(end);
     } else {
         return NULL;
     }
@@ -38,13 +40,15 @@ String XBeeCommunication::getMessage() {
     Broadcast a message to other XBees
     
     Parameter   Description
+    nodeId      String containing the id of the receiving node.
     message     String containing message to broadcast
     
     Returns true if the message was broadcast successfully. False otherwise.
 */
-bool XBeeCommunication::sendMessage(String message) {
+bool XBeeCommunication::sendMessage(String nodeId, String message) {
     xbee.listen();
     
+    message = nodeId + ',' + message;
     xbee.println(message);
     
     String response = getMessage();
