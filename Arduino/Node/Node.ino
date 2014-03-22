@@ -28,7 +28,6 @@ void setup()
     DEBUG_INIT(9600);
     DEBUG_PRINTLN("New System Startup - Sender");
 
-    RS485_Begin(4800);
     xbee.begin(9600);
     
     // Wait for sensors to power up and calibrate
