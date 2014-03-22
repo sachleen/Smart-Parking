@@ -19,8 +19,6 @@ void setup()
     DEBUG_INIT(9600);
     DEBUG_PRINTLN("System Startup - Receiver");
 
-    RS485_Begin(4800);
-    
     Wire.begin();
     Wire.beginTransmission(Addr); 
     Wire.write(byte(0x02));

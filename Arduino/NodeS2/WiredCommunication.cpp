@@ -7,7 +7,7 @@
 */
 WiredCommunication::WiredCommunication()
 {
-
+    RS485_Begin(4800);
 }
 
 /*
