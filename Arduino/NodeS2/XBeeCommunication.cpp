@@ -1,0 +1,92 @@
+#include "Arduino.h"
+#include "XBeeCommunication.h"
+#include <RS485.h>
+
+/*
+    Constructor
+*/
+XBeeCommunication::XBeeCommunication(String nodeId)
+{
+    // TODO: INITIATE XBEE SOFTWARE SERIAL
+    // xbee.begin(9600);
+    _nodeId = nodeId;
+}
+
+/*
+    Reads a message from the XBee.
+    
+    Returns a String containing the message iff it was addressed to this node.
+    Returns Null otherwise.
+*/
+String XBeeCommunication::getMessage() {
+    xbee.listen();
+    String xResponse = xbeeResponse();
+    
+    uint8_t start = 0;
+    uint8_t end = xResponse.indexOf(',');
+    
+    String targetNode = xResponse.substring(start, end);
+    
+    if(targetNode.equals(_nodeId)){
+        return xResponse;
+    } else {
+        return NULL;
+    }
+}
+
+/*
+    Broadcast a message to other XBees
+    
+    Parameter   Description
+    message     String containing message to broadcast
+    
+    Returns true if the message was broadcast successfully. False otherwise.
+*/
+bool XBeeCommunication::sendMessage(String message) {
+    xbee.listen();
+    
+    xbee.println(message);
+    
+    String response = getMessage();
+    
+    if (response == NULL) {
+        return false;
+    }
+    
+    return true;
+}
+
+/*
+    Reads data from XBee's input serial buffer until '\n'
+    Returns a '\n' terminated string.
+    Returns null upon timeout after ~2.5s
+*/
+String XBeeCommunication::xbeeResponse() {
+    String content = "";
+    int counter = 0;
+    while(!xbee.available() && counter < 250) {
+        counter++;
+        delay(10);
+    }
+    
+    if (counter >= 2500) {
+        DEBUG_PRINTLN(F("XBEE Timed Out"));
+        return NULL;
+    }
+    
+    while (xbee.available()) {
+        char input = xbee.read();
+        content.concat(input);
+        if (input == '\n') {
+            break;
+        }
+        delay(1);
+    }
+    
+    // Clear rest of input buffer
+    while (xbee.available()) {
+        xbee.read();
+    }
+    
+    return content;
+}

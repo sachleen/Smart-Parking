@@ -156,7 +156,12 @@ void loop()
             [Node ID],[Total Spots],[Available Spots]
         */
         String updateMessage = nodeId + ',' + String(numSensors) + ',' + String(countAvailable);
-
+        /*
+		xbee.listen();
+        DEBUG_PRINTLN(updateMessage);
+        xbee.println(updateMessage);
+		*/
+		
 		check = sendMessageBase(updateMessage);
 		if(check < 0){
 			DEBUG_PRINTLN("sendMessageBase() failed");
