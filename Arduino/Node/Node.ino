@@ -3,6 +3,7 @@
 
 #include "globals.h"
 #include "WiredCommunication.h"
+#include "XBeeCommunication.h"
 
 #define MAX_SENSORS 32
 String baseId = "ZZZZZ";
@@ -42,7 +43,7 @@ void setup()
 	String response = "";
     
     while(numSensors < 0){
-		sendOk = xcomm.send(baseId, "N");
+		sendOk = xcomm.sendMessage(baseId, "N");
 		if(sendOk){
 			response = xcomm.getMessage();
 			numSensors = response.toInt();
@@ -165,14 +166,14 @@ void loop()
         */
         String updateMessage = String(numSensors) + ',' + String(countAvailable);//dont need total(?)
 		
-		sendOk = xcomm.send(baseId, updateMessage);
+		sendOk = xcomm.sendMessage(baseId, updateMessage);
 		sendCount = 0;
-		while (!sendOk && sendcount < 3){
-			sendOk = xcomm.send(baseId, updateMessage);
+		while (!sendOk && sendCount < 3){
+			sendOk = xcomm.sendMessage(baseId, updateMessage);
 			sendCount++;
 		}
 		if(sendOk){
-			response = xcomm.getMessage();
+			String response = xcomm.getMessage();
 			if (response.equals("OK")){
 				DEBUG_PRINTLN("Update successful");
 			}
