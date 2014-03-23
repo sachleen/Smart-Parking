@@ -99,9 +99,9 @@ String XBeeCommunication::xbeeResponse() {
     }
     
     // Clear rest of input buffer
-    while (xbee.available()) {
-        xbee.read();
-    }
+    // while (xbee.available()) {
+        // xbee.read();
+    // }
     
     return content;
 }
