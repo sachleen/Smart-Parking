@@ -46,7 +46,10 @@ void setup()
 		sendOk = xcomm.sendMessage(baseId, "N");
 		if(sendOk){
 			response = xcomm.getMessage();
+			xcomm.sendMessage(baseId, "OK");
+			response.trim();
 			numSensors = response.toInt();
+			DEBUG_PRINTLN(numSensors);
 		}
     }
     
@@ -174,6 +177,7 @@ void loop()
 		}
 		if(sendOk){
 			String response = xcomm.getMessage();
+			xcomm.sendMessage(baseId, "OK");
 			if (response.equals("OK")){
 				DEBUG_PRINTLN("Update successful");
 			}
