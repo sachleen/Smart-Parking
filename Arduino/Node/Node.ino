@@ -46,7 +46,7 @@ void setup()
 		sendOk = xcomm.sendMessage(baseId, "N");
 		if(sendOk){
 			response = xcomm.getMessage();
-			xcomm.sendMessage(baseId, "OK");
+			//xcomm.sendMessage(baseId, "OK");
 			
 			uint8_t start = 0;
 			uint8_t end = response.indexOf(',');
@@ -185,7 +185,7 @@ void loop()
 		}
 		if(sendOk){
 			String response = xcomm.getMessage();
-			xcomm.sendMessage(baseId, "OK");
+			//xcomm.sendMessage(baseId, "OK");
 			if (response.equals("OK")){
 				DEBUG_PRINTLN("Update successful");
 			}

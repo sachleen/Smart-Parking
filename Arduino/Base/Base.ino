@@ -72,7 +72,6 @@ void loop(){
 		start = end + 1;
 		end = messageFromNode.indexOf(',', start);
 		String identifier = messageFromNode.substring(start, end);
-		xcomm.sendMessage(nodeId, "OK");
 		//identifier = identifier.trim();
 		DEBUG_PRINTLN(nodeId);
 		DEBUG_PRINTLN(identifier.length());
