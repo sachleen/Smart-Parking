@@ -40,20 +40,21 @@ String XBeeCommunication::getMessage() {
     Broadcast a message to other XBees
     
     Parameter   Description
-    nodeId      String containing the id of the receiving node.
+    nodeIdTo    String containing the id of the receiving node.
     message     String containing message to broadcast
     
     Returns true if the message was broadcast successfully. False otherwise.
 */
-bool XBeeCommunication::sendMessage(String nodeId, String message) {
+bool XBeeCommunication::sendMessage(String nodeIdTo, String message) {
     xbee.listen();
     
-    message = nodeId + ',' + message;
+    // Message format: <NodeTo>,<NodeFrom>,<Message>
+    message = nodeIdTo + ',' + _nodeId + ',' + message;
     xbee.println(message);
     
     String response = getMessage();
     
-    if (response == NULL) {
+    if (response == NULL || response != "OK") {
         return false;
     }
     
