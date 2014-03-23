@@ -31,8 +31,8 @@ String XBeeCommunication::getMessage() {
     
     if(targetNode.equals(_nodeId)) {
         DEBUG_PRINT("Returning: ");
-        DEBUG_PRINTLN(xResponse.substring(end));
-        return xResponse.substring(end);
+        DEBUG_PRINTLN(xResponse.substring(end+1));
+        return xResponse.substring(end+1);
     } else {
         DEBUG_PRINTLN("Returning NULL");
         return NULL;
