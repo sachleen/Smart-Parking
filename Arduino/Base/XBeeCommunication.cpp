@@ -34,7 +34,7 @@ String XBeeCommunication::getMessage() {
         DEBUG_PRINTLN(xResponse.substring(end+1));
         return xResponse.substring(end+1);
     } else {
-        DEBUG_PRINTLN("Returning NULL");
+        DEBUG_PRINTLN("getMessage: node ID not match, return NULL");
         return NULL;
     }
 }
@@ -57,13 +57,13 @@ bool XBeeCommunication::sendMessage(String nodeIdTo, String message) {
     
     DEBUG_PRINT("sendMessage sent: ");DEBUG_PRINTLN(message);
     
-    String response = getMessage();
-    response.trim();
+    //String response = getMessage();
+    //response.trim();
     
-    if (response == NULL || response != "00000,OK") {
-        DEBUG_PRINTLN("sendMessage return FALSE");
-        return false;
-    }
+    //if (response == NULL || response != "00000,OK") {
+    //    DEBUG_PRINTLN("sendMessage return FALSE");
+    //    return false;
+    //}
     
     DEBUG_PRINTLN("sendMessage return TRUE");
     return true;
