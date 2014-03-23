@@ -29,8 +29,10 @@ String XBeeCommunication::getMessage() {
     
     String targetNode = xResponse.substring(start, end);
     
+    DEBUG_PRINT("getMessage got: ");DEBUG_PRINTLN(xResponse);
+    
     if(targetNode.equals(_nodeId)) {
-        DEBUG_PRINT("getMessage got: ");
+        DEBUG_PRINT("getMessage your message is: ");
         DEBUG_PRINTLN(xResponse.substring(end+1));
         return xResponse.substring(end+1);
     } else {
