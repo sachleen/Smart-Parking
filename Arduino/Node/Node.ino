@@ -6,7 +6,7 @@
 #include "XBeeCommunication.h"
 
 #define MAX_SENSORS 32
-String baseId = "ZZZZZ";
+String baseId = "00000";
 //String nodeId = "test1";
 
 SoftwareSerial xbee(5, 6); // RX, TX
@@ -47,8 +47,16 @@ void setup()
 		if(sendOk){
 			response = xcomm.getMessage();
 			xcomm.sendMessage(baseId, "OK");
-			response.trim();
-			numSensors = response.toInt();
+			
+			uint8_t start = 0;
+			uint8_t end = response.indexOf(',');
+			
+			start = end + 1;
+			end = response.indexOf(',', start);
+			String numberResponse = response.substring(start, end);
+		
+			numberResponse.trim();
+			numSensors = numberResponse.toInt();
 			DEBUG_PRINTLN(numSensors);
 		}
     }
