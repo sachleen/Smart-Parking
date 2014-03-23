@@ -4,13 +4,16 @@
 #include "globals.h"
 #include "WiredCommunication.h"
 
+#define MAX_SENSORS 32
+String baseId = "ZZZZZ";
+//String nodeId = "test1";
+
 SoftwareSerial xbee(5, 6); // RX, TX
 WiredCommunication wiredbus;
+XBeeCommunication xcomm("test1");//Change here for different nodes
 
-#define MAX_SENSORS 32
-String nodeId = "test1";
 
-int  numSensors = 99; // Starts off at 99 so that the base recognizes first message as startup message. SET TO 3 FOR TESTING
+int  numSensors = -1; // Starts off at 99 so that the base recognizes first message as startup message. SET TO 3 FOR TESTING
 int retryCount = 0;//retry count for adding messages to queue
 int check = 0;//checks for success of adding to queue
 String messageFromBase = "";
@@ -18,6 +21,8 @@ String messageFromBase = "";
 
 char sensorStatus[MAX_SENSORS]; // keeps track of status of each sensor
 bool dataChanged = false; // Set to true if any sensor's status has changed. XBee only sends if this is true.
+bool sendOk = false;
+int sendCount;
 
 /*
     Setup block
@@ -33,14 +38,18 @@ void setup()
     // Wait for sensors to power up and calibrate
     delay(2000);
 	
-    String powerOnMessage = nodeId + ',' + String(numSensors) + ',' + String(0);//numSensors should be 99 at startup so the base knows its asking for number of sensors
     DEBUG_PRINTLN(numSensors); delay(2000);
-    /*
-    while(numSensors == 99 || numSensors == 0){
-        numSensors = sendMessageBase(powerOnMessage);
+	String response = "";
+    
+    while(numSensors < 0){
+		sendOk = xcomm.send(baseId, "N");
+		if(sendOk){
+			response = xcomm.getMessage();
+			numSensors = response.toInt();
+		}
     }
-    */
-    numSensors = 3;
+    
+    //numSensors = 3;//used for demo-ing
 }
 
 void loop()
@@ -152,88 +161,33 @@ void loop()
         
         /*
             Prepare XBee message packet:
-            [Node ID],[Total Spots],[Available Spots]
+            [Total Spots],[Available Spots]
         */
-        String updateMessage = nodeId + ',' + String(numSensors) + ',' + String(countAvailable);
-        /*
-		xbee.listen();
-        DEBUG_PRINTLN(updateMessage);
-        xbee.println(updateMessage);
-		*/
+        String updateMessage = String(numSensors) + ',' + String(countAvailable);//dont need total(?)
 		
-		check = sendMessageBase(updateMessage);
-		if(check < 0){
-			DEBUG_PRINTLN("sendMessageBase() failed");
+		sendOk = xcomm.send(baseId, updateMessage);
+		sendCount = 0;
+		while (!sendOk && sendcount < 3){
+			sendOk = xcomm.send(baseId, updateMessage);
+			sendCount++;
 		}
-		
+		if(sendOk){
+			response = xcomm.getMessage();
+			if (response.equals("OK")){
+				DEBUG_PRINTLN("Update successful");
+			}
+			else{
+				DEBUG_PRINTLN("Didn't receive correct message from base");
+			}
+		}
+		else{
+			DEBUG_PRINTLN("Update Failed");
+		}
     }
     
     DEBUG_PRINTLN("==============================\n");
     
     dataChanged = false;
-}
-
-int sendMessageBase(String message){
-	//sends message to base
-	//wait for response from base!!!!!!!!!!!!!!!!
-	xbee.listen();
-	
-	//To check
-	int responseCount = 0;
-	String baseResponse;
-	while(responseCount < 5){
-		xbee.println(message);
-		baseResponse = getBaseMessage();
-		if(baseResponse != NULL){
-			break;
-		}
-		delay(10);
-		responseCount++;
-	}
-	
-	uint8_t total = -1;
-	
-	if(responseCount >= 5){
-		DEBUG_PRINTLN(F("getBaseMessage() timed out!"));
-		//total = -1;
-	}
-	else{
-		if(baseResponse != NULL){
-			uint8_t start = 0;
-			uint8_t end = baseResponse.indexOf(',');
-			String target = baseResponse.substring(start, end);
-			
-			start = end + 1;
-			end = baseResponse.indexOf(',', start);
-			total = baseResponse.substring(start, end).toInt();
-			
-			DEBUG_PRINTLN("Target Node:  " + String(target));
-			DEBUG_PRINTLN("Number: " + String(total));
-		}
-		else{
-			DEBUG_PRINTLN("Base Response = NULL");
-		}
-	}
-    //DEBUG_PRINT("This is what sendMessageBase returns: ");
-    //DEBUG_PRINTLN(total);
-    //delay(2000);
-    return total;
-}
-
-
-String getBaseMessage() {
-
-  xbee.listen();
-  String xResponse = xbeeResponse();
-  uint8_t start = 0;
-  uint8_t end = xResponse.indexOf(',');
-  String targetNode = xResponse.substring(start, end);
-  if(targetNode.equals(nodeId)){
-	return xResponse;
-  }
-  else{
-	return NULL;
-  }
 }
 
 char getSensorIdFromIndex(uint8_t index) {
@@ -243,32 +197,70 @@ char getSensorIdFromIndex(uint8_t index) {
     return (char)(index + 64);
 }
 
-String xbeeResponse() {
-    String content = "";
-    int counter = 0;
-    while(!xbee.available() && counter < 250) {
-        counter++;
-        delay(10);
-    }
-    
-    if (counter >= 2500) {
-        DEBUG_PRINTLN(F("XBEE Timed Out"));
-        return NULL;
-    }
-    
-    while (xbee.available()) {
-        char input = xbee.read();
-        //DEBUG_PRINTLN("Xbee response: " + input);
-        content.concat(input);
-        if (input == '\n') {
-            break;
-        }
-        delay(1);
-    }
-    
-    xbee.flush();
-    return content;
-}
+// int sendMessageBase(String message){
+	// //sends message to base
+	// //wait for response from base!!!!!!!!!!!!!!!!
+	// xbee.listen();
+	
+	// //To check
+	// int responseCount = 0;
+	// String baseResponse;
+	// while(responseCount < 5){
+		// xbee.println(message);
+		// baseResponse = getBaseMessage();
+		// if(baseResponse != NULL){
+			// break;
+		// }
+		// delay(10);
+		// responseCount++;
+	// }
+	
+	// uint8_t total = -1;
+	
+	// if(responseCount >= 5){
+		// DEBUG_PRINTLN(F("getBaseMessage() timed out!"));
+		// //total = -1;
+	// }
+	// else{
+		// if(baseResponse != NULL){
+			// uint8_t start = 0;
+			// uint8_t end = baseResponse.indexOf(',');
+			// String target = baseResponse.substring(start, end);
+			
+			// start = end + 1;
+			// end = baseResponse.indexOf(',', start);
+			// total = baseResponse.substring(start, end).toInt();
+			
+			// DEBUG_PRINTLN("Target Node:  " + String(target));
+			// DEBUG_PRINTLN("Number: " + String(total));
+		// }
+		// else{
+			// DEBUG_PRINTLN("Base Response = NULL");
+		// }
+	// }
+    // //DEBUG_PRINT("This is what sendMessageBase returns: ");
+    // //DEBUG_PRINTLN(total);
+    // //delay(2000);
+    // return total;
+// }
+
+
+// String getBaseMessage() {
+
+  // xbee.listen();
+  // String xResponse = xbeeResponse();
+  // uint8_t start = 0;
+  // uint8_t end = xResponse.indexOf(',');
+  // String targetNode = xResponse.substring(start, end);
+  // if(targetNode.equals(nodeId)){
+	// return xResponse;
+  // }
+  // else{
+	// return NULL;
+  // }
+// }
+
+
 
 // Timeout Functions
 // ========================================
