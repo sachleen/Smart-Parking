@@ -9,7 +9,7 @@ class XBeeCommunication
   public:
     XBeeCommunication(String);
     String getMessage();
-    bool sendMessage(String, String);
+    void sendMessage(String, String);
   private:
     String xbeeResponse();
     String _nodeId;

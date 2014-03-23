@@ -47,10 +47,8 @@ String XBeeCommunication::getMessage() {
     Parameter   Description
     nodeIdTo    String containing the id of the receiving node.
     message     String containing message to broadcast
-    
-    Returns true if the message was broadcast successfully. False otherwise.
 */
-bool XBeeCommunication::sendMessage(String nodeIdTo, String message) {
+void XBeeCommunication::sendMessage(String nodeIdTo, String message) {
     xbee.listen();
     
     // Message format: <NodeTo>,<NodeFrom>,<Message>
@@ -58,17 +56,6 @@ bool XBeeCommunication::sendMessage(String nodeIdTo, String message) {
     xbee.println(message);
     
     DEBUG_PRINT("sendMessage sent: ");DEBUG_PRINTLN(message);
-    
-    //String response = getMessage();
-    //response.trim();
-    
-    //if (response == NULL || response != "00000,OK") {
-    //    DEBUG_PRINTLN("sendMessage return FALSE");
-    //    return false;
-    //}
-    
-    DEBUG_PRINTLN("sendMessage return TRUE");
-    return true;
 }
 
 /*
@@ -97,11 +84,6 @@ String XBeeCommunication::xbeeResponse() {
         }
         delay(1);
     }
-    
-    // Clear rest of input buffer
-    // while (xbee.available()) {
-        // xbee.read();
-    // }
     
     return content;
 }
