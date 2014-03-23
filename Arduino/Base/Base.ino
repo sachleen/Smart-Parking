@@ -78,7 +78,7 @@ void loop(){
 		identifier.trim();
 		if(identifier=="N"){
 			DEBUG_PRINTLN("Number of sensors request from " + nodeId);
-            xcomm.sendMessage(nodeId, "3");
+            xcomm.sendMessage(nodeId, "2");
 		}
 		else if(identifier.equals("U")){
 			start = end + 1;

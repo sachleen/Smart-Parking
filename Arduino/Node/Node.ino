@@ -41,7 +41,14 @@ void setup()
 	
     DEBUG_PRINTLN(numSensors); delay(2000);
 	String response = "";
-    
+	
+	// Need this delay for XBee to "warm up" ... messages aren't being received faster than this.
+	for (int i = 0; i < 20; i++) {
+	   DEBUG_PRINT(".");
+	   delay(1000);
+	}
+
+	
     while(numSensors < 0){
 		sendOk = xcomm.sendMessage(baseId, "N");
 		if(sendOk){
