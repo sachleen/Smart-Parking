@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "XBeeCommunication.h"
-#include <RS485.h>
+#include <SoftwareSerial.h>
 
 extern SoftwareSerial xbee;
 
