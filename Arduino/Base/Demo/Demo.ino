@@ -12,13 +12,16 @@ void setup()
     DEBUG_PRINTLN("Starting");
     
     while (!simcomm.isOn()) {
-        simcomm.resetModule();
+        simcomm.togglePower();
     }
     DEBUG_PRINT("Power Status:");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
     
     if (simcomm.connectToNetwork()) {
-        DEBUG_PRINTLN("Connected!");
+        DEBUG_PRINTLN(F("Connected!"));
+    } else {
+        DEBUG_PRINTLN(F("Network Connection Failed."));
     }
+    
     String response;
     
     DEBUG_PRINTLN(F("Making HTTP GET Request"));
@@ -30,6 +33,8 @@ void setup()
     DEBUG_PRINTLN(response);
     
     DEBUG_PRINTLN("DONE WITH SETUP");
+    
+    response = NULL; // free up some memory
 }
 
 void loop()
@@ -38,4 +43,11 @@ void loop()
     Serial.write(SIM900.read());
   if (Serial.available())
     SIM900.write(Serial.read());  
+}
+
+int freeRam () 
+{
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }

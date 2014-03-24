@@ -26,7 +26,6 @@ SIMCommunication::SIMCommunication(unsigned long baud, uint8_t powerPin)
 */
 void SIMCommunication::togglePower() {
     DEBUG_PRINT(F("Toggling Power..."));
-    
     digitalWrite(_powerPin, HIGH);
     delay(2000);
     digitalWrite(_powerPin, LOW);
@@ -37,7 +36,7 @@ void SIMCommunication::togglePower() {
 /*
     Restarts the SIM900 module. Turns it on if it's off.
 */
-void SIMCommunication::resetModule() {
+void SIMCommunication::restartModule() {
     if (isOn()) {
         togglePower();
     }
@@ -79,7 +78,7 @@ String SIMCommunication::sendCommand(String command, int timeout) {
     SIM900.println(command);
     
     if (responseTimedOut(timeout)) {
-        DEBUG_PRINT("sendCommand Timed Out: ");DEBUG_PRINTLN(command);
+        //DEBUG_PRINT("sendCommand Timed Out: ");DEBUG_PRINTLN(command);
         return NULL;
     }
     
@@ -114,15 +113,7 @@ bool SIMCommunication::connectToNetwork() {
     return true;
     
     error:
-        DEBUG_PRINTLN(F("Network Connection Failed."));
         return false;
-}
-
-int freeRam () 
-{
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
 String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters) {
@@ -153,7 +144,7 @@ String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters
             sendCommand("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1000);
             sendCommand("AT+HTTPPARA=\"TIMEOUT\",\"45\"", 1000);
             
-            int dataLen = parameters.length();
+            uint8_t dataLen = parameters.length();
             sendCommand("AT+HTTPDATA="+(String)dataLen+",5000", 5000);
             // DEBUG_PRINTLN("AT+HTTPDATA="+(String)dataLen+",5000");
             // if (!fancySend("AT+HTTPDATA="+(String)dataLen+",5000", 1, 10000, 1, "DOWNLOAD")) {
@@ -173,6 +164,7 @@ String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters
     // After HTTPACTION we have to wait for a HTTP Status Code.
     if (responseTimedOut(10000)) {
         DEBUG_PRINTLN(F("Didn't get HTTP Status Code"));
+        sendCommand("AT+HTTPTERM", 1000);
         return NULL;
     }
     delay(1000);
@@ -184,6 +176,8 @@ String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters
     SIM900.println("AT+HTTPREAD");
     if (responseTimedOut(10000)) {
         DEBUG_PRINTLN(F("Didn't get HTTP data"));
+        sendCommand("AT+HTTPTERM", 1000);
+        return NULL;
     }
     
     // Capture only data between braces (JSON)
@@ -231,17 +225,11 @@ String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters
 bool SIMCommunication::fancySend(String command, uint8_t attempts, int timeout, uint8_t num, ...) {
     va_list arguments;
     
-    //DEBUG_PRINT("Fancy Sending: ");DEBUG_PRINTLN(command);
-    
     String response;
     bool done = false;
     
     for (uint8_t i = 0; i < attempts; i++) {
         response = sendCommand(command, timeout);
-        if (command.indexOf("TERM") >= 0) {
-            DEBUG_PRINTLN(command);
-            DEBUG_PRINTLN(response);
-        }
         va_start(arguments, num);
         for (uint8_t j = 0; j < num; j++) {
             String comp = va_arg(arguments, char*);

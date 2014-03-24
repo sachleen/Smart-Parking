@@ -11,12 +11,14 @@ class SIMCommunication
     
     // Power Functions
     void togglePower();
-    void resetModule();
+    void restartModule();
     bool isOn();
     
+    // Send AT Commands
     String sendCommand(String, int);
     bool fancySend(String, uint8_t, int, uint8_t, ...);
     
+    // Network & HTTP Communication
     bool connectToNetwork();
     String HTTPRequest(uint8_t, String, String);
   private:
