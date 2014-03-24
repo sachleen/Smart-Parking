@@ -205,7 +205,7 @@ String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters
     }
     
     delay(1000);
-
+    
     sendCommand("AT+HTTPTERM", 1000);
     // if (!fancySend("AT+HTTPTERM", 1, 5000, 1, "OK")) {
         // DEBUG_PRINTLN("TERM fail");
