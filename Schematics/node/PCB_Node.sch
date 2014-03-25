@@ -4870,6 +4870,7 @@ type 0309, grid 2.5 mm</description>
 <part name="JP11" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="JP12" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="SUPPLY5" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
+<part name="GND13" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -4924,6 +4925,7 @@ type 0309, grid 2.5 mm</description>
 <instance part="JP11" gate="G$1" x="-132.08" y="5.08" rot="R90"/>
 <instance part="JP12" gate="G$1" x="-170.18" y="17.78" rot="R90"/>
 <instance part="SUPPLY5" gate="G$1" x="-116.84" y="40.64"/>
+<instance part="GND13" gate="1" x="-165.1" y="73.66"/>
 </instances>
 <busses>
 </busses>
@@ -5045,6 +5047,13 @@ type 0309, grid 2.5 mm</description>
 <pinref part="Y2" gate="G$1" pin="2"/>
 <pinref part="GND3" gate="1" pin="GND"/>
 <wire x1="-132.08" y1="78.74" x2="-137.16" y2="78.74" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="GND13" gate="1" pin="GND"/>
+<wire x1="-165.1" y1="76.2" x2="-165.1" y2="78.74" width="0.1524" layer="91"/>
+<pinref part="C1" gate="G$1" pin="P$1"/>
+<wire x1="-157.48" y1="68.58" x2="-157.48" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="-165.1" y1="78.74" x2="-157.48" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="3" class="0">
@@ -5295,6 +5304,17 @@ type 0309, grid 2.5 mm</description>
 <wire x1="-157.48" y1="58.42" x2="-157.48" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="SOLAR" gate="G$1" pin="2"/>
 <junction x="-172.72" y="58.42"/>
+<pinref part="U4" gate="G$1" pin="VDD2"/>
+<wire x1="-160.02" y1="30.48" x2="-165.1" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="-165.1" y1="30.48" x2="-165.1" y2="33.02" width="0.1524" layer="91"/>
+<pinref part="U4" gate="G$1" pin="VDD1"/>
+<wire x1="-165.1" y1="33.02" x2="-165.1" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="-160.02" y1="33.02" x2="-165.1" y2="33.02" width="0.1524" layer="91"/>
+<junction x="-165.1" y="33.02"/>
+<wire x1="-147.32" y1="40.64" x2="-165.1" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="-157.48" y1="58.42" x2="-147.32" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="-147.32" y1="58.42" x2="-147.32" y2="40.64" width="0.1524" layer="91"/>
+<junction x="-157.48" y="58.42"/>
 </segment>
 </net>
 <net name="N$9" class="0">
@@ -5319,22 +5339,6 @@ type 0309, grid 2.5 mm</description>
 <wire x1="-124.46" y1="17.78" x2="-132.08" y2="17.78" width="0.1524" layer="91"/>
 <pinref part="JP11" gate="G$1" pin="1"/>
 <wire x1="-132.08" y1="17.78" x2="-132.08" y2="12.7" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$14" class="0">
-<segment>
-<pinref part="U4" gate="G$1" pin="VDD2"/>
-<wire x1="-160.02" y1="30.48" x2="-165.1" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="-165.1" y1="30.48" x2="-165.1" y2="33.02" width="0.1524" layer="91"/>
-<pinref part="U4" gate="G$1" pin="VDD1"/>
-<wire x1="-165.1" y1="33.02" x2="-165.1" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="-160.02" y1="33.02" x2="-165.1" y2="33.02" width="0.1524" layer="91"/>
-<junction x="-165.1" y="33.02"/>
-<pinref part="C1" gate="G$1" pin="P$1"/>
-<wire x1="-157.48" y1="68.58" x2="-157.48" y2="76.2" width="0.1524" layer="91"/>
-<wire x1="-157.48" y1="76.2" x2="-147.32" y2="76.2" width="0.1524" layer="91"/>
-<wire x1="-147.32" y1="76.2" x2="-147.32" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="-147.32" y1="40.64" x2="-165.1" y2="40.64" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
