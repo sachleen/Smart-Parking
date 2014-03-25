@@ -29,7 +29,7 @@ void setup()
     DEBUG_PRINTLN(response);
     
     DEBUG_PRINTLN(F("Making HTTP POST Request"));
-    response = simcomm.HTTPRequest(1, "http://sachleen.com/sachleen/parking/API/nodes/save", "id=test1&available=0&api_key=e1d1b85eef174d89121da2407f7bb15b");
+    response = simcomm.HTTPRequest(1, "http://sachleen.com/sachleen/parking/API/nodes/save", "id=test1&available=0&api_key=8ce367853467bbfe56a51d9eac208318");
     DEBUG_PRINTLN(response);
     
     DEBUG_PRINTLN("DONE WITH SETUP");
