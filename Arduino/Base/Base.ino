@@ -149,7 +149,6 @@ void loop(){
         delay(2000);
     }
     DEBUG_PRINTLN("====================End of Void Loop====================");
-    DEBUG_PRINT("Free Ram after loop: ");DEBUG_PRINTLN(freeRam());
 }
 
 /*
