@@ -18,7 +18,7 @@ SIMCommunication simcomm(4800, 9);
 
 String response = ""; // Holds the response from SIM900
 String messageFromNode = "";
-String apiKey = "e1d1b85eef174d89121da2407f7bb15b";
+String apiKey = "8ce367853467bbfe56a51d9eac208318";
 bool pass = false; // Keeps track of various phases of the connection. Must be set to true during each phase for success
 
 //Keeps track of the number of messages to be sent to the server
