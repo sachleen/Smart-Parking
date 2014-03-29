@@ -94,7 +94,7 @@ void Sleep::sleepDelay(unsigned long sleepTime){
 ********************************************************************/
 void Sleep::sleepDelay(unsigned long sleepTime, boolean &abortCycle) {
   ADCSRA &= ~(1<<ADEN);  // adc off
-    PRR = 0xEF; // modules off
+    //PRR = 0xEF; // modules off
   
   ++sleepCycleCount;
   sleepCycleCount = sleepCycleCount % sleepCycleInterval; //recalibrate every interval cycles
@@ -108,7 +108,7 @@ void Sleep::sleepDelay(unsigned long sleepTime, boolean &abortCycle) {
   	int trem = sleepWDT(sleepTime*calibv,abortCycle); 
   	timeSleep += (sleepTime-trem);
   }
-   PRR = 0x00; //modules on
+   //PRR = 0x00; //modules on
  ADCSRA |= (1<<ADEN);  // adc on
 }
 

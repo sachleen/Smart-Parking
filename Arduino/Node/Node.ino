@@ -14,8 +14,8 @@ Sleep sleep;
 unsigned long sleepTime; //how long you want the arduino to sleep
 //String nodeId = "test1";
 
-//SoftwareSerial xbee(5, 6); // RX, TX
-SoftwareSerial xbee(2, 3); //Testing with Xbee only
+SoftwareSerial xbee(5, 6); // RX, TX
+//SoftwareSerial xbee(2, 3); //Testing with Xbee only
 
 WiredCommunication wiredbus;
 XBeeCommunication xcomm("test1");//Change here for different nodes
@@ -55,10 +55,12 @@ void setup()
 	   delay(1000);
 	}
 
-	
+    
     while(numSensors < 0){
-		xcomm.sendMessage(baseId, "N");
+		xbee.println("Sending...");
+                xcomm.sendMessage(baseId, "N");
 		response = xcomm.getMessage();
+
 		if(response != NULL){
 			uint8_t start = 0;
 			uint8_t end = response.indexOf(',');
@@ -73,7 +75,7 @@ void setup()
 		}
     }
     
-    //numSensors = 3;//used for demo-ing
+    //numSensors = 2;//used for demo-ing
     sleepTime = 5000;
 }
 
@@ -188,12 +190,12 @@ void loop()
             Prepare XBee message packet:
             [Total Spots],[Available Spots]
         */
-        String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + String(countAvailable);//dont need total(?)
+        String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + "," + String(countAvailable);//dont need total(?)
 		
         xcomm.sendMessage(baseId, updateMessage);
 		String response = xcomm.getMessage();
 		sendCount = 0;
-		while (response == NULL && sendCount < 3){
+		while (response == NULL && sendCount < 2){
 			xcomm.sendMessage(baseId, updateMessage);
 			response = xcomm.getMessage();
 			sendCount++;
