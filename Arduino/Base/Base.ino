@@ -68,14 +68,12 @@ void loop(){
 		simcomm.HTTPRequest(1, "http://sachleen.com/sachleen/parking/API/nodes/save", "id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
         //sendResponse = sendRequestServer(nodeIds[i], 'U', spacesAvail[i], totalSpaces[i]);//Sends a message to the server to update the status of the node
 		DEBUG_PRINTLN(response);//Idk what the response is supposed to be yet...
-		/*
-		if(sendResponse == 1){
-			DEBUG_PRINTLN("Update " + (String)i + " Succeeded");
-		}
-		else{
+		if (response.indexOf("TRUE") < 0) {
 			DEBUG_PRINTLN("Update " + (String)i + " Failed");
 		}
-		*/
+		else{
+			DEBUG_PRINTLN("Update " + (String)i + " Succeeded");
+		}
       }
       qCount = 0;
     }
