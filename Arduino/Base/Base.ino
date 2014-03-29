@@ -9,10 +9,9 @@
 #define QMAX 10
 
 SoftwareSerial xbee(2, 3);
-//SoftwareSerial xbee(5, 6);//For Testing on Node board
-SoftwareSerial SIM900(7, 8);
-
 XBeeCommunication xcomm("00000");//Change here for different bases
+
+SoftwareSerial SIM900(7, 8);
 SIMCommunication simcomm(4800, 9);
 
 
@@ -37,6 +36,7 @@ void setup()
   DEBUG_INIT(9600);
   xbee.begin(XBEE_BAUD); // Communicates with node
   timeout_init(5000);//Starts timer for updates to be sent to server
+  
   /*This starts the network connection*/
   while (!simcomm.isOn()) {
     simcomm.togglePower();

@@ -64,6 +64,7 @@ void XBeeCommunication::sendMessage(String nodeIdTo, String message) {
     Returns null upon timeout after ~2.5s
 */
 String XBeeCommunication::xbeeResponse() {
+    xbee.listen();
     String content = "";
     int counter = 0;
     while(!xbee.available() && counter < 250) {

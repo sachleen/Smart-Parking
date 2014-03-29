@@ -72,13 +72,14 @@ bool SIMCommunication::isOn() {
     
 */
 String SIMCommunication::sendCommand(String command, int timeout) {
+    SIM900.listen();
     // Clear read buffer before sending new command
     while(SIM900.available()) { SIM900.read(); }
-    
+
     SIM900.println(command);
     
     if (responseTimedOut(timeout)) {
-        //DEBUG_PRINT("sendCommand Timed Out: ");DEBUG_PRINTLN(command);
+        DEBUG_PRINT(F("sendCommand Timed Out: "));DEBUG_PRINTLN(command);
         return NULL;
     }
     
@@ -117,6 +118,7 @@ bool SIMCommunication::connectToNetwork() {
 }
 
 String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters) {
+    SIM900.listen();
     /*
         Setup HTTP
     */
@@ -253,6 +255,8 @@ bool SIMCommunication::fancySend(String command, uint8_t attempts, int timeout, 
     Returns true if timed out without response. False otherwise.
 */
 bool SIMCommunication::responseTimedOut(int ms) {
+    SIM900.listen();
+    
     int counter = 0;
     while(!SIM900.available() && counter < ms) {
         counter++;
