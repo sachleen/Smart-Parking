@@ -49,10 +49,11 @@ void setup()
     DEBUG_PRINTLN(F("Network Connection Failed."));
   }
   
+  DEBUG_PRINTLN("ok..");
 }
 
 void loop(){
-  DEBUG_PRINTLN("====================Beginning of Void Loop====================");
+  DEBUG_PRINTLN(F("====================Beginning of Void Loop===================="));
   
   /*
   This limits the sending of updates to the server by sending a maximum of 10 once every minute
@@ -60,7 +61,7 @@ void loop(){
   */
   if(timeout_timedout() || qCount == QMAX){
     if(qCount > 0){//will only send if q isn't empty
-      DEBUG_PRINT("Made it to server update. Number of messages: ");
+      DEBUG_PRINT(F("Made it to server update. Number of messages: "));
       DEBUG_PRINTLN(qCount);
       delay(1000);
       for(int i = 0; i < qCount; i++){
@@ -81,7 +82,7 @@ void loop(){
   }
   
   messageFromNode = xcomm.getMessage();
-  DEBUG_PRINTLN("Message From Node: "+ messageFromNode);
+  DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(messageFromNode);
   
   if (messageFromNode != NULL) {
         uint8_t start = 0;
@@ -95,7 +96,7 @@ void loop(){
 		//DEBUG_PRINTLN(identifier.length());
 		identifier.trim();
 		if(identifier=="N"){
-			DEBUG_PRINTLN("Number of sensors request from " + nodeId);
+			DEBUG_PRINT(F("Number of sensors request from "));DEBUG_PRINTLN(nodeId);
 			DEBUG_PRINTLN(F("Making HTTP GET Request"));
 			response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
 			DEBUG_PRINTLN(response);
@@ -144,11 +145,11 @@ void loop(){
 			spacesAvail[qCount] = available;
 			qCount++;
 			
-			DEBUG_PRINTLN("Storing in queue...");
+			DEBUG_PRINTLN(F("Storing in queue..."));
 		}
         delay(2000);
     }
-    DEBUG_PRINTLN("====================End of Void Loop====================");
+    DEBUG_PRINTLN(F("====================End of Void Loop===================="));
 }
 
 /*
