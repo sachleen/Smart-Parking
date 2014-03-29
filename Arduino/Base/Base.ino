@@ -100,31 +100,36 @@ void loop(){
 			DEBUG_PRINTLN(F("Making HTTP GET Request"));
 			response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
 			DEBUG_PRINTLN(response);
-			response.trim();//might not need(?)
-			//JSON Parsing
-			uint8_t responseStart = response.indexOf("id\":\"") + 5;
-			uint8_t responseEnd = responseStart + 5;
-			String nodeId = response.substring(responseStart, responseEnd);//for testing
-			//nodeId = response.substring(start, end);
-			
-			responseStart = response.indexOf("total\":\"") + 8;
-			responseEnd = responseStart + 1;
-			
-			String total;
+			if(response != NULL){
+				response.trim();//might not need(?)
+				//JSON Parsing
+				uint8_t responseStart = response.indexOf("id\":\"") + 5;
+				uint8_t responseEnd = responseStart + 5;
+				String nodeId = response.substring(responseStart, responseEnd);//for testing
+				//nodeId = response.substring(start, end);
+				
+				responseStart = response.indexOf("total\":\"") + 8;
+				responseEnd = responseStart + 1;
+				
+				String total;
 
-			uint8_t quoteStart = responseEnd;
-			uint8_t quoteEnd = responseStart + 2;
-			String quoteCheck = response.substring(quoteStart, quoteEnd);
-			
-			
-			if(quoteCheck.equals("\"")){
-				total = response.substring(responseStart, responseEnd);
+				uint8_t quoteStart = responseEnd;
+				uint8_t quoteEnd = responseStart + 2;
+				String quoteCheck = response.substring(quoteStart, quoteEnd);
+				
+				
+				if(quoteCheck.equals("\"")){
+					total = response.substring(responseStart, responseEnd);
+				}
+				else{
+					total = response.substring(responseStart, responseEnd + 1);
+				}
+				
+				xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
 			}
 			else{
-				total = response.substring(responseStart, responseEnd + 1);
+				DEBUG_PRINTLN(F("Get request returned NULL"));
 			}
-			
-            xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
 		}
 		else if(identifier.equals("U")){
 			xcomm.sendMessage(nodeId, "OK");
