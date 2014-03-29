@@ -3,13 +3,17 @@
 #include <RS485.h>
 #include "globals.h"
 #include "XbeeCommunication.h"
+#include "SIMCommunication.h"
 
 #define XBEE_BAUD 9600
 #define QMAX 10
 
 SoftwareSerial xbee(2, 3);
 //SoftwareSerial xbee(5, 6);//For Testing on Node board
+SoftwareSerial SIM900(7, 8);
+
 XBeeCommunication xcomm("00000");//Change here for different bases
+SIMCommunication simcomm(4800, 9);
 
 
 String response = ""; // Holds the response from SIM900
@@ -33,6 +37,18 @@ void setup()
   DEBUG_INIT(9600);
   xbee.begin(XBEE_BAUD); // Communicates with node
   timeout_init(5000);//Starts timer for updates to be sent to server
+  /*This starts the network connection*/
+  while (!simcomm.isOn()) {
+    simcomm.togglePower();
+  }
+  DEBUG_PRINT("Power Status:");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+
+  if (simcomm.connectToNetwork()) {
+    DEBUG_PRINTLN(F("Connected!"));
+  } else {
+    DEBUG_PRINTLN(F("Network Connection Failed."));
+  }
+  
 }
 
 void loop(){
@@ -47,15 +63,20 @@ void loop(){
       DEBUG_PRINT("Made it to server update. Number of messages: ");
       DEBUG_PRINTLN(qCount);
       delay(1000);
-      // for(int i = 0; i < qCount; i++){
-        // sendResponse = sendRequestServer(nodeIds[i], 'U', spacesAvail[i], totalSpaces[i]);//Sends a message to the server to update the status of the node
-		// if(sendResponse == 1){
-			// DEBUG_PRINTLN("Update " + (String)i + " Succeeded");
-		// }
-		// else{
-			// DEBUG_PRINTLN("Update " + (String)i + " Failed");
-		// }
-      // }
+      for(int i = 0; i < qCount; i++){
+		DEBUG_PRINTLN(F("Making HTTP POST Request"));
+		simcomm.HTTPRequest(1, "http://sachleen.com/sachleen/parking/API/nodes/save", "id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&" + apiKey);
+        //sendResponse = sendRequestServer(nodeIds[i], 'U', spacesAvail[i], totalSpaces[i]);//Sends a message to the server to update the status of the node
+		DEBUG_PRINTLN(response);//Idk what the response is supposed to be yet...
+		/*
+		if(sendResponse == 1){
+			DEBUG_PRINTLN("Update " + (String)i + " Succeeded");
+		}
+		else{
+			DEBUG_PRINTLN("Update " + (String)i + " Failed");
+		}
+		*/
+      }
       qCount = 0;
     }
     timeout_init(5000);
@@ -72,15 +93,42 @@ void loop(){
 		start = end + 1;
 		end = messageFromNode.indexOf(',', start);
 		String identifier = messageFromNode.substring(start, end);
-		//identifier = identifier.trim();
 		DEBUG_PRINTLN(nodeId);
-		DEBUG_PRINTLN(identifier.length());
+		//DEBUG_PRINTLN(identifier.length());
 		identifier.trim();
 		if(identifier=="N"){
 			DEBUG_PRINTLN("Number of sensors request from " + nodeId);
-            xcomm.sendMessage(nodeId, "2");
+			DEBUG_PRINTLN(F("Making HTTP GET Request"));
+			response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
+			DEBUG_PRINTLN(response);
+			response.trim();//might not need(?)
+			//JSON Parsing
+			uint8_t responseStart = response.indexOf("id\":\"") + 5;
+			uint8_t responseEnd = responseStart + 5;
+			String nodeId = response.substring(responseStart, responseEnd);//for testing
+			//nodeId = response.substring(start, end);
+			
+			responseStart = response.indexOf("total\":\"") + 8;
+			responseEnd = responseStart + 1;
+			
+			String total;
+
+			uint8_t quoteStart = responseEnd;
+			uint8_t quoteEnd = responseStart + 2;
+			String quoteCheck = response.substring(quoteStart, quoteEnd);
+			
+			
+			if(quoteCheck.equals("\"")){
+				total = response.substring(responseStart, responseEnd);
+			}
+			else{
+				total = response.substring(responseStart, responseEnd + 1);
+			}
+			
+            xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
 		}
 		else if(identifier.equals("U")){
+			xcomm.sendMessage(nodeId, "OK");
 			start = end + 1;
 			end = messageFromNode.indexOf(',', start);
 			uint8_t total = messageFromNode.substring(start, end).toInt();
@@ -98,7 +146,7 @@ void loop(){
 			spacesAvail[qCount] = available;
 			qCount++;
 			
-			DEBUG_PRINTLN("Sending update to server...");
+			DEBUG_PRINTLN("Storing in queue...");
 		}
         delay(2000);
     }

@@ -4,12 +4,19 @@
 #include "globals.h"
 #include "WiredCommunication.h"
 #include "XBeeCommunication.h"
+#include "Sleep_n0m1.h"
 
 #define MAX_SENSORS 32
 String baseId = "00000";
+
+//Sleep Testing
+Sleep sleep;
+unsigned long sleepTime; //how long you want the arduino to sleep
 //String nodeId = "test1";
 
-SoftwareSerial xbee(5, 6); // RX, TX
+//SoftwareSerial xbee(5, 6); // RX, TX
+SoftwareSerial xbee(2, 3); //Testing with Xbee only
+
 WiredCommunication wiredbus;
 XBeeCommunication xcomm("test1");//Change here for different nodes
 
@@ -50,11 +57,9 @@ void setup()
 
 	
     while(numSensors < 0){
-		sendOk = xcomm.sendMessage(baseId, "N");
-		if(sendOk){
-			response = xcomm.getMessage();
-			//xcomm.sendMessage(baseId, "OK");
-			
+		xcomm.sendMessage(baseId, "N");
+		response = xcomm.getMessage();
+		if(response != NULL){
 			uint8_t start = 0;
 			uint8_t end = response.indexOf(',');
 			
@@ -69,6 +74,7 @@ void setup()
     }
     
     //numSensors = 3;//used for demo-ing
+    sleepTime = 5000;
 }
 
 void loop()
@@ -182,18 +188,22 @@ void loop()
             Prepare XBee message packet:
             [Total Spots],[Available Spots]
         */
-        String updateMessage = String(numSensors) + ',' + String(countAvailable);//dont need total(?)
+        String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + String(countAvailable);//dont need total(?)
 		
-		sendOk = xcomm.sendMessage(baseId, updateMessage);
+        xcomm.sendMessage(baseId, updateMessage);
+		String response = xcomm.getMessage();
 		sendCount = 0;
-		while (!sendOk && sendCount < 3){
-			sendOk = xcomm.sendMessage(baseId, updateMessage);
+		while (response == NULL && sendCount < 3){
+			xcomm.sendMessage(baseId, updateMessage);
+			response = xcomm.getMessage();
 			sendCount++;
 		}
-		if(sendOk){
-			String response = xcomm.getMessage();
-			//xcomm.sendMessage(baseId, "OK");
-			if (response.equals("OK")){
+		if(response!=NULL){
+			uint8_t start = 0;
+			uint8_t end = response.indexOf(',');
+			
+			String baseCheck = response.substring(end+1);
+			if (baseCheck.equals("OK")){
 				DEBUG_PRINTLN("Update successful");
 			}
 			else{
@@ -206,6 +216,14 @@ void loop()
     }
     
     DEBUG_PRINTLN("==============================\n");
+    
+    //Sleep Test
+    delay(100);
+    DEBUG_PRINT("Sleeping for ");
+    DEBUG_PRINTLN(sleepTime);
+    delay(100);
+    sleep.pwrDownMode(); //set sleep mode
+    sleep.sleepDelay(sleepTime); //sleep for: sleepTime
     
     dataChanged = false;
 }
