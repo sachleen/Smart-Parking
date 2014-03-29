@@ -6,7 +6,7 @@
 #include "SIMCommunication.h"
 
 #define XBEE_BAUD 9600
-#define QMAX 10
+#define QMAX 1
 
 SoftwareSerial xbee(2, 3);
 XBeeCommunication xcomm("00000");//Change here for different bases
@@ -41,20 +41,15 @@ void setup()
   while (!simcomm.isOn()) {
     simcomm.togglePower();
   }
-  DEBUG_PRINT("Power Status:");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+  DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
 
-  if (simcomm.connectToNetwork()) {
-    DEBUG_PRINTLN(F("Connected!"));
-  } else {
+  if (!simcomm.connectToNetwork()) {
     DEBUG_PRINTLN(F("Network Connection Failed."));
   }
   
-  DEBUG_PRINTLN("ok..");
 }
 
 void loop(){
-  DEBUG_PRINTLN(F("====================Beginning of Void Loop===================="));
-  
   /*
   This limits the sending of updates to the server by sending a maximum of 10 once every minute
   or once the array of requests reaches its maximum
@@ -65,7 +60,7 @@ void loop(){
       DEBUG_PRINTLN(qCount);
       delay(1000);
       for(int i = 0; i < qCount; i++){
-		DEBUG_PRINTLN(F("Making HTTP POST Request"));
+		//DEBUG_PRINTLN(F("Making HTTP POST Request"));
 		simcomm.HTTPRequest(1, "http://sachleen.com/sachleen/parking/API/nodes/save", "id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
         //sendResponse = sendRequestServer(nodeIds[i], 'U', spacesAvail[i], totalSpaces[i]);//Sends a message to the server to update the status of the node
 		DEBUG_PRINTLN(response);//Idk what the response is supposed to be yet...
@@ -96,8 +91,8 @@ void loop(){
 		//DEBUG_PRINTLN(identifier.length());
 		identifier.trim();
 		if(identifier=="N"){
-			DEBUG_PRINT(F("Number of sensors request from "));DEBUG_PRINTLN(nodeId);
-			DEBUG_PRINTLN(F("Making HTTP GET Request"));
+			DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
+			//DEBUG_PRINTLN(F("Making HTTP GET Request"));
 			response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
 			DEBUG_PRINTLN(response);
 			response.trim();//might not need(?)
@@ -149,7 +144,6 @@ void loop(){
 		}
         delay(2000);
     }
-    DEBUG_PRINTLN(F("====================End of Void Loop===================="));
 }
 
 /*
