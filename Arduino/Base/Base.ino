@@ -20,90 +20,110 @@ String apiKey = "8ce367853467bbfe56a51d9eac208318";
 bool pass = false; // Keeps track of various phases of the connection. Must be set to true during each phase for success
 
 //Keeps track of the number of messages to be sent to the server
-int qCount = 0;
+uint8_t qCount = 0;
 
-int loopCount = 0;
+uint8_t loopCount = 0;
 
 //These arrays are what hold the different parts of the messages to be sent to the server
 String nodeIds[QMAX];
-int spacesAvail[QMAX];
-int totalSpaces[QMAX];
-
-uint8_t start;
-uint8_t end;
-
-String nodeId = "";
-String identifier = "";
-
+uint8_t spacesAvail[QMAX];
+uint8_t totalSpaces[QMAX];
 
 int freeRam () 
 {
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+      extern int __heap_start, *__brkval; 
+      int v; 
+      return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
 void setup()
 {
-  DEBUG_INIT(9600);
-  xbee.begin(XBEE_BAUD); // Communicates with node
-  //timeout_init(5000);//Starts timer for updates to be sent to server
-  
-  /*This starts the network connection*/
-  while (!simcomm.isOn()) {
-    simcomm.togglePower();
-  }
-  DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+    DEBUG_INIT(9600);
+    xbee.begin(XBEE_BAUD); // Communicates with node
+    //timeout_init(5000);//Starts timer for updates to be sent to server
+    
+    /*This starts the network connection*/
+    while (!simcomm.isOn()) {
+        simcomm.togglePower();
+    }
+    DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
 
-  if (!simcomm.connectToNetwork()) {
-    DEBUG_PRINTLN(F("Network Connection Failed."));
-  }
-  
+    if (!simcomm.connectToNetwork()) {
+        DEBUG_PRINTLN(F("Network Connection Failed."));
+    }
 }
 
-void loop(){
+void loop() {
     DEBUG_PRINTLN(freeRam());
-  /*
-  This limits the sending of updates to the server by sending a maximum of 10 once every minute
-  or once the array of requests reaches its maximum
-  */
-  if(loopCount > 9 || qCount == QMAX){
-    if(qCount > 0){//will only send if q isn't empty
-      DEBUG_PRINT(F("Made it to server update. Number of messages: "));
-      DEBUG_PRINTLN(qCount);
-      delay(1000);
-      for(int i = 0; i < qCount; i++){
-		//DEBUG_PRINTLN(F("Making HTTP POST Request"));
-		simcomm.HTTPRequest(1, "http://sachleen.com/sachleen/parking/API/nodes/save", "id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
-        //sendResponse = sendRequestServer(nodeIds[i], 'U', spacesAvail[i], totalSpaces[i]);//Sends a message to the server to update the status of the node
-		DEBUG_PRINTLN(response);//Idk what the response is supposed to be yet...
-		if (response.indexOf("TRUE") < 0) {
-			DEBUG_PRINTLN("Update " + (String)i + " Failed");
-		}
-		else{
-			DEBUG_PRINTLN("Update " + (String)i + " Succeeded");
-		}
-      }
-      qCount = 0;
+    
+    /*
+    This limits the sending of updates to the server by sending a maximum of 10 once every minute
+    or once the array of requests reaches its maximum
+    */
+    if(loopCount > 9 || qCount == QMAX) {
+        if(qCount > 0) {//will only send if q isn't empty
+            DEBUG_PRINT(F("Made it to server update. Number of messages: "));
+            DEBUG_PRINTLN(qCount);
+            delay(1000);
+            
+            for(int i = 0; i < qCount; i++) {
+                //DEBUG_PRINTLN(F("Making HTTP POST Request"));
+                response = simcomm.HTTPRequest(1, "", "id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
+                //sendResponse = sendRequestServer(nodeIds[i], 'U', spacesAvail[i], totalSpaces[i]);//Sends a message to the server to update the status of the node
+                //DEBUG_PRINTLN(response);//Idk what the response is supposed to be yet...
+                if (response.indexOf("TRUE") < 0) {
+                    DEBUG_PRINTLN("Update " + (String)i + " Failed");
+                } else{
+                    DEBUG_PRINTLN("Update " + (String)i + " Succeeded");
+                }
+            }
+            qCount = 0;
+        }
+        //timeout_init(5000);
+        loopCount = 0;
     }
-    //timeout_init(5000);
-	loopCount = 0;
-  }
   
-  response = xcomm.getMessage();
-  DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(response);
+    response = xcomm.getMessage();
+    DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(response);
   
-  if (response != NULL) {
-        start = 0;
-        end = response.indexOf(',');
-        nodeId = response.substring(start, end);
-		
-		start = end + 1;
-		end = response.indexOf(',', start);
-		identifier = response.substring(start, end);
+    if (response != NULL) {
+        uint8_t start = 0;
+        uint8_t end = response.indexOf(',');
+        String nodeId = response.substring(start, end);
 		DEBUG_PRINTLN(nodeId);
+        
+        start = end + 1;
+		end = response.indexOf(',', start);
+        
+        xcomm.sendMessage(nodeId, "OK");
+        start = end + 1;
+        end = response.indexOf(',', start);
+        uint8_t total = response.substring(start, end).toInt();
+
+        start = end + 1;
+        end = response.indexOf(',', start);
+        uint8_t available = response.substring(start, end).toInt();
+
+        DEBUG_PRINTLN("Node:  " + String(nodeId));
+        DEBUG_PRINTLN("Total: " + String(total));
+        DEBUG_PRINTLN("Avail: " + String(available));
+
+        nodeIds[qCount] = nodeId;
+        totalSpaces[qCount] = total;
+        spacesAvail[qCount] = available;
+        qCount++;
+
+        DEBUG_PRINTLN(F("Storing in queue..."));
+
+        
+        
+        
+        // start = end + 1;
+		// end = response.indexOf(',', start);
+		// String identifier = response.substring(start, end);
+        
 		//DEBUG_PRINTLN(identifier.length());
-		identifier.trim();
+		//identifier.trim();
 		// if(identifier=="N"){
 			// DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
 			// //DEBUG_PRINTLN(F("Making HTTP GET Request"));
@@ -142,27 +162,27 @@ void loop(){
 
 		// }
 		//else if(identifier.equals("U")){
-		if(identifier.equals("U")){
-			xcomm.sendMessage(nodeId, "OK");
-			start = end + 1;
-			end = response.indexOf(',', start);
-			uint8_t total = response.substring(start, end).toInt();
-			
-			start = end + 1;
-			end = response.indexOf(',', start);
-			uint8_t available = response.substring(start, end).toInt();
-			
-			DEBUG_PRINTLN("Node:  " + String(nodeId));
-			DEBUG_PRINTLN("Total: " + String(total));
-			DEBUG_PRINTLN("Avail: " + String(available));
-			
-			nodeIds[qCount] = nodeId;
-			totalSpaces[qCount] = total;
-			spacesAvail[qCount] = available;
-			qCount++;
-			
-			DEBUG_PRINTLN(F("Storing in queue..."));
-		}
+		//if(identifier.equals("U")){
+            // xcomm.sendMessage(nodeId, "OK");
+            // start = end + 1;
+            // end = response.indexOf(',', start);
+            // uint8_t total = response.substring(start, end).toInt();
+
+            // start = end + 1;
+            // end = response.indexOf(',', start);
+            // uint8_t available = response.substring(start, end).toInt();
+
+            // DEBUG_PRINTLN("Node:  " + String(nodeId));
+            // DEBUG_PRINTLN("Total: " + String(total));
+            // DEBUG_PRINTLN("Avail: " + String(available));
+
+            // nodeIds[qCount] = nodeId;
+            // totalSpaces[qCount] = total;
+            // spacesAvail[qCount] = available;
+            // qCount++;
+
+            // DEBUG_PRINTLN(F("Storing in queue..."));
+		//}
         delay(2000);
     }
 	loopCount = loopCount + 1;
