@@ -32,8 +32,8 @@ String XBeeCommunication::getMessage() {
     DEBUG_PRINT("getMessage got: ");DEBUG_PRINTLN(xResponse);
     
     if(targetNode.equals(_nodeId)) {
-        DEBUG_PRINT("getMessage your message is: ");
-        DEBUG_PRINTLN(xResponse.substring(end+1));
+        //DEBUG_PRINT("getMessage your message is: ");
+        //DEBUG_PRINTLN(xResponse.substring(end+1));
         return xResponse.substring(end+1);
     } else {
         DEBUG_PRINTLN("getMessage: node ID not match, return NULL");
@@ -55,7 +55,7 @@ void XBeeCommunication::sendMessage(String nodeIdTo, String message) {
     message = nodeIdTo + ',' + _nodeId + ',' + message;
     xbee.println(message);
     
-    DEBUG_PRINT("sendMessage sent: ");DEBUG_PRINTLN(message);
+    //DEBUG_PRINT("sendMessage sent: ");DEBUG_PRINTLN(message);
 }
 
 /*
