@@ -191,7 +191,7 @@ void loop()
             [Total Spots],[Available Spots]
         */
         //String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + "," + String(countAvailable);//dont need total(?)
-	String updateMessage = "U," + String(numSensors) + "," + String(countAvailable);
+		String updateMessage = String(countAvailable);
         xcomm.sendMessage(baseId, updateMessage);
 		String response = xcomm.getMessage();
 		sendCount = 0;
