@@ -18,7 +18,7 @@ SoftwareSerial xbee(5, 6); // RX, TX
 //SoftwareSerial xbee(2, 3); //Testing with Xbee only
 
 WiredCommunication wiredbus;
-XBeeCommunication xcomm("test1");//Change here for different nodes
+XBeeCommunication xcomm("TEST1");//Change here for different nodes
 
 
 int  numSensors = -1; // Starts off at 99 so that the base recognizes first message as startup message. SET TO 3 FOR TESTING
@@ -55,7 +55,7 @@ void setup()
 	   delay(1000);
 	}
 
-    
+    /*
     while(numSensors < 0){
 		xbee.println("Sending...");
                 xcomm.sendMessage(baseId, "N");
@@ -74,8 +74,8 @@ void setup()
 			DEBUG_PRINTLN(numSensors);
 		}
     }
-    
-    //numSensors = 2;//used for demo-ing
+    */
+    numSensors = 3;//used for demo-ing
     sleepTime = 5000;
 }
 
@@ -190,8 +190,8 @@ void loop()
             Prepare XBee message packet:
             [Total Spots],[Available Spots]
         */
-        String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + "," + String(countAvailable);//dont need total(?)
-		
+        //String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + "," + String(countAvailable);//dont need total(?)
+	String updateMessage = "U," + String(numSensors) + "," + String(countAvailable);
         xcomm.sendMessage(baseId, updateMessage);
 		String response = xcomm.getMessage();
 		sendCount = 0;
@@ -205,11 +205,11 @@ void loop()
 			uint8_t end = response.indexOf(',');
 			
 			String baseCheck = response.substring(end+1);
-			if (baseCheck.equals("OK")){
-				DEBUG_PRINTLN("Update successful");
+			if (baseCheck.indexOf("OK") < 0){
+				DEBUG_PRINTLN("Didn't receive correct message from base");
 			}
 			else{
-				DEBUG_PRINTLN("Didn't receive correct message from base");
+				DEBUG_PRINTLN("Update Successful");
 			}
 		}
 		else{

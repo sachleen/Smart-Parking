@@ -15,8 +15,7 @@ SoftwareSerial SIM900(7, 8);
 SIMCommunication simcomm(4800, 9);
 
 
-String response = ""; // Holds the response from SIM900
-String messageFromNode = "";
+String response = "";
 String apiKey = "8ce367853467bbfe56a51d9eac208318";
 bool pass = false; // Keeps track of various phases of the connection. Must be set to true during each phase for success
 
@@ -28,8 +27,11 @@ String nodeIds[QMAX];
 int spacesAvail[QMAX];
 int totalSpaces[QMAX];
 
-int sendResponse;//this holds the response from the sendRequestServer()
+uint8_t start;
+uint8_t end;
 
+String nodeId = "";
+String identifier = "";
 
 void setup()
 {
@@ -76,17 +78,17 @@ void loop(){
     timeout_init(5000);
   }
   
-  messageFromNode = xcomm.getMessage();
-  DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(messageFromNode);
+  response = xcomm.getMessage();
+  DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(response);
   
-  if (messageFromNode != NULL) {
-        uint8_t start = 0;
-        uint8_t end = messageFromNode.indexOf(',');
-        String nodeId = messageFromNode.substring(start, end);
+  if (response != NULL) {
+        start = 0;
+        end = response.indexOf(',');
+        nodeId = response.substring(start, end);
 		
 		start = end + 1;
-		end = messageFromNode.indexOf(',', start);
-		String identifier = messageFromNode.substring(start, end);
+		end = response.indexOf(',', start);
+		identifier = response.substring(start, end);
 		DEBUG_PRINTLN(nodeId);
 		//DEBUG_PRINTLN(identifier.length());
 		identifier.trim();
@@ -98,26 +100,26 @@ void loop(){
 			if(response != NULL){
 				response.trim();//might not need(?)
 				//JSON Parsing
-				uint8_t responseStart = response.indexOf("id\":\"") + 5;
-				uint8_t responseEnd = responseStart + 5;
-				String nodeId = response.substring(responseStart, responseEnd);//for testing
-				//nodeId = response.substring(start, end);
+				start = response.indexOf("id\":\"") + 5;
+				end = start + 5;
+				//nodeId = response.substring(responseStart, responseEnd);//for testing
+				nodeId = response.substring(start, end);
 				
-				responseStart = response.indexOf("total\":\"") + 8;
-				responseEnd = responseStart + 1;
+				start = response.indexOf("total\":\"") + 8;
+				end = start + 1;
 				
 				String total;
 
-				uint8_t quoteStart = responseEnd;
-				uint8_t quoteEnd = responseStart + 2;
+				uint8_t quoteStart = end;
+				uint8_t quoteEnd = start + 2;
 				String quoteCheck = response.substring(quoteStart, quoteEnd);
 				
 				
 				if(quoteCheck.equals("\"")){
-					total = response.substring(responseStart, responseEnd);
+					total = response.substring(start, end);
 				}
 				else{
-					total = response.substring(responseStart, responseEnd + 1);
+					total = response.substring(start, end + 1);
 				}
 				
 				xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
@@ -129,12 +131,12 @@ void loop(){
 		else if(identifier.equals("U")){
 			xcomm.sendMessage(nodeId, "OK");
 			start = end + 1;
-			end = messageFromNode.indexOf(',', start);
-			uint8_t total = messageFromNode.substring(start, end).toInt();
+			end = response.indexOf(',', start);
+			uint8_t total = response.substring(start, end).toInt();
 			
 			start = end + 1;
-			end = messageFromNode.indexOf(',', start);
-			uint8_t available = messageFromNode.substring(start, end).toInt();
+			end = response.indexOf(',', start);
+			uint8_t available = response.substring(start, end).toInt();
 			
 			DEBUG_PRINTLN("Node:  " + String(nodeId));
 			DEBUG_PRINTLN("Total: " + String(total));
