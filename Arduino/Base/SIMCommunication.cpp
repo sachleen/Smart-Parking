@@ -25,12 +25,12 @@ SIMCommunication::SIMCommunication(unsigned long baud, uint8_t powerPin)
     Does not use AT+CPOWD
 */
 void SIMCommunication::togglePower() {
-    DEBUG_PRINT(F("Toggling Power..."));
+    //DEBUG_PRINT(F("Toggling Power..."));
     digitalWrite(_powerPin, HIGH);
     delay(2000);
     digitalWrite(_powerPin, LOW);
     delay(2000);
-    DEBUG_PRINTLN(F("Done"));
+    //DEBUG_PRINTLN(F("Done"));
 }
 
 /*
@@ -117,26 +117,39 @@ bool SIMCommunication::connectToNetwork() {
         return false;
 }
 
-String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters) {
+String SIMCommunication::HTTPRequest(uint8_t type, String parameters) {
     SIM900.listen();
     /*
         Setup HTTP
     */
-    sendCommand("AT+HTTPINIT", 1000);
-    
-    // if (!fancySend("AT+HTTPINIT", 1, 1000, 1, "OK")) {
-        // DEBUG_PRINTLN("INIT fail");
-    // }
+    SIM900.println("AT+HTTPTERM");
+    // sendCommand("AT+HTTPINIT", 2000);
+    delay(1000);
+    if (!fancySend("AT+HTTPINIT", 1, 2000, 1, "OK")) {
+        DEBUG_PRINTLN("INIT fail");
+    }
     
     sendCommand("AT+HTTPPARA=\"CID\",\"1\"", 2000);
-    sendCommand("AT+HTTPPARA=\"URL\",\"" + url + "\"", 1000);
+    
+    
+    //SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"");
+    
+    // if (!fancySend("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"", 1, 5000, 1, "OK")) {
+        // DEBUG_PRINTLN("url fail");
+    // }
+    
     sendCommand("AT+HTTPPARA=\"REDIR\",\"1\"", 1000);
     
     switch (type) {
         case 0:
-            sendCommand("AT+HTTPACTION=0", 1000);
+            SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/"+parameters+"\"");
+            // sendCommand("AT+HTTPACTION=0", 1000);
+            if (!fancySend("AT+HTTPACTION=0", 1, 5000, 1, "OK")) {
+                DEBUG_PRINTLN("G act fail");
+            }
             break;
         case 1: {
+            SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"");
             // if (!fancySend("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1, 1000, 1, "OK")) {
                 // DEBUG_PRINTLN("CONTENT fail");
             // }
@@ -155,13 +168,18 @@ String SIMCommunication::HTTPRequest(uint8_t type, String url, String parameters
 
             sendCommand(parameters, 1000);
             
-            sendCommand("AT+HTTPACTION=1", 1000);
+            //sendCommand("AT+HTTPACTION=1", 1000);
+            if (!fancySend("AT+HTTPACTION=1", 1, 5000, 1, "OK")) {
+                DEBUG_PRINTLN("P act fail");
+            }
             
             break;
         } default:
             DEBUG_PRINTLN(F("Invalid type in HTTP Request"));
             break;
     }
+    
+    
     
     // After HTTPACTION we have to wait for a HTTP Status Code.
     if (responseTimedOut(10000)) {
@@ -229,15 +247,27 @@ bool SIMCommunication::fancySend(String command, uint8_t attempts, int timeout, 
     
     String response;
     bool done = false;
+
+    DEBUG_PRINT(F("FS:"));
+    DEBUG_PRINTLN(command);
     
     for (uint8_t i = 0; i < attempts; i++) {
         response = sendCommand(command, timeout);
+        
+        DEBUG_PRINT("r:");
+        DEBUG_PRINT(response);
+        DEBUG_PRINTLN("=");
+        
         va_start(arguments, num);
         for (uint8_t j = 0; j < num; j++) {
             String comp = va_arg(arguments, char*);
+            
+            // DEBUG_PRINT("c:");
+            // DEBUG_PRINTLN(comp);
+            
             if (response.indexOf(comp) >= 0) {
-               done = true;
-               break;
+                done = true;
+                break;
             }
         }
         va_end(arguments);
