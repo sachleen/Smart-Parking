@@ -104,44 +104,45 @@ void loop(){
 		DEBUG_PRINTLN(nodeId);
 		//DEBUG_PRINTLN(identifier.length());
 		identifier.trim();
-		if(identifier=="N"){
-			DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
-			//DEBUG_PRINTLN(F("Making HTTP GET Request"));
-			response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
-			DEBUG_PRINTLN(response);
-			if(response != NULL){
-				response.trim();//might not need(?)
-				//JSON Parsing
-				start = response.indexOf("id\":\"") + 5;
-				end = start + 5;
-				//nodeId = response.substring(responseStart, responseEnd);//for testing
-				nodeId = response.substring(start, end);
+		// if(identifier=="N"){
+			// DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
+			// //DEBUG_PRINTLN(F("Making HTTP GET Request"));
+			// response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
+			// DEBUG_PRINTLN(response);
+			// if(response != NULL){
+				// response.trim();//might not need(?)
+				// //JSON Parsing
+				// start = response.indexOf("id\":\"") + 5;
+				// end = start + 5;
+				// //nodeId = response.substring(responseStart, responseEnd);//for testing
+				// nodeId = response.substring(start, end);
 				
-				start = response.indexOf("total\":\"") + 8;
-				end = start + 1;
+				// start = response.indexOf("total\":\"") + 8;
+				// end = start + 1;
 				
-				String total;
+				// String total;
 
-				uint8_t quoteStart = end;
-				uint8_t quoteEnd = start + 2;
-				String quoteCheck = response.substring(quoteStart, quoteEnd);
+				// uint8_t quoteStart = end;
+				// uint8_t quoteEnd = start + 2;
+				// String quoteCheck = response.substring(quoteStart, quoteEnd);
 				
 				
-				if(quoteCheck.equals("\"")){
-					total = response.substring(start, end);
-				}
-				else{
-					total = response.substring(start, end + 1);
-				}
+				// if(quoteCheck.equals("\"")){
+					// total = response.substring(start, end);
+				// }
+				// else{
+					// total = response.substring(start, end + 1);
+				// }
 				
-				xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
-			}
-			else{
-				DEBUG_PRINTLN(F("Get request returned NULL"));
-			}
+				// xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
+			// }
+			// else{
+				// DEBUG_PRINTLN(F("Get request returned NULL"));
+			// }
 
-		}
-		else if(identifier.equals("U")){
+		// }
+		//else if(identifier.equals("U")){
+		if(identifier.equals("U")){
 			xcomm.sendMessage(nodeId, "OK");
 			start = end + 1;
 			end = response.indexOf(',', start);
