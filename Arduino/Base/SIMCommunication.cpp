@@ -130,33 +130,14 @@ String SIMCommunication::POSTRequest(String parameters) {
     }
     
     sendCommand("AT+HTTPPARA=\"CID\",\"1\"", 2000);
-    
-    
     SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"");
-    
     sendCommand("AT+HTTPPARA=\"REDIR\",\"1\"", 1000);
-
-        
-    // if (!fancySend("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1, 1000, 1, "OK")) {
-        // DEBUG_PRINTLN("CONTENT fail");
-    // }
-    // if (!fancySend("AT+HTTPPARA=\"TIMEOUT\",\"45\"", 1, 1000, 1, "OK")) {
-        // DEBUG_PRINTLN("TIMEOUT fail");
-    // }
     sendCommand("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1000);
     sendCommand("AT+HTTPPARA=\"TIMEOUT\",\"45\"", 1000);
-    
     uint8_t dataLen = parameters.length();
     sendCommand("AT+HTTPDATA="+(String)dataLen+",5000", 5000);
-    // DEBUG_PRINTLN("AT+HTTPDATA="+(String)dataLen+",5000");
-    // if (!fancySend("AT+HTTPDATA="+(String)dataLen+",5000", 1, 10000, 1, "DOWNLOAD")) {
-        // DEBUG_PRINTLN("httpdata fail");
-    // }
-
     sendCommand(parameters, 1000);
-    
     SIM900.println("AT+HTTPACTION=1");
-    
     
     // After HTTPACTION we have to wait for a HTTP Status Code.
     if (responseTimedOut(10000)) {
@@ -170,18 +151,19 @@ String SIMCommunication::POSTRequest(String parameters) {
     delay(1000);
     String response = "";
     
-    SIM900.println("AT+HTTPREAD");
     if (responseTimedOut(10000)) {
         DEBUG_PRINTLN(F("Didn't get HTTP data"));
         sendCommand("AT+HTTPTERM", 1000);
         return NULL;
     }
+    SIM900.println("AT+HTTPREAD");
     
     // Capture only data between braces (JSON)
     bool begin = false;
-    while (SIM900.available()) {
+    while (SIM900.available() || !begin) {
         
         char in = SIM900.read();
+
         if (in == '{') {
             begin = true;
         }
@@ -198,9 +180,6 @@ String SIMCommunication::POSTRequest(String parameters) {
     delay(1000);
     
     sendCommand("AT+HTTPTERM", 1000);
-    // if (!fancySend("AT+HTTPTERM", 1, 5000, 1, "OK")) {
-        // DEBUG_PRINTLN("TERM fail");
-    // }
     
     return response;
 }

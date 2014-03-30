@@ -6,7 +6,7 @@
 #include "SIMCommunication.h"
 
 #define XBEE_BAUD 9600
-#define QMAX 10
+#define QMAX 5
 
 SoftwareSerial xbee(2, 3);
 XBeeCommunication xcomm("00000");//Change here for different bases
@@ -68,6 +68,7 @@ void loop() {
             
             for(int i = 0; i < qCount; i++) {
                 response = simcomm.POSTRequest("id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
+                DEBUG_PRINTLN(response);
                 if (response.indexOf("TRUE") < 0) {
                     DEBUG_PRINTLN("Update " + (String)i + " Failed");
                 } else{
@@ -81,9 +82,10 @@ void loop() {
     }
   
     response = xcomm.getMessage();
-    DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(response);
   
     if (response != NULL) {
+        DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(response);
+        
         uint8_t start = 0;
         uint8_t end = response.indexOf(',');
         String nodeId = response.substring(start, end);
@@ -100,118 +102,7 @@ void loop() {
         spacesAvail[qCount] = available;
         qCount++;
 
-        // DEBUG_PRINTLN(F("Storing in queue..."));
-
-        
-        // uint8_t start = 0;
-        // uint8_t end = response.indexOf(',');
-        // String nodeId = response.substring(start, end);
-		// DEBUG_PRINTLN(nodeId);
-        
-        // start = end + 1;
-		// end = response.indexOf(',', start);
-        // String identifier = response.substring(start, end);
-        
-		// //DEBUG_PRINTLN(identifier.length());
-		// identifier.trim();
-		// if(identifier=="N"){
-			// DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
-			// //DEBUG_PRINTLN(F("Making HTTP GET Request"));
-			// response = simcomm.HTTPRequest(0, nodeId);
-			// DEBUG_PRINTLN(response);
-			// if(response != NULL){
-				// response.trim();//might not need(?)
-				// //JSON Parsing
-				// start = response.indexOf("id\":\"") + 5;
-				// end = start + 5;
-				// //nodeId = response.substring(responseStart, responseEnd);//for testing
-				// nodeId = response.substring(start, end);
-				
-				// start = response.indexOf("total\":\"") + 8;
-				// end = start + 1;
-				
-				// String total;
-
-				// uint8_t quoteStart = end;
-				// uint8_t quoteEnd = start + 2;
-				// String quoteCheck = response.substring(quoteStart, quoteEnd);
-				
-				
-				// if(quoteCheck.equals("\"")){
-					// total = response.substring(start, end);
-				// }
-				// else{
-					// total = response.substring(start, end + 1);
-				// }
-				
-				// xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
-			// }
-			// else{
-				// DEBUG_PRINTLN(F("Get request returned NULL"));
-			// }
-
-		// }
-		// else if(identifier.equals("U")){
-            // xcomm.sendMessage(nodeId, "OK");
-            // start = end + 1;
-            // end = response.indexOf(',', start);
-            // uint8_t total = response.substring(start, end).toInt();
-
-            // start = end + 1;
-            // end = response.indexOf(',', start);
-            // uint8_t available = response.substring(start, end).toInt();
-
-            // DEBUG_PRINTLN("Node:  " + String(nodeId));
-            // DEBUG_PRINTLN("Total: " + String(total));
-            // DEBUG_PRINTLN("Avail: " + String(available));
-
-            // nodeIds[qCount] = nodeId;
-            // totalSpaces[qCount] = total;
-            // spacesAvail[qCount] = available;
-            // qCount++;
-
-            // DEBUG_PRINTLN(F("Storing in queue..."));
-		// }
         delay(2000);
     }
 	loopCount = loopCount + 1;
 }
-
-// /*
-    // Software Reset Functions
-// */
-
-// /*
-    // Enables the watchdog timer and starts an infinite loop so the uC restarts
-// */
-// void soft_reset() {
-   // wdt_enable(WDTO_15MS);
-   // while(1) {};
-// }
-
-// /*
-    // Disabled the watchdog timer as soon as possible on startup (before bootloader) so it doesn't continually restart chip.
-// */
-// void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
-// void wdt_init(void)
-// {
-   // MCUSR = 0;
-   // wdt_disable();
-
-   // return;
-// }
-
-// // Timeout Functions
-// // ========================================
-// unsigned long _timeout_end = 0;
-
-// void timeout_init(int timeoutms) {
-    // _timeout_end = millis() + timeoutms;
-// }
-// unsigned long timeout_remaining() {
-    // return _timeout_end-millis();
-// }
-// bool timeout_timedout() {
-    // return millis() > _timeout_end;
-// }
-
