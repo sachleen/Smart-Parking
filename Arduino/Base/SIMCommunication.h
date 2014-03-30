@@ -20,7 +20,7 @@ class SIMCommunication
     
     // Network & HTTP Communication
     bool connectToNetwork();
-    String HTTPRequest(uint8_t, String, String);
+    String POSTRequest(String);
   private:
     uint8_t _powerPin;
     unsigned long _baud;

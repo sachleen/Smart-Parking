@@ -68,7 +68,7 @@ void loop() {
             
             for(int i = 0; i < qCount; i++) {
                 //DEBUG_PRINTLN(F("Making HTTP POST Request"));
-                response = simcomm.HTTPRequest(1, "", "id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
+                response = simcomm.HTTPRequest(1, "id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
                 //sendResponse = sendRequestServer(nodeIds[i], 'U', spacesAvail[i], totalSpaces[i]);//Sends a message to the server to update the status of the node
                 //DEBUG_PRINTLN(response);//Idk what the response is supposed to be yet...
                 if (response.indexOf("TRUE") < 0) {
@@ -130,7 +130,7 @@ void loop() {
 		if(identifier=="N"){
 			DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
 			//DEBUG_PRINTLN(F("Making HTTP GET Request"));
-			response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
+			response = simcomm.HTTPRequest(0, nodeId);
 			DEBUG_PRINTLN(response);
 			if(response != NULL){
 				response.trim();//might not need(?)

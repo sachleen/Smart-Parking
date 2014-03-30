@@ -117,7 +117,7 @@ bool SIMCommunication::connectToNetwork() {
         return false;
 }
 
-String SIMCommunication::HTTPRequest(uint8_t type, String parameters) {
+String SIMCommunication::POSTRequest(String parameters) {
     SIM900.listen();
     /*
         Setup HTTP
@@ -132,53 +132,33 @@ String SIMCommunication::HTTPRequest(uint8_t type, String parameters) {
     sendCommand("AT+HTTPPARA=\"CID\",\"1\"", 2000);
     
     
-    //SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"");
-    
-    // if (!fancySend("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"", 1, 5000, 1, "OK")) {
-        // DEBUG_PRINTLN("url fail");
-    // }
+    SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"");
     
     sendCommand("AT+HTTPPARA=\"REDIR\",\"1\"", 1000);
-    
-    switch (type) {
-        case 0:
-            SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/"+parameters+"\"");
-            // sendCommand("AT+HTTPACTION=0", 1000);
-            if (!fancySend("AT+HTTPACTION=0", 1, 5000, 1, "OK")) {
-                DEBUG_PRINTLN("G act fail");
-            }
-            break;
-        case 1: {
-            SIM900.println("AT+HTTPPARA=\"URL\",\"http://sachleen.com/sachleen/parking/API/nodes/save\"");
-            // if (!fancySend("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1, 1000, 1, "OK")) {
-                // DEBUG_PRINTLN("CONTENT fail");
-            // }
-            // if (!fancySend("AT+HTTPPARA=\"TIMEOUT\",\"45\"", 1, 1000, 1, "OK")) {
-                // DEBUG_PRINTLN("TIMEOUT fail");
-            // }
-            sendCommand("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1000);
-            sendCommand("AT+HTTPPARA=\"TIMEOUT\",\"45\"", 1000);
-            
-            uint8_t dataLen = parameters.length();
-            sendCommand("AT+HTTPDATA="+(String)dataLen+",5000", 5000);
-            // DEBUG_PRINTLN("AT+HTTPDATA="+(String)dataLen+",5000");
-            // if (!fancySend("AT+HTTPDATA="+(String)dataLen+",5000", 1, 10000, 1, "DOWNLOAD")) {
-                // DEBUG_PRINTLN("httpdata fail");
-            // }
 
-            sendCommand(parameters, 1000);
-            
-            //sendCommand("AT+HTTPACTION=1", 1000);
-            if (!fancySend("AT+HTTPACTION=1", 1, 5000, 1, "OK")) {
-                DEBUG_PRINTLN("P act fail");
-            }
-            
-            break;
-        } default:
-            DEBUG_PRINTLN(F("Invalid type in HTTP Request"));
-            break;
-    }
+        
+    // if (!fancySend("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1, 1000, 1, "OK")) {
+        // DEBUG_PRINTLN("CONTENT fail");
+    // }
+    // if (!fancySend("AT+HTTPPARA=\"TIMEOUT\",\"45\"", 1, 1000, 1, "OK")) {
+        // DEBUG_PRINTLN("TIMEOUT fail");
+    // }
+    sendCommand("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"", 1000);
+    sendCommand("AT+HTTPPARA=\"TIMEOUT\",\"45\"", 1000);
     
+    uint8_t dataLen = parameters.length();
+    sendCommand("AT+HTTPDATA="+(String)dataLen+",5000", 5000);
+    // DEBUG_PRINTLN("AT+HTTPDATA="+(String)dataLen+",5000");
+    // if (!fancySend("AT+HTTPDATA="+(String)dataLen+",5000", 1, 10000, 1, "DOWNLOAD")) {
+        // DEBUG_PRINTLN("httpdata fail");
+    // }
+
+    sendCommand(parameters, 1000);
+    
+    //sendCommand("AT+HTTPACTION=1", 1000);
+    if (!fancySend("AT+HTTPACTION=1", 1, 5000, 1, "OK")) {
+        DEBUG_PRINTLN("P act fail");
+    }    
     
     
     // After HTTPACTION we have to wait for a HTTP Status Code.
