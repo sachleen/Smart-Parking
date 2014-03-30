@@ -33,6 +33,14 @@ uint8_t end;
 String nodeId = "";
 String identifier = "";
 
+
+int freeRam () 
+{
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
 void setup()
 {
   DEBUG_INIT(9600);
@@ -52,6 +60,7 @@ void setup()
 }
 
 void loop(){
+    DEBUG_PRINTLN(freeRam());
   /*
   This limits the sending of updates to the server by sending a maximum of 10 once every minute
   or once the array of requests reaches its maximum
@@ -127,6 +136,7 @@ void loop(){
 			else{
 				DEBUG_PRINTLN(F("Get request returned NULL"));
 			}
+
 		}
 		else if(identifier.equals("U")){
 			xcomm.sendMessage(nodeId, "OK");
