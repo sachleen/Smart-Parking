@@ -87,6 +87,35 @@ void loop() {
     DEBUG_PRINT(F("Message From Node: "));DEBUG_PRINTLN(response);
   
     if (response != NULL) {
+        // uint8_t start = 0;
+        // uint8_t end = response.indexOf(',');
+        // String nodeId = response.substring(start, end);
+		// DEBUG_PRINTLN(nodeId);
+        
+        // start = end + 1;
+		// end = response.indexOf(',', start);
+        
+        // xcomm.sendMessage(nodeId, "OK");
+        // start = end + 1;
+        // end = response.indexOf(',', start);
+        // uint8_t total = response.substring(start, end).toInt();
+
+        // start = end + 1;
+        // end = response.indexOf(',', start);
+        // uint8_t available = response.substring(start, end).toInt();
+
+        // DEBUG_PRINTLN("Node:  " + String(nodeId));
+        // DEBUG_PRINTLN("Total: " + String(total));
+        // DEBUG_PRINTLN("Avail: " + String(available));
+
+        // nodeIds[qCount] = nodeId;
+        // totalSpaces[qCount] = total;
+        // spacesAvail[qCount] = available;
+        // qCount++;
+
+        // DEBUG_PRINTLN(F("Storing in queue..."));
+
+        
         uint8_t start = 0;
         uint8_t end = response.indexOf(',');
         String nodeId = response.substring(start, end);
@@ -94,95 +123,68 @@ void loop() {
         
         start = end + 1;
 		end = response.indexOf(',', start);
-        
-        xcomm.sendMessage(nodeId, "OK");
-        start = end + 1;
-        end = response.indexOf(',', start);
-        uint8_t total = response.substring(start, end).toInt();
-
-        start = end + 1;
-        end = response.indexOf(',', start);
-        uint8_t available = response.substring(start, end).toInt();
-
-        DEBUG_PRINTLN("Node:  " + String(nodeId));
-        DEBUG_PRINTLN("Total: " + String(total));
-        DEBUG_PRINTLN("Avail: " + String(available));
-
-        nodeIds[qCount] = nodeId;
-        totalSpaces[qCount] = total;
-        spacesAvail[qCount] = available;
-        qCount++;
-
-        DEBUG_PRINTLN(F("Storing in queue..."));
-
-        
-        
-        
-        // start = end + 1;
-		// end = response.indexOf(',', start);
-		// String identifier = response.substring(start, end);
+        String identifier = response.substring(start, end);
         
 		//DEBUG_PRINTLN(identifier.length());
-		//identifier.trim();
-		// if(identifier=="N"){
-			// DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
-			// //DEBUG_PRINTLN(F("Making HTTP GET Request"));
-			// response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
-			// DEBUG_PRINTLN(response);
-			// if(response != NULL){
-				// response.trim();//might not need(?)
-				// //JSON Parsing
-				// start = response.indexOf("id\":\"") + 5;
-				// end = start + 5;
-				// //nodeId = response.substring(responseStart, responseEnd);//for testing
-				// nodeId = response.substring(start, end);
+		identifier.trim();
+		if(identifier=="N"){
+			DEBUG_PRINT(F("num req frm "));DEBUG_PRINTLN(nodeId);
+			//DEBUG_PRINTLN(F("Making HTTP GET Request"));
+			response = simcomm.HTTPRequest(0, "http://sachleen.com/sachleen/parking/API/nodes/" + nodeId, "");
+			DEBUG_PRINTLN(response);
+			if(response != NULL){
+				response.trim();//might not need(?)
+				//JSON Parsing
+				start = response.indexOf("id\":\"") + 5;
+				end = start + 5;
+				//nodeId = response.substring(responseStart, responseEnd);//for testing
+				nodeId = response.substring(start, end);
 				
-				// start = response.indexOf("total\":\"") + 8;
-				// end = start + 1;
+				start = response.indexOf("total\":\"") + 8;
+				end = start + 1;
 				
-				// String total;
+				String total;
 
-				// uint8_t quoteStart = end;
-				// uint8_t quoteEnd = start + 2;
-				// String quoteCheck = response.substring(quoteStart, quoteEnd);
+				uint8_t quoteStart = end;
+				uint8_t quoteEnd = start + 2;
+				String quoteCheck = response.substring(quoteStart, quoteEnd);
 				
 				
-				// if(quoteCheck.equals("\"")){
-					// total = response.substring(start, end);
-				// }
-				// else{
-					// total = response.substring(start, end + 1);
-				// }
+				if(quoteCheck.equals("\"")){
+					total = response.substring(start, end);
+				}
+				else{
+					total = response.substring(start, end + 1);
+				}
 				
-				// xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
-			// }
-			// else{
-				// DEBUG_PRINTLN(F("Get request returned NULL"));
-			// }
+				xcomm.sendMessage(nodeId, total);//Sends reponse from server back to node
+			}
+			else{
+				DEBUG_PRINTLN(F("Get request returned NULL"));
+			}
 
-		// }
-		//else if(identifier.equals("U")){
-		//if(identifier.equals("U")){
-            // xcomm.sendMessage(nodeId, "OK");
-            // start = end + 1;
-            // end = response.indexOf(',', start);
-            // uint8_t total = response.substring(start, end).toInt();
+		}
+		else if(identifier.equals("U")){
+            xcomm.sendMessage(nodeId, "OK");
+            start = end + 1;
+            end = response.indexOf(',', start);
+            uint8_t total = response.substring(start, end).toInt();
 
-            // start = end + 1;
-            // end = response.indexOf(',', start);
-            // uint8_t available = response.substring(start, end).toInt();
+            start = end + 1;
+            end = response.indexOf(',', start);
+            uint8_t available = response.substring(start, end).toInt();
 
-            // DEBUG_PRINTLN("Node:  " + String(nodeId));
-            // DEBUG_PRINTLN("Total: " + String(total));
-            // DEBUG_PRINTLN("Avail: " + String(available));
+            DEBUG_PRINTLN("Node:  " + String(nodeId));
+            DEBUG_PRINTLN("Total: " + String(total));
+            DEBUG_PRINTLN("Avail: " + String(available));
 
-            // nodeIds[qCount] = nodeId;
-            // totalSpaces[qCount] = total;
-            // spacesAvail[qCount] = available;
-            // qCount++;
+            nodeIds[qCount] = nodeId;
+            totalSpaces[qCount] = total;
+            spacesAvail[qCount] = available;
+            qCount++;
 
-            // DEBUG_PRINTLN(F("Storing in queue..."));
-		//}
+            DEBUG_PRINTLN(F("Storing in queue..."));
+		}
         delay(2000);
     }
 	loopCount = loopCount + 1;
