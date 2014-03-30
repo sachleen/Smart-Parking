@@ -6,7 +6,7 @@
 #include "SIMCommunication.h"
 
 #define XBEE_BAUD 9600
-#define QMAX 1
+#define QMAX 10
 
 SoftwareSerial xbee(2, 3);
 XBeeCommunication xcomm("00000");//Change here for different bases

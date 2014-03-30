@@ -155,10 +155,7 @@ String SIMCommunication::POSTRequest(String parameters) {
 
     sendCommand(parameters, 1000);
     
-    //sendCommand("AT+HTTPACTION=1", 1000);
-    if (!fancySend("AT+HTTPACTION=1", 1, 5000, 1, "OK")) {
-        DEBUG_PRINTLN("P act fail");
-    }    
+    SIM900.println("AT+HTTPACTION=1");
     
     
     // After HTTPACTION we have to wait for a HTTP Status Code.
@@ -227,23 +224,13 @@ bool SIMCommunication::fancySend(String command, uint8_t attempts, int timeout, 
     
     String response;
     bool done = false;
-
-    DEBUG_PRINT(F("FS:"));
-    DEBUG_PRINTLN(command);
     
     for (uint8_t i = 0; i < attempts; i++) {
         response = sendCommand(command, timeout);
         
-        DEBUG_PRINT("r:");
-        DEBUG_PRINT(response);
-        DEBUG_PRINTLN("=");
-        
         va_start(arguments, num);
         for (uint8_t j = 0; j < num; j++) {
             String comp = va_arg(arguments, char*);
-            
-            // DEBUG_PRINT("c:");
-            // DEBUG_PRINTLN(comp);
             
             if (response.indexOf(comp) >= 0) {
                 done = true;
