@@ -22,6 +22,8 @@ bool pass = false; // Keeps track of various phases of the connection. Must be s
 //Keeps track of the number of messages to be sent to the server
 int qCount = 0;
 
+int loopCount = 0;
+
 //These arrays are what hold the different parts of the messages to be sent to the server
 String nodeIds[QMAX];
 int spacesAvail[QMAX];
@@ -45,7 +47,7 @@ void setup()
 {
   DEBUG_INIT(9600);
   xbee.begin(XBEE_BAUD); // Communicates with node
-  timeout_init(5000);//Starts timer for updates to be sent to server
+  //timeout_init(5000);//Starts timer for updates to be sent to server
   
   /*This starts the network connection*/
   while (!simcomm.isOn()) {
@@ -65,7 +67,7 @@ void loop(){
   This limits the sending of updates to the server by sending a maximum of 10 once every minute
   or once the array of requests reaches its maximum
   */
-  if(timeout_timedout() || qCount == QMAX){
+  if(loopCount > 9 || qCount == QMAX){
     if(qCount > 0){//will only send if q isn't empty
       DEBUG_PRINT(F("Made it to server update. Number of messages: "));
       DEBUG_PRINTLN(qCount);
@@ -84,7 +86,8 @@ void loop(){
       }
       qCount = 0;
     }
-    timeout_init(5000);
+    //timeout_init(5000);
+	loopCount = 0;
   }
   
   response = xcomm.getMessage();
@@ -161,43 +164,44 @@ void loop(){
 		}
         delay(2000);
     }
+	loopCount = loopCount + 1;
 }
 
-/*
-    Software Reset Functions
-*/
+// /*
+    // Software Reset Functions
+// */
 
-/*
-    Enables the watchdog timer and starts an infinite loop so the uC restarts
-*/
-void soft_reset() {
-   wdt_enable(WDTO_15MS);
-   while(1) {};
-}
+// /*
+    // Enables the watchdog timer and starts an infinite loop so the uC restarts
+// */
+// void soft_reset() {
+   // wdt_enable(WDTO_15MS);
+   // while(1) {};
+// }
 
-/*
-    Disabled the watchdog timer as soon as possible on startup (before bootloader) so it doesn't continually restart chip.
-*/
-void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
-void wdt_init(void)
-{
-   MCUSR = 0;
-   wdt_disable();
+// /*
+    // Disabled the watchdog timer as soon as possible on startup (before bootloader) so it doesn't continually restart chip.
+// */
+// void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
+// void wdt_init(void)
+// {
+   // MCUSR = 0;
+   // wdt_disable();
 
-   return;
-}
+   // return;
+// }
 
-// Timeout Functions
-// ========================================
-unsigned long _timeout_end = 0;
+// // Timeout Functions
+// // ========================================
+// unsigned long _timeout_end = 0;
 
-void timeout_init(int timeoutms) {
-    _timeout_end = millis() + timeoutms;
-}
-unsigned long timeout_remaining() {
-    return _timeout_end-millis();
-}
-bool timeout_timedout() {
-    return millis() > _timeout_end;
-}
+// void timeout_init(int timeoutms) {
+    // _timeout_end = millis() + timeoutms;
+// }
+// unsigned long timeout_remaining() {
+    // return _timeout_end-millis();
+// }
+// bool timeout_timedout() {
+    // return millis() > _timeout_end;
+// }
 
