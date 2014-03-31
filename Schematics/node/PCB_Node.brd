@@ -142,7 +142,7 @@
 <text x="4.445" y="16.51" size="0.8128" layer="25">1.8k</text>
 <text x="19.685" y="18.415" size="0.8128" layer="25">10k</text>
 <text x="16.51" y="12.7" size="1.778" layer="25">*</text>
-<text x="21.59" y="39.37" size="0.762" layer="16" ratio="18" rot="MR0">NODE_SP 2.0</text>
+<text x="21.59" y="39.37" size="0.762" layer="26" ratio="18" rot="MR0">NODE_SP 2.0</text>
 <text x="35.56" y="36.83" size="0.8128" layer="26" rot="MR0">PWR</text>
 <text x="32.385" y="36.83" size="0.8128" layer="26" rot="MR0">St2</text>
 <text x="29.845" y="36.83" size="0.8128" layer="26" rot="MR0">St1</text>
