@@ -5,6 +5,9 @@
 #include "globals.h"
 #include "WiredCommunication.h"
 
+#include <avr/sleep.h>
+#include <avr/power.h>
+
 #define Addr 0x1E               // 7-bit address of HMC5883 compass
 #define SENSOR_ID 3
 
@@ -18,6 +21,18 @@ void setup()
 {
     DEBUG_INIT(9600);
     DEBUG_PRINTLN("System Startup - Receiver");
+    
+    /* Power Management Stuff */
+    attachInterrupt(0, wakeUpNow, RISING);
+    
+    power_adc_disable();
+    power_spi_disable();
+    //power_timer0_disable(); need timer 0 for delay()
+    power_timer1_disable();
+    power_timer2_disable();
+    //power_twi_disable(); need twi for compass
+    
+    /* End Power Management Stuff */
 
     Wire.begin();
     Wire.beginTransmission(Addr); 
@@ -70,6 +85,8 @@ void loop()
         
         DEBUG_PRINTLN();
     }
+
+    sleepNow();
 }
 
 int calZ; // Holds the reference value for compass Z axis
@@ -143,4 +160,27 @@ void getCompassData(int& x, int& y, int& z) {
 */
 char getSensorIdFromIndex(uint8_t index) {
     return (char)(index + 64);
+}
+
+void sleepNow()
+{
+    delay(100);
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    attachInterrupt(0,wakeUpNow, RISING);
+    sleep_mode();
+    
+    // program continues here after waking up
+ 
+    sleep_disable();
+    detachInterrupt(0);
+    delay(100);
+}
+
+void wakeUpNow()
+{
+    // execute code here after wake-up before returning to the loop() function
+    // timers and code using timers (serial.print and more...) will not work here.
+    // we don't really need to execute any special functions here, since we
+    // just want the thing to wake up
 }

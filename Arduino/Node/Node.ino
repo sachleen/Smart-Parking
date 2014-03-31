@@ -89,6 +89,9 @@ void loop()
         
         DEBUG_PRINT("Querying Sensor ");DEBUG_PRINTLN(sensorNum);
         
+        // Send some data to the sensors to wake them up. Doesn't matter what it is.
+        wiredbus.sendMessage("wakeup");
+        
         //The message is composed of a sensor ID and command.
         char sendBuff[maxMsgLen+1];
         sendBuff[0] = getSensorIdFromIndex(sensorNum);//get sensorIdFromIndex
