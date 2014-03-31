@@ -2,14 +2,14 @@ EAGLE AutoRouter Statistics:
 
 Job           : /Users/fountcal/Dropbox/Documents/Spring 2014/CPE191/GitHub/Smart-Parking/Schematics/sensor/sensor.brd
 
-Start at      : 19:24:09 (3/9/14)
-End at        : 19:24:09 (3/9/14)
+Start at      : 19:39:49 (3/30/14)
+End at        : 19:39:49 (3/30/14)
 Elapsed time  : 00:00:00
 
-Signals       :    17   RoutingGrid: 8 mil  Layers: 2
-Connections   :    32   predefined:  32 ( 9 Vias )
+Signals       :    17   RoutingGrid: 4 mil  Layers: 2
+Connections   :    32   predefined:  32 ( 15 Vias )
 
-Router memory :   71456
+Router memory :   270000
 
 Passname          :     Route Optimize1 Optimize2 Optimize3 Optimize4
 
