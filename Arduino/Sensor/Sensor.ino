@@ -36,10 +36,6 @@ void setup()
     /* End Power Management Stuff */
 
     Wire.begin();
-    Wire.beginTransmission(Addr); 
-    Wire.write(byte(0x02));
-    Wire.write(byte(0x00));
-    Wire.endTransmission();
     
     // Calibrate compass on startup
     isCarPresent();
@@ -86,7 +82,7 @@ void loop()
         
         DEBUG_PRINTLN();
     }
-
+    
     sleepNow();
 }
 
@@ -143,6 +139,14 @@ bool isCarPresent() {
     Returns the X, Y, and Z values from the compass module.
 */
 void getCompassData(int& x, int& y, int& z) {
+    // Set to continuous mode
+    Wire.beginTransmission(Addr); 
+    Wire.write(byte(0x02));
+    Wire.write(byte(0x00));
+    Wire.endTransmission();
+    
+    delay(10);
+    
     // Initiate communications with compass
     Wire.beginTransmission(Addr);
     Wire.write(byte(0x03));       // Send request to X MSB register
@@ -154,6 +158,12 @@ void getCompassData(int& x, int& y, int& z) {
         z = Wire.read() << 8 | Wire.read();
         y = Wire.read() << 8 | Wire.read();
     }
+    
+    // Put compass to sleep
+    Wire.beginTransmission(Addr); 
+    Wire.write(byte(0x02));
+    Wire.write(byte(0x03));
+    Wire.endTransmission();
 }
 /*
     Returns a byte from 0x40 of the ascii table. Starting at @ A B C ...
