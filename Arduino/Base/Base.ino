@@ -67,7 +67,10 @@ void loop() {
             DEBUG_PRINT(F("Made it to server update. Number of messages: "));
             DEBUG_PRINTLN(qCount);
             delay(1000);
-            
+            while (!simcomm.isOn()) {
+				simcomm.togglePower();//Turn on SIM900
+			}
+			DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
             for(int i = 0; i < qCount; i++) {
                 response = simcomm.POSTRequest("id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
                 DEBUG_PRINTLN(response);
@@ -81,6 +84,8 @@ void loop() {
         }
         //timeout_init(5000);
         loopCount = 0;
+		simcomm.togglePower();//Turns off SIM900
+		DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
     }
   
     response = xcomm.getMessage();
