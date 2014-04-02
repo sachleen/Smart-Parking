@@ -1,3 +1,4 @@
+#define DEBUG_ENABLED
 #include <RS485.h>
 #include <SoftwareSerial.h>
 

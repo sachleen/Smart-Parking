@@ -1,7 +1,8 @@
+#define DEBUG_ENABLED
+
 #include <RS485.h>
 #include <SoftwareSerial.h>
 #include <Wire.h>
-
 #include "globals.h"
 #include "WiredCommunication.h"
 

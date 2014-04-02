@@ -1,3 +1,5 @@
+#define DEBUG_ENABLED
+
 #include <avr/wdt.h> // for watchdog timer
 #include <SoftwareSerial.h>
 #include <RS485.h>

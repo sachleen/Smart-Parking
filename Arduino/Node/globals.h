@@ -4,7 +4,6 @@
 /*
     Debug functions
 */
-#define DEBUG_ENABLED
 #ifdef DEBUG_ENABLED
     #define DEBUG_INIT(baud)  Serial.begin(baud)
     #define DEBUG_PRINT(x)  Serial.print (x)
