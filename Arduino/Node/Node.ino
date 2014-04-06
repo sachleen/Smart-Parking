@@ -2,18 +2,24 @@
 #include <RS485.h>
 #include <SoftwareSerial.h>
 
+#include <avr/sleep.h>
+#include <avr/power.h>
+#include <avr/wdt.h>
+
 #include "globals.h"
 #include "WiredCommunication.h"
 #include "XBeeCommunication.h"
-#include "Sleep_n0m1.h"
+
+#define XBEE_SLEEP 7	//Set Sleep pin to D7
 
 #define MAX_SENSORS 32
 String baseId = "00000";
 
 //Sleep Testing
-Sleep sleep;
-unsigned long sleepTime; //how long you want the arduino to sleep
-//String nodeId = "test1";
+//Sleep sleep;
+//unsigned long sleepTime; //how long you want the arduino to sleep
+
+volatile int f_wdt=1;
 
 SoftwareSerial xbee(5, 6); // RX, TX
 //SoftwareSerial xbee(2, 3); //Testing with Xbee only
@@ -43,18 +49,27 @@ void setup()
     DEBUG_PRINTLN("New System Startup - Sender");
 
     xbee.begin(9600);
-    
+    power_adc_disable();
+    power_spi_disable();
+    //power_timer0_disable(); need timer 0 for delay()
+    power_timer1_disable();
+    power_timer2_disable();
+    power_twi_disable(); //need twi for compass
+    wdtSetup();
     // Wait for sensors to power up and calibrate
     delay(2000);
 	
     DEBUG_PRINTLN(numSensors); delay(2000);
 	String response = "";
+	pinMode(XBEE_SLEEP, OUTPUT);     // sleep control
+        digitalWrite(XBEE_SLEEP, LOW);   // deassert 
 	
 	// Need this delay for XBee to "warm up" ... messages aren't being received faster than this.
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 10; i++) {
 	   DEBUG_PRINT(".");
 	   delay(1000);
 	}
+	setXbeeSleep();
 
     /*
     while(numSensors < 0){
@@ -77,11 +92,15 @@ void setup()
     }
     */
     numSensors = 3;//used for demo-ing
-    sleepTime = 5000;
+    //sleepTime = 5000;
 }
 
 void loop()
 {
+    if(f_wdt == 1){
+      Serial.println("Awake");
+    }
+	
     /*
         Loops through all the sensors asking for a status.
         Records the responses or time outs in sensorStatus[]
@@ -177,8 +196,9 @@ void loop()
     DEBUG_PRINTLN();
     
     DEBUG_PRINTLN(dataChanged ? "Data changed, sending..." : "Not sending. no change");
-    
+    dataChanged = true;
     if (dataChanged) {
+        digitalWrite(XBEE_SLEEP, LOW);
         /*
             Send data to base station using XBee
         */
@@ -224,14 +244,21 @@ void loop()
     DEBUG_PRINTLN("==============================\n");
     
     //Sleep Test
+	digitalWrite(XBEE_SLEEP, HIGH);
     delay(100);
-    DEBUG_PRINT("Sleeping for ");
-    DEBUG_PRINTLN(sleepTime);
+    //DEBUG_PRINT("Sleeping for ");
+    //DEBUG_PRINTLN(sleepTime);
     delay(100);
-    sleep.pwrDownMode(); //set sleep mode
-    sleep.sleepDelay(sleepTime); //sleep for: sleepTime
+    //sleep.pwrDownMode(); //set sleep mode
+    //sleep.sleepDelay(sleepTime); //sleep for: sleepTime
     
     dataChanged = false;
+    
+    Serial.println("Going to sleep");
+    delay(100);
+    f_wdt == 0;
+    wdt_reset();
+    enterSleep();
 }
 
 char getSensorIdFromIndex(uint8_t index) {
@@ -253,4 +280,86 @@ unsigned long timeout_remaining() {
 }
 bool timeout_timedout() {
     return millis() > _timeout_end;
+}
+
+void setXbeeSleep(){
+	String ok_response = "OK\r"; // the response we expect.
+	xbee.print("+++");
+	xbee.listen();
+	//xbee.print("+++");
+	String content = "";
+	int counter = 0;
+	while(!xbee.available() && counter < 500) {
+		counter++;
+		delay(10);
+	}
+
+	if (counter >= 500) {
+		Serial.println(F("XBEE Timed Out"));
+	}
+
+	while (xbee.available()) {
+		char input = xbee.read();
+		content.concat(input);
+		if (input == '\n') {
+			break;
+		}
+		delay(1);
+	}
+	//Serial.print("Content: ");
+
+	//Serial.println(content);
+
+	if (content.equals(ok_response)) {
+		xbee.println("ATSM 1");
+	delay(500);
+		xbee.println("ATCN");     // back to data mode
+		Serial.println(F("Set to pin sleep"));
+	}
+}
+
+void wdtSetup(){
+	/* Clear the reset flag. */
+	MCUSR &= ~(1<<WDRF);
+
+	/* In order to change WDE or the prescaler, we need to
+	* set WDCE (This will allow updates for 4 clock cycles).
+	*/
+	WDTCSR |= (1<<WDCE) | (1<<WDE);
+
+	/* set new watchdog timeout prescaler value */
+	WDTCSR = 1<<WDP0 | 1<<WDP3; /* 8.0 seconds */
+
+	/* Enable the WD interrupt (note no reset). */
+	WDTCSR |= _BV(WDIE);
+
+	Serial.println("Initialisation complete.");
+	delay(100); //Allow for serial print to complete.
+}
+
+ISR(WDT_vect)
+{
+  if(f_wdt == 0)
+  {
+    f_wdt=1;
+  }
+  else
+  {
+    Serial.println("WDT Overrun!!!");
+  }
+}
+
+void enterSleep(void)
+{
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);   /* EDIT: could also use SLEEP_MODE_PWR_DOWN for lowest power consumption. */
+  sleep_enable();
+  
+  /* Now enter sleep mode. */
+  sleep_mode();
+  
+  /* The program will continue from here after the WDT timeout*/
+  sleep_disable(); /* First thing to do is disable sleep. */
+  
+  /* Re-enable the peripherals. */
+  //power_all_enable();
 }
