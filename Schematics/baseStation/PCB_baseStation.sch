@@ -5185,9 +5185,6 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <<<<<<< HEAD
 =======
 <junction x="38.1" y="50.8"/>
-<<<<<<< HEAD
->>>>>>> FETCH_HEAD
-=======
 >>>>>>> FETCH_HEAD
 </segment>
 </net>
@@ -5212,7 +5209,6 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="33.02" y="33.02" size="1.778" layer="95"/>
 </segment>
 <segment>
-<<<<<<< HEAD
 <<<<<<< HEAD
 <pinref part="SM_RX" gate="G$1" pin="1"/>
 <wire x1="93.98" y1="5.08" x2="93.98" y2="12.7" width="0.1524" layer="91"/>
@@ -5242,14 +5238,11 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <segment>
 =======
 >>>>>>> FETCH_HEAD
-=======
->>>>>>> FETCH_HEAD
 <pinref part="R9" gate="G$1" pin="1"/>
 <wire x1="63.5" y1="66.04" x2="50.8" y2="66.04" width="0.1524" layer="91"/>
 <label x="50.8" y="66.04" size="1.778" layer="95"/>
 </segment>
 </net>
-<<<<<<< HEAD
 <<<<<<< HEAD
 <net name="PD2" class="0">
 <segment>
@@ -5277,8 +5270,6 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="116.84" y="12.7" size="1.778" layer="95"/>
 </segment>
 </net>
-=======
->>>>>>> FETCH_HEAD
 =======
 >>>>>>> FETCH_HEAD
 </nets>
