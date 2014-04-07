@@ -4747,14 +4747,14 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="SUPPLY4" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="C2" library="microbuilder" deviceset="CAP_CERAMIC" device="0805"/>
 <part name="GND11" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="5V" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
-<part name="GND" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
-<part name="RST" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
+<part name="SM_5V" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
+<part name="SM_GND" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
+<part name="SM_RST" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="3" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="1" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="4" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
-<part name="TX" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
-<part name="RX" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
+<part name="SM_TX" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
+<part name="SM_RX" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="2" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="6" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="5" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
@@ -4769,6 +4769,7 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="RST2" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 <part name="R9" library="SparkFun-Resistors" deviceset="1.8KOHM1/10W1%(0603)" device="" value="1.8k"/>
 <part name="R10" library="SparkFun-Resistors" deviceset="3.3KOHM1/10W1%(0603)" device="" value="3.3k"/>
+<part name="SM_PWR" library="SparkFun-Connectors" deviceset="M01" device="PTH"/>
 </parts>
 <sheets>
 <sheet>
@@ -4809,14 +4810,14 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="SUPPLY4" gate="G$1" x="-30.48" y="5.08"/>
 <instance part="C2" gate="G$1" x="-81.28" y="22.86"/>
 <instance part="GND11" gate="1" x="-91.44" y="27.94"/>
-<instance part="5V" gate="G$1" x="73.66" y="22.86" rot="R90"/>
-<instance part="GND" gate="G$1" x="78.74" y="43.18" rot="R90"/>
-<instance part="RST" gate="G$1" x="-81.28" y="66.04" rot="R90"/>
+<instance part="SM_5V" gate="G$1" x="73.66" y="22.86" rot="R90"/>
+<instance part="SM_GND" gate="G$1" x="78.74" y="43.18" rot="R90"/>
+<instance part="SM_RST" gate="G$1" x="111.76" y="-2.54" rot="R90"/>
 <instance part="3" gate="G$1" x="43.18" y="7.62" rot="R90"/>
 <instance part="1" gate="G$1" x="53.34" y="10.16" rot="R90"/>
 <instance part="4" gate="G$1" x="50.8" y="27.94" rot="R270"/>
-<instance part="TX" gate="G$1" x="53.34" y="40.64" rot="R90"/>
-<instance part="RX" gate="G$1" x="48.26" y="58.42" rot="R270"/>
+<instance part="SM_TX" gate="G$1" x="76.2" y="-2.54" rot="R90"/>
+<instance part="SM_RX" gate="G$1" x="93.98" y="-2.54" rot="R90"/>
 <instance part="2" gate="G$1" x="83.82" y="22.86" rot="R90"/>
 <instance part="6" gate="G$1" x="68.58" y="43.18" rot="R90"/>
 <instance part="5" gate="G$1" x="-55.88" y="66.04" rot="R90"/>
@@ -4831,6 +4832,7 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="RST2" gate="G$1" x="-68.58" y="66.04" rot="R90"/>
 <instance part="R9" gate="G$1" x="68.58" y="66.04"/>
 <instance part="R10" gate="G$1" x="86.36" y="66.04"/>
+<instance part="SM_PWR" gate="G$1" x="129.54" y="-2.54" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -4843,14 +4845,11 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="-22.86" y1="76.2" x2="-22.86" y2="73.66" width="0.1524" layer="91"/>
 <junction x="-22.86" y="73.66"/>
 <label x="-33.02" y="73.66" size="1.778" layer="95"/>
-<pinref part="RST" gate="G$1" pin="1"/>
 <wire x1="-22.86" y1="73.66" x2="-55.88" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="5" gate="G$1" pin="1"/>
 <wire x1="-55.88" y1="73.66" x2="-68.58" y2="73.66" width="0.1524" layer="91"/>
 <junction x="-55.88" y="73.66"/>
 <pinref part="RST2" gate="G$1" pin="1"/>
-<wire x1="-68.58" y1="73.66" x2="-81.28" y2="73.66" width="0.1524" layer="91"/>
-<junction x="-68.58" y="73.66"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -4950,7 +4949,7 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="101.6" y1="63.5" x2="101.6" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="53.34" x2="78.74" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="GND1" gate="1" pin="GND"/>
-<pinref part="GND" gate="G$1" pin="1"/>
+<pinref part="SM_GND" gate="G$1" pin="1"/>
 <wire x1="78.74" y1="53.34" x2="68.58" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="68.58" y1="53.34" x2="58.42" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="78.74" y1="50.8" x2="78.74" y2="53.34" width="0.1524" layer="91"/>
@@ -5026,7 +5025,7 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="83.82" y1="40.64" x2="83.82" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="83.82" y1="35.56" x2="73.66" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="SUPPLY3" gate="G$1" pin="VCC"/>
-<pinref part="5V" gate="G$1" pin="1"/>
+<pinref part="SM_5V" gate="G$1" pin="1"/>
 <wire x1="73.66" y1="35.56" x2="68.58" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="30.48" x2="73.66" y2="35.56" width="0.1524" layer="91"/>
 <junction x="73.66" y="35.56"/>
@@ -5173,34 +5172,23 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </net>
 <net name="N$19" class="0">
 <segment>
-<pinref part="TX" gate="G$1" pin="1"/>
 <pinref part="U1" gate="G$1" pin="PD1(TXD)"/>
-<wire x1="53.34" y1="48.26" x2="43.18" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="TX1" gate="G$1" pin="1"/>
 <wire x1="43.18" y1="48.26" x2="30.48" y2="48.26" width="0.1524" layer="91"/>
-<junction x="43.18" y="48.26"/>
 </segment>
 </net>
 <net name="N$20" class="0">
 <segment>
-<pinref part="RX" gate="G$1" pin="1"/>
 <pinref part="U1" gate="G$1" pin="PD0(RXD)"/>
-<wire x1="48.26" y1="50.8" x2="38.1" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="RX1" gate="G$1" pin="1"/>
 <wire x1="38.1" y1="50.8" x2="30.48" y2="50.8" width="0.1524" layer="91"/>
+<<<<<<< HEAD
+=======
 <junction x="38.1" y="50.8"/>
-</segment>
-</net>
-<net name="PD4" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PD4(XCK/T0)"/>
-<wire x1="30.48" y1="40.64" x2="35.56" y2="40.64" width="0.1524" layer="91"/>
-<label x="30.48" y="40.64" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="R9" gate="G$1" pin="1"/>
-<wire x1="63.5" y1="66.04" x2="50.8" y2="66.04" width="0.1524" layer="91"/>
-<label x="50.8" y="66.04" size="1.778" layer="95"/>
+<<<<<<< HEAD
+>>>>>>> FETCH_HEAD
+=======
+>>>>>>> FETCH_HEAD
 </segment>
 </net>
 <net name="N$6" class="0">
@@ -5217,6 +5205,82 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <junction x="76.2" y="66.04"/>
 </segment>
 </net>
+<net name="PD7" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PD7(AIN1)"/>
+<wire x1="30.48" y1="33.02" x2="35.56" y2="33.02" width="0.1524" layer="91"/>
+<label x="33.02" y="33.02" size="1.778" layer="95"/>
+</segment>
+<segment>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<pinref part="SM_RX" gate="G$1" pin="1"/>
+<wire x1="93.98" y1="5.08" x2="93.98" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="12.7" x2="104.14" y2="12.7" width="0.1524" layer="91"/>
+<label x="99.06" y="12.7" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PB0" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PB0(ICP)"/>
+<wire x1="30.48" y1="27.94" x2="35.56" y2="27.94" width="0.1524" layer="91"/>
+<label x="33.02" y="27.94" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SM_TX" gate="G$1" pin="1"/>
+<wire x1="76.2" y1="5.08" x2="76.2" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="12.7" x2="86.36" y2="12.7" width="0.1524" layer="91"/>
+<label x="81.28" y="12.7" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PD4" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PD4(XCK/T0)"/>
+<wire x1="30.48" y1="40.64" x2="35.56" y2="40.64" width="0.1524" layer="91"/>
+<label x="33.02" y="40.64" size="1.778" layer="95"/>
+</segment>
+<segment>
+=======
+>>>>>>> FETCH_HEAD
+=======
+>>>>>>> FETCH_HEAD
+<pinref part="R9" gate="G$1" pin="1"/>
+<wire x1="63.5" y1="66.04" x2="50.8" y2="66.04" width="0.1524" layer="91"/>
+<label x="50.8" y="66.04" size="1.778" layer="95"/>
+</segment>
+</net>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<net name="PD2" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PD2(INT0)"/>
+<wire x1="30.48" y1="45.72" x2="35.56" y2="45.72" width="0.1524" layer="91"/>
+<label x="33.02" y="45.72" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SM_PWR" gate="G$1" pin="1"/>
+<wire x1="129.54" y1="5.08" x2="129.54" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="12.7" x2="139.7" y2="12.7" width="0.1524" layer="91"/>
+<label x="134.62" y="12.7" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PD3" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PD3(INT1)"/>
+<wire x1="30.48" y1="43.18" x2="35.56" y2="43.18" width="0.1524" layer="91"/>
+<label x="33.02" y="43.18" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SM_RST" gate="G$1" pin="1"/>
+<wire x1="111.76" y1="5.08" x2="111.76" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="12.7" x2="121.92" y2="12.7" width="0.1524" layer="91"/>
+<label x="116.84" y="12.7" size="1.778" layer="95"/>
+</segment>
+</net>
+=======
+>>>>>>> FETCH_HEAD
+=======
+>>>>>>> FETCH_HEAD
 </nets>
 </sheet>
 </sheets>
