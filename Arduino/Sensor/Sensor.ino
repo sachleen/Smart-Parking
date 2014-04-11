@@ -11,7 +11,10 @@
 
 #define Addr 0x1E               // 7-bit address of HMC5883 compass
 #define SENSOR_ID 3
+#define SENSOR_MAX 10
 
+int sensorId = 3;
+int randomized = 0;//Prevents ID from being randomized twice
 WiredCommunication wiredbus;
 
 /*
@@ -39,11 +42,17 @@ void setup()
     
     // Calibrate compass on startup
     isCarPresent();
+    
+    delay(millis() % SENSOR_MAX);//Just to lower chance of getting same starting ID as another sensor
+    sensorId = (millis() % SENSOR_MAX) + 1;
+    if(sensorId > SENSOR_MAX){
+      sensorId = SENSOR_MAX;
+    }
 }
 
 void loop()
 {
-    char recBuff[maxMsgLen+3+1];
+    char recBuff[maxMsgLen+3+1+1];//extra 1 added for number to change to
     
     if(wiredbus.getMessage(recBuff))
     {
@@ -51,16 +60,37 @@ void loop()
         DEBUG_PRINTLN(recBuff);
         
         // Check if the request is for this sensor
-        if (recBuff[0] == getSensorIdFromIndex(SENSOR_ID)) {
+        if (recBuff[0] == getSensorIdFromIndex(sensorId)) {
             // Prepare response message
             char sendBuff[maxMsgLen+1];
-            sendBuff[0] = getSensorIdFromIndex(SENSOR_ID);
+            sendBuff[0] = getSensorIdFromIndex(sensorId);
             
             switch (recBuff[1]) {
                 case 'C': // Report compass status
                     DEBUG_PRINTLN("Reporting Compass Status");
                     sendBuff[1] = isCarPresent() ? 'T' : 'A';
                     break;
+                case 'P'://Poweron
+		    randomized = 0;//randomized needs to be reset once it receives a poweron message
+                    DEBUG_PRINTLN("Reporting ID Number");
+                    sendBuff[1] = 'X'; //To confirm assignment
+                    sensorId = (int)(recBuff[2]) - 64;//converting to an integer
+                    DEBUG_PRINTLN(sensorId);
+                    break;
+                case 'R'://Randomize
+		    if(randomized == 0){
+			DEBUG_PRINTLN("Randomizing ID Number");
+			sendBuff[1] = 'Y'; //To confirm randomization
+			sensorId = (millis() % SENSOR_MAX) + 1;
+			if(sensorId > SENSOR_MAX){
+			    sensorId = SENSOR_MAX;
+			}
+                        //sensorId = random(1, SENSOR_MAX);
+			DEBUG_PRINT("New ID: ");
+			DEBUG_PRINTLN(sensorId);
+			randomized = 1;
+			break;
+		    }
                 default:
                     DEBUG_PRINTLN("Don't understand the request :(");
                     sendBuff[1] = '?';
@@ -82,7 +112,6 @@ void loop()
         
         DEBUG_PRINTLN();
     }
-    
     sleepNow();
 }
 

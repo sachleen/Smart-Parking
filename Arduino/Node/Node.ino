@@ -13,6 +13,7 @@
 #define XBEE_SLEEP 7	//Set Sleep pin to D7
 
 #define MAX_SENSORS 32
+#define SENSOR_MAX 10
 String baseId = "00000";
 
 //Sleep Testing
@@ -20,6 +21,7 @@ String baseId = "00000";
 //unsigned long sleepTime; //how long you want the arduino to sleep
 
 volatile int f_wdt=1;
+volatile int sleep_count = 0;
 
 SoftwareSerial xbee(5, 6); // RX, TX
 //SoftwareSerial xbee(2, 3); //Testing with Xbee only
@@ -37,7 +39,10 @@ String messageFromBase = "";
 char sensorStatus[MAX_SENSORS]; // keeps track of status of each sensor
 bool dataChanged = false; // Set to true if any sensor's status has changed. XBee only sends if this is true.
 bool sendOk = false;
+bool sensorSuccess = false;
 int sendCount;
+
+int sensorCount = 0;
 
 /*
     Setup block
@@ -45,54 +50,112 @@ int sendCount;
 */
 void setup()
 {
-    DEBUG_INIT(9600);
-    DEBUG_PRINTLN("New System Startup - Sender");
+  DEBUG_INIT(9600);
+  DEBUG_PRINTLN("New System Startup - Sender");
 
-    xbee.begin(9600);
-    power_adc_disable();
-    power_spi_disable();
-    //power_timer0_disable(); need timer 0 for delay()
-    power_timer1_disable();
-    power_timer2_disable();
-    power_twi_disable(); //need twi for compass
-    wdtSetup();
-    // Wait for sensors to power up and calibrate
-    delay(2000);
-	
-    DEBUG_PRINTLN(numSensors); delay(2000);
-	String response = "";
-	pinMode(XBEE_SLEEP, OUTPUT);     // sleep control
-        digitalWrite(XBEE_SLEEP, LOW);   // deassert 
-	
-	// Need this delay for XBee to "warm up" ... messages aren't being received faster than this.
-	for (int i = 0; i < 10; i++) {
-	   DEBUG_PRINT(".");
-	   delay(1000);
-	}
-	setXbeeSleep();
+  xbee.begin(9600);
+  power_adc_disable();
+  power_spi_disable();
+  //power_timer0_disable(); need timer 0 for delay()
+  power_timer1_disable();
+  power_timer2_disable();
+  power_twi_disable(); //need twi for compass
+  wdtSetup();
+  // Wait for sensors to power up and calibrate
+  delay(2000);
+  
+  DEBUG_PRINTLN(numSensors); delay(2000);
+  String response = "";
+  pinMode(XBEE_SLEEP, OUTPUT);   // sleep control
+  digitalWrite(XBEE_SLEEP, LOW);   // deassert 
+  
+  // Need this delay for XBee to "warm up" ... messages aren't being received faster than this.
+  for (int i = 0; i < 10; i++) {
+   DEBUG_PRINT(".");
+   delay(1000);
+  }
+  setXbeeSleep();
+  /*
+  while(numSensors < 0){
+    xbee.println("Sending...");
+    xcomm.sendMessage(baseId, "N");
+    response = xcomm.getMessage();
 
-    /*
-    while(numSensors < 0){
-		xbee.println("Sending...");
-                xcomm.sendMessage(baseId, "N");
-		response = xcomm.getMessage();
-
-		if(response != NULL){
-			uint8_t start = 0;
-			uint8_t end = response.indexOf(',');
-			
-			start = end + 1;
-			end = response.indexOf(',', start);
-			String numberResponse = response.substring(start, end);
-		
-			numberResponse.trim();
-			numSensors = numberResponse.toInt();
-			DEBUG_PRINTLN(numSensors);
-		}
+    if(response != NULL){
+      uint8_t start = 0;
+      uint8_t end = response.indexOf(',');
+    
+      start = end + 1;
+      end = response.indexOf(',', start);
+      String numberResponse = response.substring(start, end);
+  
+      numberResponse.trim();
+      numSensors = numberResponse.toInt();
+      DEBUG_PRINTLN(numSensors);
     }
-    */
-    numSensors = 3;//used for demo-ing
-    //sleepTime = 5000;
+  }
+  */
+    
+  numSensors = 2;//used for demo-ing Not using response from server due to lack of memory
+  while(!sensorSuccess){  
+    for(int i=1; i <= SENSOR_MAX; i++){
+      char sendBuff[maxMsgLen+2];
+      sendBuff[0] = getSensorIdFromIndex(i);//get sensorIdFromIndex
+      sendBuff[1] = 'P';
+      sendBuff[2] = getSensorIdFromIndex(sensorCount+1);
+      sendBuff[3] = '\0';
+      wiredbus.sendMessage("wakeup");//to wake up sensors
+      if(wiredbus.sendMessage(sendBuff)){
+        DEBUG_PRINTLN(sendBuff);
+        // Listen for response
+        char recBuff[maxMsgLen+3+1];
+        timeout_init(2000);
+        bool gotResponse = false;
+        while (!timeout_timedout()) {
+          if (wiredbus.getMessage(recBuff)){
+            DEBUG_PRINT("Got:");
+            DEBUG_PRINTLN(recBuff);
+            if (recBuff[0] == getSensorIdFromIndex(i)) {
+              if(recBuff[1] == 'X'){
+                sensorCount++;
+                DEBUG_PRINT("Sensor Assigned: ");
+                DEBUG_PRINTLN(sensorCount);//Sensor count
+              }
+            }
+	    else {
+              // Wrong sensor ID
+              DEBUG_PRINTLN("Wrong sensor responded to assignment...");
+            }
+            gotResponse = true;
+            break;
+          }
+          delay(100);
+        }
+        if (!gotResponse) {
+          DEBUG_PRINTLN("Timed out!");
+        }
+      }
+      else {
+        DEBUG_PRINTLN("Assignment Failed");
+      }
+      if((sensorCount) == numSensors)
+        break;
+      delay(100);
+    }
+    if((sensorCount) < numSensors){
+      sensorSuccess = false;
+      DEBUG_PRINTLN("Sensors intialization failed");
+      sensorCount = 0;
+      //Tell sensors to reset themselves
+      resetSensors();
+    }
+    else{
+      sensorSuccess = true;
+      DEBUG_PRINTLN("Sensors initialized");
+    }
+  }
+  
+  //sleepTime = 5000;
 }
 
 void loop()
@@ -171,7 +234,7 @@ void loop()
                 sensorStatus[sensorNum-1] = 'L';
             }
         }
-		else {
+	else {
             DEBUG_PRINTLN("Send Failed");
         }
         DEBUG_PRINTLN();
@@ -216,7 +279,7 @@ void loop()
         */
         //String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + "," + String(countAvailable);//dont need total(?)
 		String updateMessage = String(countAvailable);
-        xcomm.sendMessage(baseId, updateMessage);
+                xcomm.sendMessage(baseId, updateMessage);
 		String response = xcomm.getMessage();
 		sendCount = 0;
 		while (response == NULL && sendCount < 2){
@@ -244,7 +307,7 @@ void loop()
     DEBUG_PRINTLN("==============================\n");
     
     //Sleep Test
-	digitalWrite(XBEE_SLEEP, HIGH);
+    digitalWrite(XBEE_SLEEP, HIGH);
     delay(100);
     //DEBUG_PRINT("Sleeping for ");
     //DEBUG_PRINTLN(sleepTime);
@@ -256,9 +319,25 @@ void loop()
     
     Serial.println("Going to sleep");
     delay(100);
-    f_wdt == 0;
+    
+    int cyclesSlept = 0;
+    int sleepMinutes = 1;//Minutes we want arduino to sleep
+    int sleepCycles = (sleepMinutes * 60)/8;
+    
+    
+    f_wdt = 0;
     wdt_reset();
     enterSleep();
+    
+    
+    /*
+    while(cyclesSlept < sleepCycles){
+      f_wdt = 0;
+      wdt_reset();
+      enterSleep();
+      cyclesSlept++;
+    }
+    */
 }
 
 char getSensorIdFromIndex(uint8_t index) {
@@ -345,7 +424,7 @@ ISR(WDT_vect)
   }
   else
   {
-    Serial.println("WDT Overrun!!!");
+    //Serial.println("WDT Overrun!!!");
   }
 }
 
@@ -362,4 +441,52 @@ void enterSleep(void)
   
   /* Re-enable the peripherals. */
   //power_all_enable();
+}
+
+void initializeSensors(){//Will initializing code here once I'm sure it works after another test
+  
+}
+
+void resetSensors(){
+  for(int i=1; i <= SENSOR_MAX; i++){//99 will be replaced by max number//5 for testing
+    //resp = ping(i);//This is the sendbuff thing
+    char sendBuff[maxMsgLen+1];
+    sendBuff[0] = getSensorIdFromIndex(i);//get sensorIdFromIndex
+    sendBuff[1] = 'R';
+    sendBuff[2] = '\0';
+    wiredbus.sendMessage("wakeup");//to wake up sensors
+    if(wiredbus.sendMessage(sendBuff)){
+      DEBUG_PRINTLN(sendBuff);
+      // Listen for response
+      char recBuff[maxMsgLen+3+1];
+      timeout_init(2000);
+      bool gotResponse = false;
+      while (!timeout_timedout()) {
+        if (wiredbus.getMessage(recBuff)){
+          DEBUG_PRINT("Got:");
+          DEBUG_PRINTLN(recBuff);
+          if (recBuff[0] == getSensorIdFromIndex(i)) {
+            if(recBuff[1] == 'Y'){
+              DEBUG_PRINT("Sensor Randomized: ");
+              DEBUG_PRINTLN(i);//Sensor count
+            }
+          } else {
+            // Wrong sensor ID
+            DEBUG_PRINTLN("Wrong sensor responded to assignment...");
+          }
+          gotResponse = true;
+          break;
+        }
+        delay(100);
+      }
+        if (!gotResponse) {
+          DEBUG_PRINTLN("Timed out!");
+        }
+    }
+  	else {
+  		DEBUG_PRINTLN("Randomize Failed");
+  	}
+  	delay(100);
+  }
+    
 }
