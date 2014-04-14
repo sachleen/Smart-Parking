@@ -98,16 +98,28 @@ void loop() {
         String nodeId = response.substring(start, end);
 		DEBUG_PRINTLN(nodeId);
         
-        xcomm.sendMessage(nodeId, "OK");
-        start = end + 1;
-        end = response.indexOf(',', start);
-        uint8_t available = response.substring(start, end).toInt();
+		start = end + 1;
+		end = response.indexOf(',', start);
+        String identifier = response.substring(start, end);
+		identifier.trim();
+		
+		if(identifier=="N"){
+			int total = 2;
+			xcomm.sendMessage(nodeId, String(total));
+		}
+		
+		if(identifier=="U"){
+			xcomm.sendMessage(nodeId, "OK");
+			start = end + 1;
+			end = response.indexOf(',', start);
+			uint8_t available = response.substring(start, end).toInt();
 
-        DEBUG_PRINTLN("Avail: " + String(available));
+			DEBUG_PRINTLN("Avail: " + String(available));
 
-        nodeIds[qCount] = nodeId;
-        spacesAvail[qCount] = available;
-        qCount++;
+			nodeIds[qCount] = nodeId;
+			spacesAvail[qCount] = available;
+			qCount++;
+		}
 
         delay(2000);
     }

@@ -15,6 +15,7 @@
 
 int sensorId = 3;
 int randomized = 0;//Prevents ID from being randomized twice
+int sendQ = 0;
 WiredCommunication wiredbus;
 
 /*
@@ -48,6 +49,8 @@ void setup()
     if(sensorId > SENSOR_MAX){
       sensorId = SENSOR_MAX;
     }
+    DEBUG_PRINT("Sensor Id: ");
+    DEBUG_PRINTLN(sensorId);
 }
 
 void loop()
@@ -74,7 +77,7 @@ void loop()
 		    randomized = 0;//randomized needs to be reset once it receives a poweron message
                     DEBUG_PRINTLN("Reporting ID Number");
                     sendBuff[1] = 'X'; //To confirm assignment
-                    sensorId = (int)(recBuff[2]) - 64;//converting to an integer
+                    sensorId = (int)(recBuff[2]) - 96;//converting to an integer
                     DEBUG_PRINTLN(sensorId);
                     break;
                 case 'R'://Randomize
@@ -85,12 +88,11 @@ void loop()
 			if(sensorId > SENSOR_MAX){
 			    sensorId = SENSOR_MAX;
 			}
-                        //sensorId = random(1, SENSOR_MAX);
 			DEBUG_PRINT("New ID: ");
 			DEBUG_PRINTLN(sensorId);
 			randomized = 1;
-			break;
 		    }
+                    break;
                 default:
                     DEBUG_PRINTLN("Don't understand the request :(");
                     sendBuff[1] = '?';
@@ -100,11 +102,18 @@ void loop()
             sendBuff[2] = '\0';
             
             // Send response
+            delay(100);
             if(wiredbus.sendMessage(sendBuff))
             {
                 DEBUG_PRINT("Sent:");
                 DEBUG_PRINTLN(sendBuff);
             }
+            else//Check to make sure we sent the message back
+            {
+              DEBUG_PRINT("Failed to send:");
+              DEBUG_PRINTLN(sendBuff);
+            }
+            
         } else {
             // The request was NOT for this sensor
             DEBUG_PRINTLN("Not me");
@@ -195,11 +204,11 @@ void getCompassData(int& x, int& y, int& z) {
     Wire.endTransmission();
 }
 /*
-    Returns a byte from 0x40 of the ascii table. Starting at @ A B C ...
+    Returns a byte from 0x40 of the ascii table. Starting at @ a b c ...
     Have to do this because if we start from 0 1 2... the control characters at the beginning mess up transmissions
 */
 char getSensorIdFromIndex(uint8_t index) {
-    return (char)(index + 64);
+    return (char)(index + 96);
 }
 
 void sleepNow()

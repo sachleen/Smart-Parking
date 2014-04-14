@@ -16,10 +16,6 @@
 #define SENSOR_MAX 10
 String baseId = "00000";
 
-//Sleep Testing
-//Sleep sleep;
-//unsigned long sleepTime; //how long you want the arduino to sleep
-
 volatile int f_wdt=1;
 volatile int sleep_count = 0;
 
@@ -70,7 +66,7 @@ void setup()
   digitalWrite(XBEE_SLEEP, LOW);   // deassert 
   
   // Need this delay for XBee to "warm up" ... messages aren't being received faster than this.
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 1; i++) {
    DEBUG_PRINT(".");
    delay(1000);
   }
@@ -105,6 +101,7 @@ void setup()
       sendBuff[2] = getSensorIdFromIndex(sensorCount+1);
       sendBuff[3] = '\0';
       wiredbus.sendMessage("wakeup");//to wake up sensors
+      //delay(75);//adding to see if this works
       if(wiredbus.sendMessage(sendBuff)){
         DEBUG_PRINTLN(sendBuff);
         // Listen for response
@@ -140,7 +137,7 @@ void setup()
       }
       if((sensorCount) == numSensors)
         break;
-      delay(100);
+      delay(500);
     }
     if((sensorCount) < numSensors){
       sensorSuccess = false;
@@ -152,10 +149,10 @@ void setup()
     else{
       sensorSuccess = true;
       DEBUG_PRINTLN("Sensors initialized");
+      delay(3000);
     }
   }
   
-  //sleepTime = 5000;
 }
 
 void loop()
@@ -173,7 +170,7 @@ void loop()
         DEBUG_PRINT("Querying Sensor ");DEBUG_PRINTLN(sensorNum);
         
         // Send some data to the sensors to wake them up. Doesn't matter what it is.
-        wiredbus.sendMessage("wakeup");
+        //wiredbus.sendMessage("wakeup");
         
         //The message is composed of a sensor ID and command.
         char sendBuff[maxMsgLen+1];
@@ -181,6 +178,7 @@ void loop()
         sendBuff[1] = 'C';
         sendBuff[2] = '\0';
         
+        wiredbus.sendMessage("wakeup");
         if(wiredbus.sendMessage(sendBuff))
         {
             DEBUG_PRINTLN(sendBuff);
@@ -190,7 +188,9 @@ void loop()
             timeout_init(2000);
             bool gotResponse = false;
             while (!timeout_timedout()) {
+              
                 if (wiredbus.getMessage(recBuff)){
+                    
                     DEBUG_PRINT("Got:");
                     DEBUG_PRINTLN(recBuff);
                     
@@ -238,7 +238,7 @@ void loop()
             DEBUG_PRINTLN("Send Failed");
         }
         DEBUG_PRINTLN();
-        delay(100);
+        delay(500);
     }
     
     
@@ -259,7 +259,7 @@ void loop()
     DEBUG_PRINTLN();
     
     DEBUG_PRINTLN(dataChanged ? "Data changed, sending..." : "Not sending. no change");
-    dataChanged = true;
+    //dataChanged = true;
     if (dataChanged) {
         digitalWrite(XBEE_SLEEP, LOW);
         /*
@@ -278,7 +278,7 @@ void loop()
             [Total Spots],[Available Spots]
         */
         //String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + "," + String(countAvailable);//dont need total(?)
-		String updateMessage = String(countAvailable);
+		String updateMessage = "U," + String(countAvailable);
                 xcomm.sendMessage(baseId, updateMessage);
 		String response = xcomm.getMessage();
 		sendCount = 0;
@@ -308,12 +308,6 @@ void loop()
     
     //Sleep Test
     digitalWrite(XBEE_SLEEP, HIGH);
-    delay(100);
-    //DEBUG_PRINT("Sleeping for ");
-    //DEBUG_PRINTLN(sleepTime);
-    delay(100);
-    //sleep.pwrDownMode(); //set sleep mode
-    //sleep.sleepDelay(sleepTime); //sleep for: sleepTime
     
     dataChanged = false;
     
@@ -327,7 +321,7 @@ void loop()
     
     f_wdt = 0;
     wdt_reset();
-    enterSleep();
+    //enterSleep();
     
     
     /*
@@ -341,10 +335,10 @@ void loop()
 }
 
 char getSensorIdFromIndex(uint8_t index) {
-    // Returns a byte from 0x40 of the ascii table. Starting at @ A B C ...
+    // Returns a byte from 0x40 of the ascii table. Starting at @ a b c ...
     // Have to do this because if we start from 0 1 2... the control characters at the beginning mess up transmissions
-    // Since sensor 0 is master, it will be @, the slaves will start from A
-    return (char)(index + 64);
+    // Since sensor 0 is master, it will be @, the slaves will start from a
+    return (char)(index + 96);
 }
 
 // Timeout Functions
@@ -451,6 +445,9 @@ void resetSensors(){
   for(int i=1; i <= SENSOR_MAX; i++){//99 will be replaced by max number//5 for testing
     //resp = ping(i);//This is the sendbuff thing
     char sendBuff[maxMsgLen+1];
+    if(i == 5)
+      sendBuff[0] = 'e';
+    else
     sendBuff[0] = getSensorIdFromIndex(i);//get sensorIdFromIndex
     sendBuff[1] = 'R';
     sendBuff[2] = '\0';
@@ -486,7 +483,7 @@ void resetSensors(){
   	else {
   		DEBUG_PRINTLN("Randomize Failed");
   	}
-  	delay(100);
+  	delay(500);
   }
     
 }
