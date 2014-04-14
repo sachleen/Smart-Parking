@@ -10,12 +10,13 @@
 #define XBEE_BAUD 9600
 #define QMAX 5
 
-SoftwareSerial xbee(2, 3);
+//SoftwareSerial xbee(2, 3);
+SoftwareSerial xbee(5, 6);
 XBeeCommunication xcomm("00000");//Change here for different bases
 
 SoftwareSerial SIM900(7, 8);
-SIMCommunication simcomm(4800, 9);
-
+//SIMCommunication simcomm(4800, 9);
+SIMCommunication simcomm(4800, 2);
 
 String response = "";
 String apiKey = "8ce367853467bbfe56a51d9eac208318";
@@ -68,9 +69,12 @@ void loop() {
             DEBUG_PRINTLN(qCount);
             delay(1000);
             while (!simcomm.isOn()) {
-				simcomm.togglePower();//Turn on SIM900
-			}
-			DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+		simcomm.togglePower();//Turn on SIM900
+	    }
+            while (!simcomm.connectToNetwork()) {
+              DEBUG_PRINTLN(F("Network Connection Failed."));
+            }
+	    DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
             for(int i = 0; i < qCount; i++) {
                 response = simcomm.POSTRequest("id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
                 DEBUG_PRINTLN(response);

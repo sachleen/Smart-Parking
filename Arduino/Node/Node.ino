@@ -71,7 +71,7 @@ void setup()
    delay(1000);
   }
   setXbeeSleep();
-  /*
+  
   while(numSensors < 0){
     xbee.println("Sending...");
     xcomm.sendMessage(baseId, "N");
@@ -90,7 +90,7 @@ void setup()
       DEBUG_PRINTLN(numSensors);
     }
   }
-  */
+  
     
   numSensors = 2;//used for demo-ing Not using response from server due to lack of memory
   while(!sensorSuccess){  
