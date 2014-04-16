@@ -16,17 +16,17 @@
 #define SENSOR_MAX 10
 String baseId = "00000";
 
-volatile int f_wdt=1;
+volatile int f_wdt=1;//used for wdt interrupt
 volatile int sleep_count = 0;
 
 SoftwareSerial xbee(5, 6); // RX, TX
 //SoftwareSerial xbee(2, 3); //Testing with Xbee only
 
 WiredCommunication wiredbus;
-XBeeCommunication xcomm("TEST1");//Change here for different nodes
+XBeeCommunication xcomm("TEST2");//Change here for different nodes
 
 
-int  numSensors = -1; // Starts off at 99 so that the base recognizes first message as startup message. SET TO 3 FOR TESTING
+int  numSensors = -1; // Starts off at -1 to show the Node has yet to be intialized
 int retryCount = 0;//retry count for adding messages to queue
 int check = 0;//checks for success of adding to queue
 String messageFromBase = "";
@@ -55,7 +55,7 @@ void setup()
   //power_timer0_disable(); need timer 0 for delay()
   power_timer1_disable();
   power_timer2_disable();
-  power_twi_disable(); //need twi for compass
+  power_twi_disable();
   wdtSetup();
   // Wait for sensors to power up and calibrate
   delay(2000);
@@ -66,15 +66,20 @@ void setup()
   digitalWrite(XBEE_SLEEP, LOW);   // deassert 
   
   // Need this delay for XBee to "warm up" ... messages aren't being received faster than this.
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 10; i++) {
    DEBUG_PRINT(".");
    delay(1000);
   }
   setXbeeSleep();
   
+  /**
+   * The node will stay in this loop until it receives it's number of sensors from the Base station
+   * Commented out for testing purposes
+   */
+   
   while(numSensors < 0){
     xbee.println("Sending...");
-    xcomm.sendMessage(baseId, "N");
+    xcomm.sendMessage(baseId, "N");//"N" indicates that the Node is requesting its number of Sensors
     response = xcomm.getMessage();
 
     if(response != NULL){
@@ -92,7 +97,13 @@ void setup()
   }
   
     
-  numSensors = 2;//used for demo-ing Not using response from server due to lack of memory
+  //numSensors = 3;//used when we don't get numSensors from Base Station
+  
+  /**
+   * This while loop will run until the number of nodes the sensor has assigned a new ID matches numSensors
+   * The loop keeps track of how many assignment statements reached the sensors successfully
+   */
+   
   while(!sensorSuccess){  
     for(int i=1; i <= SENSOR_MAX; i++){
       char sendBuff[maxMsgLen+2];
@@ -101,7 +112,6 @@ void setup()
       sendBuff[2] = getSensorIdFromIndex(sensorCount+1);
       sendBuff[3] = '\0';
       wiredbus.sendMessage("wakeup");//to wake up sensors
-      //delay(75);//adding to see if this works
       if(wiredbus.sendMessage(sendBuff)){
         DEBUG_PRINTLN(sendBuff);
         // Listen for response
@@ -143,8 +153,7 @@ void setup()
       sensorSuccess = false;
       DEBUG_PRINTLN("Sensors intialization failed");
       sensorCount = 0;
-      //Tell sensors to reset themselves
-      resetSensors();
+      resetSensors();//This tells sensors to randomize to a new SensorID
     }
     else{
       sensorSuccess = true;
@@ -158,7 +167,7 @@ void setup()
 void loop()
 {
     if(f_wdt == 1){
-      Serial.println("Awake");
+      Serial.println("Awake");//Check to see if Arduino woke back up
     }
 	
     /*
@@ -259,7 +268,7 @@ void loop()
     DEBUG_PRINTLN();
     
     DEBUG_PRINTLN(dataChanged ? "Data changed, sending..." : "Not sending. no change");
-    //dataChanged = true;
+    //dataChanged = true;//This line will force the XBee to send a message. (Used for testing)
     if (dataChanged) {
         digitalWrite(XBEE_SLEEP, LOW);
         /*
@@ -275,10 +284,9 @@ void loop()
         
         /*
             Prepare XBee message packet:
-            [Total Spots],[Available Spots]
+            [Message Identifier],[Available Spots]
         */
-        //String updateMessage = String(numSensors) + ','  + "U," + String(numSensors) + "," + String(countAvailable);//dont need total(?)
-		String updateMessage = "U," + String(countAvailable);
+		String updateMessage = "U," + String(countAvailable);//The identifier "U" means that this is an update meant for the server
                 xcomm.sendMessage(baseId, updateMessage);
 		String response = xcomm.getMessage();
 		sendCount = 0;
@@ -306,28 +314,28 @@ void loop()
     
     DEBUG_PRINTLN("==============================\n");
     
-    //Sleep Test
-    digitalWrite(XBEE_SLEEP, HIGH);
     
-    dataChanged = false;
+	digitalWrite(XBEE_SLEEP, HIGH);//Set XBee to sleep
     
+    dataChanged = false;//reset dataChanged flag
+    
+    /**
+    *This block of code will cause the arduino to sleep for a given number of minutes
+    *It is commented out for demonstration purposes where we want a quick response
+    */
+	 
+    /*
     Serial.println("Going to sleep");
     delay(100);
     
     int cyclesSlept = 0;
     int sleepMinutes = 1;//Minutes we want arduino to sleep
-    int sleepCycles = (sleepMinutes * 60)/8;
+    int sleepCycles = (sleepMinutes * 60)/8;//This tells us how many sleep cycles of 8 seconds to perform
     
     
-    f_wdt = 0;
-    wdt_reset();
-    //enterSleep();
-    
-    
-    /*
     while(cyclesSlept < sleepCycles){
       f_wdt = 0;
-      wdt_reset();
+      wdt_reset();//Resets the watchdog timer for the sleep cycle
       enterSleep();
       cyclesSlept++;
     }
@@ -355,6 +363,10 @@ bool timeout_timedout() {
     return millis() > _timeout_end;
 }
 
+/**
+ * This method issues the AT command SM1 to the XBee
+ * This sets the XBee Sleep Mode to 1 which allows us to control the sleep state of the XBee by asserting a its DTR pin
+ */
 void setXbeeSleep(){
 	String ok_response = "OK\r"; // the response we expect.
 	xbee.print("+++");
@@ -437,13 +449,15 @@ void enterSleep(void)
   //power_all_enable();
 }
 
-void initializeSensors(){//Will initializing code here once I'm sure it works after another test
+void initializeSensors(){//Will add initializing code here once I'm sure it works after another test
   
 }
 
+/**
+ *This method sends a message to all attached sensors letting them know to randomize their SensorIDs
+ */
 void resetSensors(){
-  for(int i=1; i <= SENSOR_MAX; i++){//99 will be replaced by max number//5 for testing
-    //resp = ping(i);//This is the sendbuff thing
+  for(int i=1; i <= SENSOR_MAX; i++){
     char sendBuff[maxMsgLen+1];
     if(i == 5)
       sendBuff[0] = 'e';

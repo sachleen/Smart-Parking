@@ -15,7 +15,6 @@
 
 int sensorId = 3;
 int randomized = 0;//Prevents ID from being randomized twice
-int sendQ = 0;
 WiredCommunication wiredbus;
 
 /*
@@ -68,6 +67,12 @@ void loop()
             char sendBuff[maxMsgLen+1];
             sendBuff[0] = getSensorIdFromIndex(sensorId);
             
+            /**
+             * There are three different types of messages the Sensor can receive:
+             * C: Report Status
+             * P: Sensor ID Assignment
+             * R: Randomize my Sensor ID
+             */
             switch (recBuff[1]) {
                 case 'C': // Report compass status
                     DEBUG_PRINTLN("Reporting Compass Status");
