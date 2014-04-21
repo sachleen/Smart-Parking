@@ -10,8 +10,7 @@ Computer Engineering Senior Design Project
 Team #4
 
  - Sachleen Sandhu
- - Quy Nguyen
  - Caleb Fountain
- - Kailash Khalasi
+ - Phillip Booker
 
   [1]: http://csus.edu
