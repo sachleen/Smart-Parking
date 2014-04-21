@@ -1027,13 +1027,6 @@ design rules under a new name.</description>
 <wire x1="43.688" y1="20.5232" x2="43.6626" y2="20.58" width="0.254" layer="1"/>
 <wire x1="48.1584" y1="20.32" x2="48.26" y2="20.25" width="0.254" layer="1"/>
 </signal>
-<signal name="N$12">
-<contactref element="U2" pad="4"/>
-<contactref element="U2" pad="2"/>
-<wire x1="22.9616" y1="48.9712" x2="22.9616" y2="55.2704" width="0.254" layer="1"/>
-<wire x1="22.9616" y1="55.2704" x2="22.86" y2="55.2704" width="0.254" layer="1"/>
-<wire x1="22.9616" y1="48.9712" x2="22.86" y2="48.8696" width="0.254" layer="1"/>
-</signal>
 <signal name="N$14">
 <contactref element="U2" pad="3"/>
 <contactref element="U$1" pad="1"/>
@@ -1101,6 +1094,11 @@ design rules under a new name.</description>
 <via x="6.35" y="48.26" extent="1-16" drill="0.5"/>
 <via x="38.1" y="46.99" extent="1-16" drill="0.5"/>
 <via x="44.45" y="30.48" extent="1-16" drill="0.5"/>
+<contactref element="U2" pad="4"/>
+<contactref element="U2" pad="2"/>
+<wire x1="22.9616" y1="48.9712" x2="22.9616" y2="55.2704" width="0.254" layer="1"/>
+<wire x1="22.9616" y1="55.2704" x2="22.86" y2="55.2704" width="0.254" layer="1"/>
+<wire x1="22.9616" y1="48.9712" x2="22.86" y2="48.8696" width="0.254" layer="1"/>
 </signal>
 <signal name="VCC">
 <contactref element="U2" pad="1"/>
