@@ -131,7 +131,7 @@
 <text x="1.27" y="31.75" size="1.27" layer="25">RST</text>
 <text x="1.27" y="37.465" size="1.27" layer="25">RX</text>
 <text x="1.27" y="34.925" size="1.27" layer="25">TX</text>
-<text x="41.91" y="57.15" size="1.27" layer="26" rot="MR0">BASE_SP 1.4</text>
+<text x="41.91" y="57.15" size="1.27" layer="26" rot="MR0">BASE_SP 1.5</text>
 </plain>
 <libraries>
 <library name="SparkFun-DigitalIC">
