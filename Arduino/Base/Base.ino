@@ -10,12 +10,14 @@
 #define XBEE_BAUD 9600
 #define QMAX 5
 #define LOOP_MAX 14
+#define SIM_RST 3
 
 //SoftwareSerial xbee(2, 3);
 SoftwareSerial xbee(5, 6);
 XBeeCommunication xcomm("00000");//This gives the Base a TargetID of "00000"
 
-SoftwareSerial SIM900(7, 8);
+//SoftwareSerial SIM900(7, 8);
+SoftwareSerial SIM900(8, 7);
 //SIMCommunication simcomm(4800, 9);
 SIMCommunication simcomm(4800, 2);
 
@@ -44,14 +46,25 @@ void setup()
 {
     DEBUG_INIT(9600);
     xbee.begin(XBEE_BAUD); // Communicates with node
-    
+    pinMode(SIM_RST, OUTPUT);
+    digitalWrite(SIM_RST, LOW);
+    /*Commented out for demo*/
+    /*
+    while (simcomm.isOn()) {
+        simcomm.togglePower();
+        DEBUG_PRINTLN(F("Toggling power"));
+    }
+    DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+    */
     /*This starts the network connection*/
+    /*Normally commented out, but we're avoiding an issue with network connectivity*/
+    
     while (!simcomm.isOn()) {
         simcomm.togglePower();
     }
     DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
 
-    if (!simcomm.connectToNetwork()) {
+    while (!simcomm.connectToNetwork()) {
         DEBUG_PRINTLN(F("Network Connection Failed."));
     }
     
@@ -64,19 +77,59 @@ void loop() {
     This limits the sending of updates to the server by sending a maximum of 10 once every time the loopCount reaches the max
     or once the array of requests reaches its maximum (Each loop is 2 seconds. Right now it is set to update the server every 30 seconds.)
     */
+    //qCount = 1;//for testing
+    //loopCount = 0;
+    
     if(loopCount > LOOP_MAX || qCount == QMAX) {
         if(qCount > 0) {//will only send if q isn't empty
             DEBUG_PRINT(F("Made it to server update. Number of messages: "));
             DEBUG_PRINTLN(qCount);
             delay(1000);
-            
+            /*
             while (!simcomm.isOn()) {
 		simcomm.togglePower();//Turn on SIM900
 	    }
             while (!simcomm.connectToNetwork()) {//The loop will keep running until it is connected to the network
               DEBUG_PRINTLN(F("Network Connection Failed."));
             }
-	    DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+            */
+            /*Following block commented out to keep SIM900 on to avoid connectivity issue*/
+            /*
+            bool netConnect = false;
+            int connectCount = 0;
+            while (!simcomm.isOn() || !netConnect) {
+                connectCount = 0;
+		DEBUG_PRINTLN(F("Resetting SIM and Network Connection"));
+                while (!simcomm.isOn()) {
+		  simcomm.togglePower();//Turn on SIM900
+                  DEBUG_PRINTLN(F("Toggling Power"));
+                  DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+	        }
+                while(connectCount < 3){
+                  if (!simcomm.connectToNetwork()) {//The loop will keep running until it is connected to the network
+                    DEBUG_PRINTLN(F("Network Connection Failed."));
+                    netConnect = false;
+                    connectCount++;
+                  }
+                  else {
+                    netConnect = true;
+                    break;
+                  }
+                }
+                if(netConnect){
+                  break;
+                }
+                else{
+                  while (simcomm.isOn()) {
+                    simcomm.togglePower();//Turn off SIM900
+                    DEBUG_PRINTLN("Power cycling");
+                    DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+                  }
+                }
+	    }
+            */
+	    //DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
+            //DEBUG_PRINT("Network Connection Successful!");
             
             for(int i = 0; i < qCount; i++) {
                 response = simcomm.POSTRequest("id=" + nodeIds[i] + "&" + "available=" + spacesAvail[i] + "&api_key=" + apiKey);
@@ -90,11 +143,15 @@ void loop() {
             qCount = 0;
         }
         loopCount = 0;
-        
-	simcomm.togglePower();//Turns off SIM900
+        /*Commented out to avoid connectivity issue*/
+        /*
+        while (simcomm.isOn()) {
+	    simcomm.togglePower();//Turn off SIM900
+	}
 	DEBUG_PRINT("Pwr ");DEBUG_PRINTLN(simcomm.isOn() ? "ON" : "OFF");
-
+        */
     }
+    
   
     response = xcomm.getMessage();
     /**

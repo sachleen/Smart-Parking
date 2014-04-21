@@ -23,7 +23,7 @@ SoftwareSerial xbee(5, 6); // RX, TX
 //SoftwareSerial xbee(2, 3); //Testing with Xbee only
 
 WiredCommunication wiredbus;
-XBeeCommunication xcomm("TEST2");//Change here for different nodes
+XBeeCommunication xcomm("TEST1");//Change here for different nodes
 
 
 int  numSensors = -1; // Starts off at -1 to show the Node has yet to be intialized
@@ -269,6 +269,8 @@ void loop()
     
     DEBUG_PRINTLN(dataChanged ? "Data changed, sending..." : "Not sending. no change");
     //dataChanged = true;//This line will force the XBee to send a message. (Used for testing)
+    if(!sendOk)
+        dataChanged = true;
     if (dataChanged) {
         digitalWrite(XBEE_SLEEP, LOW);
         /*
@@ -290,7 +292,7 @@ void loop()
                 xcomm.sendMessage(baseId, updateMessage);
 		String response = xcomm.getMessage();
 		sendCount = 0;
-		while (response == NULL && sendCount < 2){
+		while (response == NULL && sendCount < 4){//Send attempts bumped up to 4 in case it sends during update loop
 			xcomm.sendMessage(baseId, updateMessage);
 			response = xcomm.getMessage();
 			sendCount++;
@@ -302,13 +304,16 @@ void loop()
 			String baseCheck = response.substring(end+1);
 			if (baseCheck.indexOf("OK") < 0){
 				DEBUG_PRINTLN("Didn't receive correct message from base");
+                                sendOk = false;
 			}
 			else{
 				DEBUG_PRINTLN("Update Successful");
+                                sendOk = true;
 			}
 		}
 		else{
 			DEBUG_PRINTLN("Update Failed");
+                        sendOk = false;
 		}
     }
     
