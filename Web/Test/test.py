@@ -1,3 +1,5 @@
+# Automated test script for Smart Parking API
+
 import requests
 
 CONFIG_BASE_URL = 'http://smartparking.local/API/'

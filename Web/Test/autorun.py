@@ -1,3 +1,5 @@
+# Simulates all the hardware by randomly modifying node data on server
+
 import requests, random, time
 
 CONFIG_BASE_URL = 'http://smartparking.local/API/'
